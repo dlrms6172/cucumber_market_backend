@@ -29,3 +29,6 @@ dev-cellsMathVerticalApp.json
 
 ### SVN
 .svn/
+
+### .yml ###
+*.yml
