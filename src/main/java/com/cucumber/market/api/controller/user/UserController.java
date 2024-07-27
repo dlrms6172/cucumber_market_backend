@@ -29,21 +29,11 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Value("${google.client.auth-url}")
-    private String googleAuthUrl;
-
-    @Value("${google.client.id}")
-    private String googleClientId;
-
-    @Value("${google.client.pw}")
-    private String googleClientPw;
-
-    @Value("${google.client.callback-url}")
-    private String googleCallBackUrl;
-
-    @Value("${google.client.scope}")
-    private String googleScope;
-
+    /**
+     * 로그인 페이지 리턴
+     * @param dto
+     * @return
+     */
     @GetMapping(value="/signin")
     public ResponseEntity signInController(@Valid UserDto.signInDto dto){
 
@@ -52,41 +42,19 @@ public class UserController {
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
+    /**
+     * 회원가입 or 로그인
+     * @param platform
+     * @param dto
+     * @return
+     */
     @GetMapping("/singin/callback/{platform}")
-    public ResponseEntity signInCallBackController(@Valid UserDto.signInCallBackDto dto){
-
+    public ResponseEntity signInCallBackController(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto){
+        dto.setPlatform(platform);
 
         body.put("data",userService.signInCallBackService(dto));
 
-        String GOOGLE_TOKEN_REQUEST_URL="https://oauth2.googleapis.com/token";
-        RestTemplate restTemplate=new RestTemplate();
-        Map<String, Object> params = new HashMap<>();
-        params.put("code", dto.getCode());
-        params.put("client_id", googleClientId);
-        params.put("client_secret", googleClientPw);
-        params.put("redirect_uri", googleCallBackUrl);
-        params.put("grant_type", "authorization_code");
-
-        ResponseEntity<Map> responseEntity=restTemplate.postForEntity(GOOGLE_TOKEN_REQUEST_URL,
-                params,Map.class);
-
-
-        if(responseEntity.getStatusCode() == HttpStatus.OK){
-            String GOOGLE_USERINFO_REQUEST_URL="https://www.googleapis.com/oauth2/v1/userinfo";
-            String accessToken = responseEntity.getBody().get("access_token").toString();
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization","Bearer "+accessToken);
-
-            //HttpEntity를 하나 생성해 헤더를 담아서 restTemplate으로 구글과 통신하게 된다.
-            HttpEntity<Map<String, String>> request = new HttpEntity(headers);
-            ResponseEntity<String> response=restTemplate.exchange(GOOGLE_USERINFO_REQUEST_URL, HttpMethod.GET,request,String.class);
-            System.out.println("response.getBody() = " + response.getBody());
-        }
-
-
         return new ResponseEntity(body, headers, HttpStatus.OK);
-
     }
 
 }

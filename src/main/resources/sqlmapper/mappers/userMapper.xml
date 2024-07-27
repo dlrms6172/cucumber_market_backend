@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cucumber.market.api.mapper.user.UserMapper">
+    <select id="selectCheckUserInfo" resultType="resultMap">
+        SELECT
+            MEMBER.MEMBER_ID,
+            MEMBER.SNS_ID,
+            SNS.SNS_NAME,
+            MEMBER.NAME,
+            MEMBER.EMAIL,
+            MEMBER.REGION_ID
+        FROM cucumber.member as MEMBER
+        JOIN cucumber.sns as SNS on MEMBER.SNS_ID = SNS.SNS_ID
+        WHERE 1=1
+            AND MEMBER.SNS_ID = #{snsId}
+            AND MEMBER.SNS_VALUE = #{snsValue}
+    </select>
 
+    <insert id="insertUserInfo">
+        INSERT INTO cucumber.member
+        (
+        SNS_ID,
+        SNS_VALUE
+        )
+        VALUES
+        (
+        #{snsId},
+        #{snsValue}
+        )
+    </insert>
 </mapper>

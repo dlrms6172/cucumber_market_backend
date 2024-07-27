@@ -24,5 +24,11 @@ public class UserDto {
 
         @NotBlank
         private String code;
+
+        private int snsId;
+
+        private String snsValue;
+
+        private String email;
     }
 }
