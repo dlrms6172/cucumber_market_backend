@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cucumber.market.api.mapper.item.ItemMapper">
+
+    <insert id="insertItem" useGeneratedKeys="true" keyProperty="request.itemId">
+        insert into item (member_id, item_name, item_info, price, post_date, view_count)
+        values (#{memberId}, #{request.itemName}, #{request.itemInfo} ,#{request.price}, NOW(), 0)
+    </insert>
+
+    <select id="selectItem" resultType="resultMap">
+        select *
+        from item
+        where item_id = #{itemId}
+    </select>
+
+    <update id="updateViewCount">
+        update item
+        set view_count = view_count + 1
+        where item_id = #{itemId}
+    </update>
+</mapper>

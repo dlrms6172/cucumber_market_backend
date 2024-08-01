@@ -10,4 +10,4 @@ spring:
 mybatis:
 #  check-config-location: true
   mapper-locations: classpath:/sqlmapper/mappers/**/*.xml
-#  config-location: classpath:/sqlmapper/sql-mapper-config.xml
+  config-location: classpath:/sqlmapper/sql-mapper-config.xml
