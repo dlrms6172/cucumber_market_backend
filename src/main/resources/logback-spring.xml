@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 로그 설정 -->
+<configuration>
+
+    <!-- 출력 설정 -->
+    <property name="CONSOLE_LOG_PATTERN" value="%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%5level) %cyan(%logger) - %yellow(%msg%n)"/>
+    <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %5level %logger - %msg%n"/>
+
+    <!-- 콘솔 로그 설정 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                ${CONSOLE_LOG_PATTERN}
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 로그 출력 범위 -->
+    <logger name="com.cucumber.market.api" level="DEBUG"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
