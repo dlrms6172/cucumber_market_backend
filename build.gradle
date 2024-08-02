@@ -13,16 +13,21 @@ repositories {
 }
 
 dependencies {
+    // web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // MyBatis
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
-    // web
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
     // MyBatis returnType Map CamelCase 적용 클래스 구현용 -->
     implementation group: 'com.google.guava', name: 'guava', version: '11.0.2'
+
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // log4jdbc
+    implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
