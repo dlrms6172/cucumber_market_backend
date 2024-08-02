@@ -7,36 +7,7 @@ spring:
     username:
     password:
     maximum-pool-size: 20
-
-# mybatis
 mybatis:
+#  check-config-location: true
   mapper-locations: classpath:/sqlmapper/mappers/**/*.xml
   config-location: classpath:/sqlmapper/sql-mapper-config.xml
-
-# log4jdbc, Mybatis Console Log
-logging:
-  level:
-    com:
-      zaxxer:
-        hikari: INFO
-    javax:
-      sql:
-        DataSource: OFF
-    jdbc:
-      audit: OFF
-      resultset: OFF
-      resultsettable: DEBUG  #SQL 결과 데이터 Table을 로그로 남긴다.
-      sqlonly: OFF     #SQL만 로그로 남긴다.
-      sqltiming: INFO    #SQL과 소요시간을 표기한다.
-      connection : OFF  # 커넥션 확인가능
-
-# Google
-google:
-  client:
-    id:
-    pw:
-    scope: https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile
-    callback-url: http://localhost:8080/user/singin/callback/google
-    auth-url: https://accounts.google.com/o/oauth2/v2/auth
-    token-request-url: https://oauth2.googleapis.com/token
-    userinfo-request-url: https://www.googleapis.com/oauth2/v1/userinfo
