@@ -1,6 +1,6 @@
 package com.cucumber.market.api.controller.item;
 
-import com.cucumber.market.api.dto.item.ItemRequestDto;
+import com.cucumber.market.api.dto.item.ItemDto;
 import com.cucumber.market.api.service.item.ItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +19,14 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ResponseEntity addItem(@Valid @RequestBody ItemRequestDto itemRequestDto,
+    public ResponseEntity addItem(@Valid @RequestBody ItemDto.addItemDto itemDto,
                                   @SessionAttribute Long memberId) {  //추후 수정
 
         Map<String, Object> body = new LinkedHashMap<String, Object>() {
             {
                 put("resultCode", 201);
                 put("resultMsg", "success");
-                put("itemId", itemService.addItem(memberId, itemRequestDto));
+                put("data", itemService.addItem(memberId, itemDto));
             }
         };
 
@@ -34,17 +34,34 @@ public class ItemController {
 
     }
 
-    @GetMapping
-    public ResponseEntity getItem(@PathVariable Long itemId, @SessionAttribute Long memberId) {
+    @GetMapping("/{item_id}")
+    public ResponseEntity getItem(@PathVariable(name = "item_id") Long itemId,
+                                  @SessionAttribute Long memberId) {
 
         Map<String, Object> body = new LinkedHashMap<String, Object>() {
             {
                 put("resultCode", 200);
                 put("resultMsg", "success");
-                put("itemInfo", itemService.getItem(itemId));
+                put("data", itemService.getItem(itemId));
             }
         };
 
         return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+    @PutMapping("/{item_id}")
+    public ResponseEntity modifyItem(@Valid @RequestBody ItemDto.modifyItemDto itemDto,
+                                     @PathVariable(name = "item_id") Long itemId,
+                                     @SessionAttribute Long memberId) {
+        Map<String, Object> body = new LinkedHashMap<String, Object>() {
+            {
+                put("resultCode", 200);
+                put("resultMsg", "success");
+                put("data", itemService.modifyItem(memberId, itemId, itemDto));
+            }
+        };
+
+        return new ResponseEntity(body, HttpStatus.OK);
+
     }
 }
