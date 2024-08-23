@@ -18,4 +18,13 @@
         set view_count = view_count + 1
         where item_id = #{itemId}
     </update>
+
+    <update id="updateItem">
+        update item
+        set item_name = #{request.itemName},
+            item_info = #{request.itemInfo},
+            update_date = NOW(),
+            price = #{request.price}
+        where item_id = #{itemId}
+    </update>
 </mapper>

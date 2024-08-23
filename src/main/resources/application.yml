@@ -3,7 +3,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/cucumber
+    url:
     username:
     password:
     maximum-pool-size: 20
@@ -34,8 +34,8 @@ google:
   client:
     id:
     pw:
-    scope: https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile
-    callback-url: http://localhost:8080/user/singin/callback/google
-    auth-url: https://accounts.google.com/o/oauth2/v2/auth
-    token-request-url: https://oauth2.googleapis.com/token
-    userinfo-request-url: https://www.googleapis.com/oauth2/v1/userinfo
+    scope:
+    callback-url:
+    auth-url:
+    token-request-url:
+    userinfo-request-url:
