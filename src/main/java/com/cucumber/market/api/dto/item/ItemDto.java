@@ -17,7 +17,6 @@ public class ItemDto {
         @NotBlank
         private String itemInfo;
         private LocalDateTime postDate;
-        @NotBlank
         private int price;
     }
 
@@ -30,7 +29,6 @@ public class ItemDto {
         @NotBlank
         private String itemInfo;
         private LocalDateTime updateDate;
-        @NotBlank
         private int price;
     }
 }
