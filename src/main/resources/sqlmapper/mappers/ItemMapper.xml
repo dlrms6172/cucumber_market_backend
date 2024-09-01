@@ -34,11 +34,6 @@
         where item_id = #{itemId}
     </update>
 
-    <delete id="deleteItem">
-        delete from item
-        where item_id = #{itemId}
-    </delete>
-
     <insert id="insertLike">
         insert into favorite (item_id, member_id)
         values (#{itemId}, #{memberId})
