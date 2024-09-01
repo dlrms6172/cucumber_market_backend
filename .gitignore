@@ -32,7 +32,6 @@ dev-cellsMathVerticalApp.json
 
 ### .yml ###
 *.yml
-/.gradle/
 
 # Gradle files
 .gradle/
