@@ -24,5 +24,7 @@ public interface ItemMapper {
 
     void updateItemStatus(@Param("itemId") Long itemId, @Param("itemStatus") ItemStatus itemStatus);
 
-    void deleteItem(Long itemId);
+    void insertLike(@Param("itemId") Long itemId, @Param("memberId") Long memberId);
+
+    void deleteLike(@Param("itemId") Long itemId, @Param("memberId") Long memberId);
 }

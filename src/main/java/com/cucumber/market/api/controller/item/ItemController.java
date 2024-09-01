@@ -71,12 +71,22 @@ public class ItemController {
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{item_id}")
-    public ResponseEntity deleteItem(@PathVariable(name = "item_id") Long itemId,
+    @PostMapping("/{item_id}/like")
+    public ResponseEntity addLike(@PathVariable(name = "item_id") Long itemId,
+                                  @SessionAttribute Long memberId) {
+
+        body.put("data", itemService.addLike(itemId, memberId));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{item_id}/like")
+    public ResponseEntity deleteLike(@PathVariable(name = "item_id") Long itemId,
                                      @SessionAttribute Long memberId) {
 
-        body.put("data", itemService.deleteItem(memberId, itemId));
+        body.put("data", itemService.deleteLike(itemId, memberId));
 
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return new ResponseEntity(body, HttpStatus.OK);
     }
+
 }

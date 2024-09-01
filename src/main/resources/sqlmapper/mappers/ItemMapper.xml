@@ -39,4 +39,14 @@
         where item_id = #{itemId}
     </delete>
 
+    <insert id="insertLike">
+        insert into favorite (item_id, member_id)
+        values (#{itemId}, #{memberId})
+    </insert>
+
+    <delete id="deleteLike">
+        delete from favorite
+        where item_id = #{itemId}
+        and member_id = #{memberId}
+    </delete>
 </mapper>
