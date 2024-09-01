@@ -66,7 +66,7 @@ public class ItemController {
                                            @PathVariable(name = "item_id") Long itemId,
                                            @SessionAttribute Long memberId) {
 
-        body.put("data", itemService.modifyItemStatus(1L, itemId, itemStatus.get("itemStatus")));
+        body.put("data", itemService.modifyItemStatus(memberId, itemId, itemStatus.get("itemStatus")));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
