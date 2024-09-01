@@ -27,4 +27,10 @@
             price = #{request.price}
         where item_id = #{itemId}
     </update>
+
+    <update id="updateItemStatus">
+        update item
+        set item_status_id = #{itemStatus}
+        where item_id = #{itemId}
+    </update>
 </mapper>

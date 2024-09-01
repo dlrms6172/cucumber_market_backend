@@ -1,10 +1,9 @@
 package com.cucumber.market.api.service.item;
 
 import com.cucumber.market.api.dto.item.ItemDto;
-import com.cucumber.market.api.repository.ItemRepository;
+import com.cucumber.market.api.mapper.item.ItemMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,37 +15,51 @@ import java.util.Map;
 @Slf4j
 public class ItemService {
 
-    private final ItemRepository itemRepository;
+    private final ItemMapper itemMapper;
 
     @Transactional
-    public Map addItem(Long memberId, ItemDto.addItemDto itemDto) throws DataAccessException {
-        LinkedHashMap<String, Long> result = new LinkedHashMap<>();
+    public Map addItem(Long memberId, ItemDto.addItemDto itemDto) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         //userMapper.findById(memberId); -> 상품 등록 권한 확인
-        ItemDto.addItemDto savedItem = itemRepository.insertItem(memberId, itemDto);
-        result.put("itemId", savedItem.getItemId());
+
+        itemMapper.insertItem(memberId, itemDto);
+        result.put("item", itemDto);
+
         return result;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Map getItem(Long itemId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        itemRepository.updateViewCount(itemId);  //조회 수 증가
-        result.put("item", itemRepository.selectItem(itemId));
+        itemMapper.updateViewCount(itemId);  //조회 수 증가
+        result.put("item", itemMapper.selectItem(itemId));
 
         return result;
     }
 
     @Transactional
     public Map modifyItem(Long memberId, Long itemId, ItemDto.modifyItemDto itemDto) {
-        LinkedHashMap<String, Long> result = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         //userMapper.findById(memberId); -> 상품 수정 권한 확인
 
-        itemRepository.updateItem(itemId, itemDto);
-        result.put("itemId", itemDto.getItemId());
+        itemMapper.updateItem(itemId, itemDto);
+        result.put("item", itemDto);
 
         return result;
+    }
+
+    public Map modifyItemStatus(Long memberId, Long itemId, ItemStatus itemStatus) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        //userMapper.findById(memberId); -> 상품 상태 수정 권한 확인
+
+        itemMapper.updateItemStatus(itemId, itemStatus);
+        result.put("itemId", itemId);
+        result.put("itemStatus", itemStatus);
+
+        return  result;
     }
 }
