@@ -63,10 +63,13 @@ public class ItemService {
         return  result;
     }
 
-    public Map getItems(String itemName, ItemStatus itemStatus) {
+    public Map deleteItem(Long memberId, Long itemId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        result.put("items", itemMapper.selectItems(itemName, itemStatus));
+        //userMapper.findById(memberId); -> 상품 삭제 권한 확인
+
+        itemMapper.deleteItem(itemId);
+        result.put("itemId", itemId);
 
         return result;
     }

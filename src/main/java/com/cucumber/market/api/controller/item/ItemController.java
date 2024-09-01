@@ -66,17 +66,17 @@ public class ItemController {
                                            @PathVariable(name = "item_id") Long itemId,
                                            @SessionAttribute Long memberId) {
 
-        body.put("data", itemService.modifyItemStatus(1L, itemId, itemStatus.get("itemStatus")));
+        body.put("data", itemService.modifyItemStatus(memberId, itemId, itemStatus.get("itemStatus")));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity getItems(@Nullable @RequestParam("name") String itemName,
-                                   @Nullable @RequestParam("status") ItemStatus itemStatus) {
+    @DeleteMapping("/{item_id}")
+    public ResponseEntity deleteItem(@PathVariable(name = "item_id") Long itemId,
+                                     @SessionAttribute Long memberId) {
 
-        body.put("data", itemService.getItems(itemName, itemStatus));
+        body.put("data", itemService.deleteItem(memberId, itemId));
 
-        return new ResponseEntity(body, HttpStatus.OK);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 }
