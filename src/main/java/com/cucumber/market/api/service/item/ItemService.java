@@ -81,4 +81,26 @@ public class ItemService {
 
         return result;
     }
+
+    public Map addLike(Long itemId, Long memberId) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        //userMapper.findById(memberId); -> 상품 삭제 권한 확인
+
+        itemMapper.insertLike(itemId, memberId);
+        result.put("itemId", itemId);
+
+        return result;
+    }
+
+    public Map deleteLike(Long itemId, Long memberId) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        //userMapper.findById(memberId); -> 상품 삭제 권한 확인
+
+        itemMapper.deleteLike(itemId, memberId);
+        result.put("itemId", itemId);
+
+        return result;
+    }
  }
