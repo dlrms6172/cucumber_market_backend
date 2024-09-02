@@ -63,6 +63,14 @@ public class ItemService {
         return  result;
     }
 
+    public Map getItems(String itemName, ItemStatus itemStatus) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        result.put("items", itemMapper.selectItems(itemName, itemStatus));
+
+        return result;
+    }
+
     public Map deleteItem(Long memberId, Long itemId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
