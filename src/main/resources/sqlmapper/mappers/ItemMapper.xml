@@ -62,4 +62,5 @@
         where item_id = #{itemId}
         and member_id = #{memberId}
     </delete>
+    
 </mapper>
