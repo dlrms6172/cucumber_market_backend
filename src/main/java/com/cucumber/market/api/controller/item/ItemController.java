@@ -79,4 +79,13 @@ public class ItemController {
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{item_id}")
+    public ResponseEntity deleteItem(@PathVariable(name = "item_id") Long itemId,
+                                     @SessionAttribute Long memberId) {
+
+        body.put("data", itemService.deleteItem(memberId, itemId));
+
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
 }

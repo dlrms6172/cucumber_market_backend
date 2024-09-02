@@ -70,4 +70,15 @@ public class ItemService {
 
         return result;
     }
+
+    public Map deleteItem(Long memberId, Long itemId) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        //userMapper.findById(memberId); -> 상품 삭제 권한 확인
+
+        itemMapper.deleteItem(itemId);
+        result.put("itemId", itemId);
+
+        return result;
+    }
  }
