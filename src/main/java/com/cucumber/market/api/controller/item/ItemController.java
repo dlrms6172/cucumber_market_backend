@@ -80,15 +80,6 @@ public class ItemController {
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity getItems(@Nullable @RequestParam("name") String itemName,
-                                   @Nullable @RequestParam("status") ItemStatus itemStatus) {
-
-        body.put("data", itemService.getItems(itemName, itemStatus));
-
-        return new ResponseEntity(body, HttpStatus.OK);
-    }
-
     @DeleteMapping("/{item_id}")
     public ResponseEntity deleteItem(@PathVariable(name = "item_id") Long itemId,
                                      @SessionAttribute Long memberId) {
