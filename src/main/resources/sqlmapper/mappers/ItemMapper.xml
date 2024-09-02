@@ -33,7 +33,7 @@
         set item_status_id = #{itemStatus}
         where item_id = #{itemId}
     </update>
-
+    
     <select id="selectItems" resultType="resultMap">
         select *
         from item
@@ -46,5 +46,10 @@
             </if>
         </where>
     </select>
+
+    <delete id="deleteItem">
+        delete from item
+        where item_id = #{itemId}
+    </delete>
 
 </mapper>
