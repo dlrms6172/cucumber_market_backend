@@ -2,6 +2,8 @@ package com.cucumber.market.api.controller.item;
 
 import com.cucumber.market.api.dto.item.ItemDto;
 import com.cucumber.market.api.service.item.ItemService;
+import com.cucumber.market.api.service.item.ItemStatus;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,9 +20,16 @@ public class ItemController {
 
     private final ItemService itemService;
 
+    private Map<String, Object> body = new LinkedHashMap<String, Object>() {
+        {
+            put("resultCode", 200);
+            put("resultMsg", "success");
+        }
+    };
+
     @PostMapping
     public ResponseEntity addItem(@Valid @RequestBody ItemDto.addItemDto itemDto,
-                                  @SessionAttribute Long memberId) {  //추후 수정
+                                  @SessionAttribute Long memberId) {
 
         Map<String, Object> body = new LinkedHashMap<String, Object>() {
             {
@@ -35,16 +44,9 @@ public class ItemController {
     }
 
     @GetMapping("/{item_id}")
-    public ResponseEntity getItem(@PathVariable(name = "item_id") Long itemId,
-                                  @SessionAttribute Long memberId) {
+    public ResponseEntity getItem(@PathVariable(name = "item_id") Long itemId) {
 
-        Map<String, Object> body = new LinkedHashMap<String, Object>() {
-            {
-                put("resultCode", 200);
-                put("resultMsg", "success");
-                put("data", itemService.getItem(itemId));
-            }
-        };
+        body.put("data", itemService.getItem(itemId));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
@@ -53,15 +55,56 @@ public class ItemController {
     public ResponseEntity modifyItem(@Valid @RequestBody ItemDto.modifyItemDto itemDto,
                                      @PathVariable(name = "item_id") Long itemId,
                                      @SessionAttribute Long memberId) {
-        Map<String, Object> body = new LinkedHashMap<String, Object>() {
-            {
-                put("resultCode", 200);
-                put("resultMsg", "success");
-                put("data", itemService.modifyItem(memberId, itemId, itemDto));
-            }
-        };
+
+        body.put("data", itemService.modifyItem(memberId, itemId, itemDto));
 
         return new ResponseEntity(body, HttpStatus.OK);
-
     }
+
+    @PutMapping("/{item_id}/status")
+    public ResponseEntity modifyItemStatus(@Valid @RequestBody Map<String, ItemStatus> itemStatus,
+                                           @PathVariable(name = "item_id") Long itemId,
+                                           @SessionAttribute Long memberId) {
+
+        body.put("data", itemService.modifyItemStatus(memberId, itemId, itemStatus.get("itemStatus")));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+    
+    @GetMapping
+    public ResponseEntity getItems(@Nullable @RequestParam("name") String itemName,
+                                   @Nullable @RequestParam("status") ItemStatus itemStatus) {
+
+        body.put("data", itemService.getItems(itemName, itemStatus));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{item_id}")
+    public ResponseEntity deleteItem(@PathVariable(name = "item_id") Long itemId,
+                                     @SessionAttribute Long memberId) {
+
+        body.put("data", itemService.deleteItem(memberId, itemId));
+
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+    @PostMapping("/{item_id}/like")
+    public ResponseEntity addLike(@PathVariable(name = "item_id") Long itemId,
+                                  @SessionAttribute Long memberId) {
+
+        body.put("data", itemService.addLike(itemId, memberId));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{item_id}/like")
+    public ResponseEntity deleteLike(@PathVariable(name = "item_id") Long itemId,
+                                     @SessionAttribute Long memberId) {
+
+        body.put("data", itemService.deleteLike(itemId, memberId));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
 }
