@@ -33,4 +33,18 @@
         set item_status_id = #{itemStatus}
         where item_id = #{itemId}
     </update>
+
+    <select id="selectItems" resultType="resultMap">
+        select *
+        from item
+        <where>
+            <if test="itemName != null and itemName != ''">
+                item_name like concat('%',#{itemName},'%')
+            </if>
+            <if test="itemStatus != null">
+                and item_status_id = #{itemStatus}
+            </if>
+        </where>
+    </select>
+
 </mapper>
