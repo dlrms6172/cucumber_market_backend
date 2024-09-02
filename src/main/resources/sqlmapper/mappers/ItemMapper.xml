@@ -34,33 +34,9 @@
         where item_id = #{itemId}
     </update>
 
-    <select id="selectItems" resultType="resultMap">
-        select *
-        from item
-        <where>
-            <if test="itemName != null and itemName != ''">
-                item_name like concat('%',#{itemName},'%')
-            </if>
-            <if test="itemStatus != null">
-                and item_status_id = #{itemStatus}
-            </if>
-        </where>
-    </select>
-
     <delete id="deleteItem">
         delete from item
         where item_id = #{itemId}
     </delete>
 
-    <insert id="insertLike">
-        insert into favorite (item_id, member_id)
-        values (#{itemId}, #{memberId})
-    </insert>
-
-    <delete id="deleteLike">
-        delete from favorite
-        where item_id = #{itemId}
-        and member_id = #{memberId}
-    </delete>
-    
 </mapper>
