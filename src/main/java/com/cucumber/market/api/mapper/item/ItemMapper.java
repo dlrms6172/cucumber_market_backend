@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,4 +23,6 @@ public interface ItemMapper {
     int updateItem(@Param("itemId") Long itemId, @Param("request") ItemDto.modifyItemDto itemDto);
 
     void updateItemStatus(@Param("itemId") Long itemId, @Param("itemStatus") ItemStatus itemStatus);
+
+    List<Map> selectItems(@Param("itemName") String itemName, @Param("itemStatus") ItemStatus itemStatus);
 }
