@@ -1,86 +1,86 @@
 /** schema 생성 */
-CREATE SCHEMA cucumber;
+create schema cucumber;
 
-/* SNS SNS **/
-CREATE TABLE SNS(
-    SNS_ID INT(11) NOT NULL COMMENT 'SNS ID' AUTO_INCREMENT PRIMARY KEY,
-    SNS_NAME VARCHAR(100) COMMENT 'SNS 이름'
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='SNS';
+/* sns sns **/
+create table sns(
+    sns_id int(11) not null comment 'sns id' auto_increment primary key,
+    sns_name varchar(100) comment 'sns 이름'
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='sns';
 
-INSERT INTO cucumber.sns(SNS_NAME)
-VALUES('google');
-
-
-/* REGION 지역 **/
-CREATE TABLE REGION(
-    REGION_ID INT(11) NOT NULL COMMENT '지역 ID' AUTO_INCREMENT PRIMARY KEY,
-    REGION_NAME VARCHAR(100) COMMENT '시도',
-    SI VARCHAR(100) COMMENT '시군구',
-    DONG VARCHAR(100) COMMENT '읍면동',
-    LI VARCHAR(100) COMMENT '리',
-    LATI_TUDE DECIMAL(16,14) COMMENT '위도',
-    LONGI_TUDE DECIMAL(16,14) COMMENT '경도'
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='지역';
-
-/* 회원 MEMBER **/
-CREATE TABLE MEMBER(
-    MEMBER_ID INT(11) NOT NULL COMMENT '멤버 ID' AUTO_INCREMENT PRIMARY KEY,
-    SNS_ID INT(11) NOT NULL COMMENT 'SNS ID',
-    SNS_VALUE VARCHAR(100) DEFAULT NULL COMMENT 'SNS 값',
-    NAME VARCHAR(100) COMMENT '이름',
-    EMAIL VARCHAR(100) COMMENT '이메일',
-    REGION_ID INT(11) COMMENT '지역 ID',
-    FOREIGN KEY (SNS_ID) REFERENCES SNS(SNS_ID) ON UPDATE CASCADE,
-    FOREIGN KEY (REGION_ID) REFERENCES REGION(REGION_ID) ON UPDATE CASCADE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='회원';
-
-/** 상품 상태 ITEM_STATUS */
-CREATE TABLE ITEM_STATUS(
-    ITEM_STATUS_ID INT(11) COMMENT '상품 상태 ID' AUTO_INCREMENT PRIMARY KEY ,
-    ITEM_STATUS_NAME VARCHAR(100) COMMENT '상품 상태명'
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='상품 상태';
-
-INSERT INTO cucumber.item_status(ITEM_STATUS_NAME)
-VALUES('판매중');
+insert into cucumber.sns(sns_name)
+values('google');
 
 
+/* region 지역 **/
+create table region(
+    region_id int(11) not null comment '지역 id' auto_increment primary key,
+    region_name varchar(100) comment '시도',
+    si varchar(100) comment '시군구',
+    dong varchar(100) comment '읍면동',
+    li varchar(100) comment '리',
+    lati_tude decimal(16,14) comment '위도',
+    longi_tude decimal(16,14) comment '경도'
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='지역';
 
-/** 상품 ITEM */
-CREATE TABLE ITEM(
-    ITEM_ID INT(11) NOT NULL COMMENT '상품 ID' AUTO_INCREMENT PRIMARY KEY,
-    MEMBER_ID INT(11) NOT NULL COMMENT '멤버 ID',
-    ITEM_NAME VARCHAR(100) COMMENT '상품 이름',
-    ITEM_INFO VARCHAR(100) COMMENT '상품 설명',
-    POST_DATE DATETIME COMMENT '게시 일자',
-    UPDATE_DATE DATETIME COMMENT '수정 일자',
-    PRICE INT(11) COMMENT '가격',
-    VIEW_COUNT INT(11) COMMENT '조회 수',
-    ITEM_STATUS_ID INT(11) DEFAULT 1 COMMENT '상태 ID',
-    FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID) ON DELETE CASCADE,
-    FOREIGN KEY (ITEM_STATUS_ID) REFERENCES ITEM_STATUS(ITEM_STATUS_ID) ON UPDATE CASCADE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='상품';
+/* 회원 member **/
+create table member(
+    member_id int(11) not null comment '멤버 id' auto_increment primary key,
+    sns_id int(11) not null comment 'sns id',
+    sns_value varchar(100) default null comment 'sns 값',
+    name varchar(100) comment '이름',
+    email varchar(100) comment '이메일',
+    region_id int(11) comment '지역 id',
+    foreign key (sns_id) references sns(sns_id) on update cascade,
+    foreign key (region_id) references region(region_id) on update cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='회원';
 
-/** 관심 FAVORITE */
-CREATE TABLE FAVORITE(
-    ITEM_ID INT(11) COMMENT '상품 ID',
-    MEMBER_ID INT(11) COMMENT '멤버 ID',
-    FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID) ON DELETE CASCADE,
-    FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID) ON DELETE CASCADE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='관심';
+/** 상품 상태 item_status */
+create table item_status(
+    item_status_id int(11) comment '상품 상태 id' auto_increment primary key ,
+    item_status_name varchar(100) comment '상품 상태명'
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='상품 상태';
+
+insert into cucumber.item_status(item_status_name)
+values('판매중');
 
 
-/** 판매자 후기 SELLER_REVIEW */
-CREATE TABLE SELLER_REVIEW(
-    ITEM_ID INT(11) COMMENT '상품 ID',
-    REVIEW VARCHAR(100) COMMENT '후기',
-    FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID) ON DELETE CASCADE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='판매자 후기';
 
-/** 구매자 후기 BUYER_REVIEW */
-CREATE TABLE BUYER_REVIEW(
-    ITEM_ID INT(11) COMMENT '상품 ID',
-    MEMBER_ID INT(11) COMMENT '멤버 ID',
-    REVIEW VARCHAR(100) COMMENT '후기',
-    FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID) ON DELETE CASCADE,
-    FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID) ON DELETE CASCADE
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='구매자 후기';
+/** 상품 item */
+create table item(
+    item_id int(11) not null comment '상품 id' auto_increment primary key,
+    member_id int(11) not null comment '멤버 id',
+    item_name varchar(100) comment '상품 이름',
+    item_info varchar(100) comment '상품 설명',
+    post_date datetime comment '게시 일자',
+    update_date datetime comment '수정 일자',
+    price int(11) comment '가격',
+    view_count int(11) comment '조회 수',
+    item_status_id int(11) default 1 comment '상태 id',
+    foreign key (member_id) references member(member_id) on delete cascade,
+    foreign key (item_status_id) references item_status(item_status_id) on update cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='상품';
+
+/** 관심 favorite */
+create table favorite(
+    item_id int(11) comment '상품 id',
+    member_id int(11) comment '멤버 id',
+    foreign key (item_id) references item(item_id) on delete cascade,
+    foreign key (member_id) references member(member_id) on delete cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='관심';
+
+
+/** 판매자 후기 seller_review */
+create table seller_review(
+    item_id int(11) comment '상품 id',
+    review varchar(100) comment '후기',
+    foreign key (item_id) references item(item_id) on delete cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='판매자 후기';
+
+/** 구매자 후기 buyer_review */
+create table buyer_review(
+    item_id int(11) comment '상품 id',
+    member_id int(11) comment '멤버 id',
+    review varchar(100) comment '후기',
+    foreign key (item_id) references item(item_id) on delete cascade,
+    foreign key (member_id) references member(member_id) on delete cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='구매자 후기';
