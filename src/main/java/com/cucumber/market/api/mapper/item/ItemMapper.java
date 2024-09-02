@@ -24,5 +24,7 @@ public interface ItemMapper {
 
     void updateItemStatus(@Param("itemId") Long itemId, @Param("itemStatus") ItemStatus itemStatus);
 
+    List<Map> selectItems(@Param("itemName") String itemName, @Param("itemStatus") ItemStatus itemStatus);
+
     void deleteItem(Long itemId);
 }
