@@ -2,30 +2,54 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cucumber.market.api.mapper.user.UserMapper">
     <select id="selectCheckUserInfo" resultType="resultMap">
-        SELECT
-            MEMBER.MEMBER_ID,
-            MEMBER.SNS_ID,
-            SNS.SNS_NAME,
-            MEMBER.NAME,
-            MEMBER.EMAIL,
-            MEMBER.REGION_ID
-        FROM cucumber.member as MEMBER
-        JOIN cucumber.sns as SNS on MEMBER.SNS_ID = SNS.SNS_ID
-        WHERE 1=1
-            AND MEMBER.SNS_ID = #{snsId}
-            AND MEMBER.SNS_VALUE = #{snsValue}
+        select
+            member.member_id,
+            member.sns_id,
+            sns.sns_name,
+            member.name,
+            member.email,
+            member.region_id
+        from cucumber.member as member
+        join cucumber.sns as sns on member.sns_id = sns.sns_id
+        where 1=1
+            and member.sns_id = #{snsId}
+            and member.sns_value = #{snsValue}
     </select>
 
     <insert id="insertUserInfo">
-        INSERT INTO cucumber.member
+        insert into cucumber.member
         (
-        SNS_ID,
-        SNS_VALUE
+        sns_id,
+        sns_value
         )
-        VALUES
+        values
         (
         #{snsId},
         #{snsValue}
         )
     </insert>
+
+    <select id="selectUserInfo" resultType="resultMap">
+        select
+            member.member_id,
+            member.sns_id,
+            sns.sns_name,
+            member.name,
+            member.email,
+            member.region_id
+        from cucumber.member as member
+        join cucumber.sns as sns on member.sns_id = sns.sns_id
+        where 1=1
+            and member.member_id = #{memberId}
+    </select>
+
+    <update id="updateUserInfo">
+        update cucumber.member
+        set name = #{name},
+            email = #{email},
+            region_id = #{regionId}
+        where 1=1
+            and member_id = #{memberId}
+            and sns_id = #{snsId}
+    </update>
 </mapper>
