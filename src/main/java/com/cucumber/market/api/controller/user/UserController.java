@@ -4,16 +4,12 @@ import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -53,6 +49,32 @@ public class UserController {
         dto.setPlatform(platform);
 
         body.put("data",userService.signInCallBackService(dto));
+
+        return new ResponseEntity(body, headers, HttpStatus.OK);
+    }
+
+    /**
+     * 프로필 조회
+     * @param dto
+     * @return
+     */
+    @GetMapping("/profile")
+    public ResponseEntity userProfile(@Valid UserDto.userProfileGet dto){
+
+        body.put("data",userService.userProfileGet(dto));
+
+        return new ResponseEntity(body, headers, HttpStatus.OK);
+    }
+
+    /**
+     * 프로필 수정
+     * @param dto
+     * @return
+     */
+    @PutMapping("/profile")
+    public ResponseEntity userProfile(@RequestBody @Valid UserDto.userProfilePut dto){
+
+        body.put("data",userService.userProfilePut(dto));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }

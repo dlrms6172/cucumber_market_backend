@@ -13,4 +13,8 @@ public interface UserMapper {
     Map selectCheckUserInfo(UserDto.signInCallBackDto dto);
 
     int insertUserInfo(UserDto.signInCallBackDto dto);
+
+    Map selectUserInfo(UserDto.userProfileGet dto);
+
+    int updateUserInfo(UserDto.userProfilePut dto);
 }

@@ -111,6 +111,11 @@ public class UserService {
         return result;
     }
 
+    /**
+     * signInCallBackService 시 필요한 서비스
+     * @param dto
+     * @return
+     */
     public Map userCheck(UserDto.signInCallBackDto dto) {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
@@ -128,5 +133,23 @@ public class UserService {
 
         return result;
     }
+
+    public Map userProfileGet(UserDto.userProfileGet dto){
+        LinkedHashMap<String,Object> result = new LinkedHashMap<>();
+
+        result = (LinkedHashMap)userMapper.selectUserInfo(dto);
+
+        return result;
+    }
+
+    public Map userProfilePut(UserDto.userProfilePut dto){
+        LinkedHashMap<String,Object> result = new LinkedHashMap<>();
+
+        int updateUserInfo = userMapper.updateUserInfo(dto);
+        result.put("result",updateUserInfo);
+
+        return result;
+    }
+
 
 }
