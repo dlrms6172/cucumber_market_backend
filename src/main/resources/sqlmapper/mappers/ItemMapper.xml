@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cucumber.market.api.mapper.item.ItemMapper">
 
-    <insert id="insertItem" useGeneratedKeys="true" keyProperty="request.itemId">
+    <insert id="insertItem" useGeneratedKeys="true" keyProperty="itemDto.itemId">
         insert into item (member_id, item_name, item_info, price, post_date, view_count)
-        values (#{memberId}, #{request.itemName}, #{request.itemInfo} ,#{request.price}, NOW(), 0)
+        values (#{memberId}, #{itemDto.itemName}, #{itemDto.itemInfo} ,#{itemDto.price}, NOW(), 0)
     </insert>
 
     <select id="selectItem" resultType="resultMap">
@@ -21,10 +21,10 @@
 
     <update id="updateItem">
         update item
-        set item_name = #{request.itemName},
-            item_info = #{request.itemInfo},
-            update_date = NOW(),
-            price = #{request.price}
+        set item_name = #{itemDto.itemName},
+        item_info = #{itemDto.itemInfo},
+        update_date = NOW(),
+        price = #{itemDto.price}
         where item_id = #{itemId}
     </update>
 
@@ -61,6 +61,50 @@
         delete from favorite
         where item_id = #{itemId}
         and member_id = #{memberId}
+    </delete>
+
+    <insert id="insertBuyerReview">
+        insert into buyer_review (item_id, member_id, review)
+        values (#{itemId}, #{memberId}, #{reviewDto.review})
+    </insert>
+
+    <select id="selectBuyerReview" resultType="resultMap">
+        select *
+        from buyer_review
+        where item_id = #{itemId}
+    </select>
+
+    <update id="updateBuyerReview">
+        update buyer_review
+        set review = #{reviewDto.review}
+        where item_id = #{itemId}
+    </update>
+
+    <delete id="deleteBuyerReview">
+        delete from buyer_review
+        where item_id = #{item_id}
+    </delete>
+
+    <insert id="insertSellerReview">
+        insert into seller_review (item_id, review)
+        values (#{itemId}, #{reviewDto.review})
+    </insert>
+
+    <select id="selectSellerReview" resultType="resultMap">
+        select *
+        from seller_review
+        where item_id = #{itemId}
+    </select>
+
+    <update id="updateSellerReview">
+        update seller_review
+        set review = #{reviewDto.review}
+        where item_id = #{itemId}
+    </update>
+
+    <delete id="deleteSellerReview">
+        delete from seller_review
+        where item_id = #{item_id}
     </delete>
 
 </mapper>
