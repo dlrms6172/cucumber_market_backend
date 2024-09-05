@@ -68,25 +68,43 @@
         values (#{itemId}, #{memberId}, #{reviewDto.review})
     </insert>
 
-    <update id="updateBuyerReview">
-        update buyer_review
-        set review = #{reviewDto.review}
-        where item_id = #{itemId}
-    </update>
-
-    <insert id="insertSellerReview">
-        insert into seller_review (item_id, review)
-        values (#{itemId}, #{reviewDto.review})
-    </insert>
-
     <select id="selectBuyerReview" resultType="resultMap">
         select *
         from buyer_review
         where item_id = #{itemId}
     </select>
 
+    <update id="updateBuyerReview">
+        update buyer_review
+        set review = #{reviewDto.review}
+        where item_id = #{itemId}
+    </update>
+
     <delete id="deleteBuyerReview">
         delete from buyer_review
         where item_id = #{item_id}
     </delete>
+
+    <insert id="insertSellerReview">
+        insert into seller_review (item_id, review)
+        values (#{itemId}, #{reviewDto.review})
+    </insert>
+
+    <select id="selectSellerReview" resultType="resultMap">
+        select *
+        from seller_review
+        where item_id = #{itemId}
+    </select>
+
+    <update id="updateSellerReview">
+        update seller_review
+        set review = #{reviewDto.review}
+        where item_id = #{itemId}
+    </update>
+
+    <delete id="deleteSellerReview">
+        delete from seller_review
+        where item_id = #{item_id}
+    </delete>
+
 </mapper>

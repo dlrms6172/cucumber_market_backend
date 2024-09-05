@@ -14,31 +14,37 @@ import java.util.Optional;
 @Mapper
 public interface ItemMapper {
 
-    int insertItem(@Param("memberId") Long memberId, @Param("itemDto") ItemDto.addItemDto itemDto);
+    int insertItem(@Param("memberId") Integer memberId, @Param("itemDto") ItemDto.addItemDto itemDto);
 
-    Optional<Map> selectItem(Long itemId);
+    Optional<Map> selectItem(Integer itemId);
 
-    void updateViewCount(Long itemId);
+    void updateViewCount(Integer itemId);
 
-    int updateItem(@Param("itemId") Long itemId, @Param("itemDto") ItemDto.modifyItemDto itemDto);
+    int updateItem(@Param("itemId") Integer itemId, @Param("itemDto") ItemDto.modifyItemDto itemDto);
 
-    void updateItemStatus(@Param("itemId") Long itemId, @Param("itemStatus") ItemStatus itemStatus);
+    void updateItemStatus(@Param("itemId") Integer itemId, @Param("itemStatus") ItemStatus itemStatus);
 
     List<Map> selectItems(@Param("itemName") String itemName, @Param("itemStatus") ItemStatus itemStatus);
 
-    void deleteItem(Long itemId);
+    void deleteItem(Integer itemId);
     
-    int insertLike(@Param("itemId") Long itemId, @Param("memberId") Long memberId);
+    int insertLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
-    void deleteLike(@Param("itemId") Long itemId, @Param("memberId") Long memberId);
+    void deleteLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
-    int insertBuyerReview(@Param("itemId") Long itemId, @Param("memberId") Long memberId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+    int insertBuyerReview(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
-    int insertSellerReview(@Param("itemId") Long itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+    Optional<Map> selectBuyerReview(Integer itemId);
 
-    Optional<Map> selectBuyerReview(Long itemId);
+    void updateBuyerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
-    void deleteBuyerReview(Long itemId);
+    void deleteBuyerReview(Integer itemId);
 
-    void updateBuyerReview(@Param("itemId") Long itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+    int insertSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+
+    Optional<Map> selectSellerReview(Integer itemId);
+
+    void updateSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+
+    void deleteSellerReview(Integer itemId);
 }
