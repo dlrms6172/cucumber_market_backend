@@ -14,7 +14,7 @@ public class ItemDto {
     @Getter
     @Setter
     public static class addItemDto {
-        private Long itemId;
+        private Integer itemId;
         @NotBlank
         private String itemName;
         @NotBlank
@@ -27,7 +27,7 @@ public class ItemDto {
     @Getter
     @Setter
     public static class modifyItemDto {
-        private Long itemId;
+        private Integer itemId;
         @NotBlank
         private String itemName;
         @NotBlank
@@ -42,7 +42,7 @@ public class ItemDto {
     public static class modifyItemStatusDto {
         @NotNull
         private ItemStatus itemStatus;
-        private Long clientId;
+        private Integer clientId;
     }
 
     @Getter
