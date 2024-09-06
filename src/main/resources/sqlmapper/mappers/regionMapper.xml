@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cucumber.market.api.mapper.region.RegionMapper">
+
+    <insert id="insertRegionAdd">
+        insert into cucumber.region
+        (
+            si_do,
+            si_gun_gu,
+            eup_myeon_dong_gu,
+            eup_myeon_li_dong,
+            li,
+            lati_tude,
+            longi_tude
+        )
+        values
+        <foreach collection="list" item="item" separator=" , ">
+            (
+                #{item.siDo},
+                #{item.siGunGu},
+                #{item.eupMyeonDongGu},
+                #{item.eupMyeonLiDong},
+                #{item.li},
+                #{item.latiTude},
+                #{item.longiTude}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectLevel1" resultType="java.lang.String">
+        select distinct
+            si_do as level1
+        from cucumber.region
+    </select>
+
+    <select id="selectLevel2" resultType="java.lang.String">
+        select distinct
+            si_gun_gu as level2
+        from cucumber.region
+        where 1=1
+            and si_do = #{level1}
+            and si_gun_gu is not null
+    </select>
+
+    <select id="selectLevel3" resultType="java.lang.String">
+        select distinct
+            eup_myeon_dong_gu as level3
+        from cucumber.region
+        where 1=1
+            and si_gun_gu = #{level2}
+            and eup_myeon_dong_gu is not null
+    </select>
+
+    <select id="selectLevel4" resultType="java.lang.String">
+        select distinct
+            eup_myeon_li_dong as level4
+        from cucumber.region
+        where 1=1
+            and eup_myeon_dong_gu = #{level3}
+            and eup_myeon_li_dong is not null
+    </select>
+
+    <select id="selectLevel5" resultType="java.lang.String">
+        select distinct
+            li as level5
+        from cucumber.region
+        where 1=1
+            and eup_myeon_li_dong = #{level4}
+            and li is not null
+    </select>
+
+    <select id="selectRegionId" resultType="resultMap">
+        select
+            region_id
+        from cucumber.region
+        where 1=1
+            and si_do = #{level1}
+            and si_gun_gu = #{level2}
+            and eup_myeon_dong_gu = #{level3}
+            <if test="level4 != null">
+                and eup_myeon_li_dong = #{level4}
+            </if>
+            <if test="level5 != null">
+                and li = #{level5}
+            </if>
+    </select>
+
+</mapper>
