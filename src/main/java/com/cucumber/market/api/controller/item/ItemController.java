@@ -94,9 +94,10 @@ public class ItemController {
     public ResponseEntity addLike(@PathVariable(name = "item_id") Integer itemId,
                                   @RequestParam(name = "member_id") Integer memberId) {
 
+        body.put("resultCode", 201);
         body.put("data", itemService.addLike(itemId, memberId));
 
-        return new ResponseEntity(body, HttpStatus.OK);
+        return new ResponseEntity(body, HttpStatus.CREATED);
     }
 
 
@@ -116,6 +117,15 @@ public class ItemController {
                                        @RequestBody ItemDto.reviewDto reviewDto) {
 
         body.put("data", itemService.modifyReview(itemId, memberId, reviewDto));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{item_id}/review")
+    public ResponseEntity deleteReview(@PathVariable(name = "item_id") Integer itemId,
+                                       @RequestParam(name = "member_id") Integer memberId) {
+
+        body.put("data", itemService.deleteReview(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
