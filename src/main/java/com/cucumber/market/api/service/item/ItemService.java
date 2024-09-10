@@ -152,5 +152,28 @@ public class ItemService {
 
         return result;
     }
+
+
+    public Map deleteReview(Integer itemId, Integer memberId) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
+
+        if (item.get("memberId").equals(memberId)) {  //판매자 여부 판별
+
+            itemMapper.deleteSellerReview(itemId);
+        } else {
+            Map buyerReview = itemMapper.selectBuyerReview(itemId).orElseThrow(IllegalArgumentException::new);
+
+            if (!buyerReview.get("memberId").equals(memberId)) {   //구매자 여부 판별
+                //throw Exception
+            }
+            itemMapper.deleteBuyerReview(itemId);
+
+            result.put("itemId", itemId);
+        }
+
+        return result;
+    }
 }
 
