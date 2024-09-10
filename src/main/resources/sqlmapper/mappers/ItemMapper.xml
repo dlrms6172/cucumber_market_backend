@@ -35,16 +35,30 @@
     </update>
 
     <select id="selectItems" resultType="resultMap">
-        select *
-        from item
-        <where>
-            <if test="itemName != null and itemName != ''">
-                item_name like concat('%',#{itemName},'%')
-            </if>
-            <if test="itemStatus != null">
-                and item_status_id = #{itemStatus}
-            </if>
-        </where>
+        SELECT *
+        FROM item
+        WHERE member_id IN (
+            SELECT member_id
+            FROM member
+            WHERE region_id IN (
+                SELECT region_id
+                FROM (
+                        SELECT region_id, (6371*ACOS(COS(RADIANS((SELECT lati_tude FROM region WHERE region_id = #{regionId})))
+                                    *COS(RADIANS(lati_tude))*COS(RADIANS(longi_tude)-RADIANS((SELECT longi_tude FROM region WHERE region_id = #{regionId})))
+                                    +SIN(RADIANS((SELECT lati_tude FROM region WHERE region_id = #{regionId})))*SIN(RADIANS(lati_tude))))
+                                    AS distance
+                        FROM region) AS a
+                        <![CDATA[
+                        WHERE distance <= 6
+                        ]]>
+                )
+            )
+        <if test="itemName != null and itemName != ''">
+            AND item_name LIKE CONCAT('%',#{itemName},'%')
+        </if>
+        <if test="itemStatus != null">
+            AND item_status_id = #{itemStatus}
+        </if>
     </select>
 
     <delete id="deleteItem">
