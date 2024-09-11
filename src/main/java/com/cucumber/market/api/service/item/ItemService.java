@@ -1,7 +1,9 @@
 package com.cucumber.market.api.service.item;
 
 import com.cucumber.market.api.dto.item.ItemDto;
+import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.mapper.item.ItemMapper;
+import com.cucumber.market.api.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.Map;
 public class ItemService {
 
     private final ItemMapper itemMapper;
+    private final UserMapper userMapper;
 
     public Map addItem(Integer memberId, ItemDto.addItemDto itemDto) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
@@ -83,10 +86,12 @@ public class ItemService {
 
 
     @Transactional(readOnly = true)
-    public Map getItems(String itemName, ItemStatus itemStatus) {
+    public Map getItems(UserDto.userProfileGet dto, String itemName, ItemStatus itemStatus) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        result.put("items", itemMapper.selectItems(itemName, itemStatus));
+        Map userInfo = userMapper.selectUserInfo(dto);
+        Integer regionId = (Integer) userInfo.get("regionId");
+        result.put("items", itemMapper.selectItems(regionId, itemName, itemStatus));
 
         return result;
     }
