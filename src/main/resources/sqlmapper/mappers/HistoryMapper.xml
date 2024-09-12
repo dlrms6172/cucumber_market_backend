@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cucumber.market.api.mapper.history.HistoryMapper">
+
+    <select id="selectSales" resultType="resultMap">
+        select
+            item_id,
+            item_name,
+            item_info,
+            post_date,
+            update_date,
+            price,
+            view_count,
+            item_status_id
+        from cucumber.item
+        where 1=1
+            and member_id = #{memberId}
+            <if test="itemStatusId != null">
+                and item_status_id = #{itemStatusId}
+            </if>
+    </select>
+
+    <select id="selectPurchases" resultType="resultMap">
+        select
+            buy.item_id,
+            item.item_name,
+            item.item_info,
+            item.post_date,
+            item.update_date,
+            item.price,
+            item.view_count,
+            buy.review
+        from cucumber.buyer_review as buy
+        join cucumber.item as item on buy.item_id = item.item_id
+        where 1=1
+            and buy.member_id = #{memberId}
+    </select>
+
+    <select id="selectInterests" resultType="resultMap">
+        select
+            item.item_id,
+            item.item_name,
+            item.item_info,
+            item.post_date,
+            item.update_date,
+            item.price,
+            item.view_count,
+            item.item_status_id
+        from cucumber.favorite as fav
+        join cucumber.item as item on fav.item_id = item.item_id
+        where 1=1
+            and fav.member_id = #{memberId}
+    </select>
+
+    <select id="selectItemStatus" resultType="resultMap">
+        select
+            item_status_id,
+            item_status_name
+        from cucumber.item_status
+    </select>
+
+</mapper>
