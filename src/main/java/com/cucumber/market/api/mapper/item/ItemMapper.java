@@ -36,6 +36,8 @@ public interface ItemMapper {
 
     Optional<Map> selectBuyerReview(Integer itemId);
 
+    List<Map> selectBuyerReviews(Integer memberId);
+
     void updateBuyerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
     void deleteBuyerReview(Integer itemId);
@@ -43,6 +45,8 @@ public interface ItemMapper {
     int insertSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
     Optional<Map> selectSellerReview(Integer itemId);
+
+    List<Map> selectSellerReviews(Integer memberId);
 
     void updateSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
