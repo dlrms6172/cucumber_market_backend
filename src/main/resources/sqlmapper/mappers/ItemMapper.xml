@@ -88,6 +88,16 @@
         where item_id = #{itemId}
     </select>
 
+    <select id="selectBuyerReviews" resultType="resultMap">
+        select *
+        from buyer_review
+        where item_id in (
+                            select item_id
+                            from item
+                            where member_id = #{memberId}
+        )
+    </select>
+
     <update id="updateBuyerReview">
         update buyer_review
         set review = #{reviewDto.review}
@@ -108,6 +118,16 @@
         select *
         from seller_review
         where item_id = #{itemId}
+    </select>
+
+    <select id="selectSellerReviews" resultType="resultMap">
+        select *
+        from seller_review
+        where item_id in (
+                            select item_id
+                            from buyer_review
+                            where member_id = #{memberId}
+        )
     </select>
 
     <update id="updateSellerReview">
