@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,8 @@ public class HistoryController {
     HistoryService historyService;
 
     @GetMapping("/sales")
-    public ResponseEntity sales(@Valid HistoryDto.sales dto){
+    public ResponseEntity sales(@RequestHeader(name = "memberId") int memberId, @Valid HistoryDto.sales dto){
+        dto.setMemberId(memberId);
 
         body.put("data",historyService.sales(dto));
 
@@ -39,7 +41,8 @@ public class HistoryController {
     }
 
     @GetMapping("/purchases")
-    public ResponseEntity purchases(@Valid HistoryDto.purchase dto){
+    public ResponseEntity purchases(@RequestHeader(name = "memberId") int memberId,@Valid HistoryDto.purchase dto){
+        dto.setMemberId(memberId);
 
         body.put("data",historyService.purchases(dto));
 
@@ -47,7 +50,8 @@ public class HistoryController {
     }
 
     @GetMapping("/interests")
-    public ResponseEntity interests(@Valid HistoryDto.interests dto){
+    public ResponseEntity interests(@RequestHeader(name = "memberId") int memberId,@Valid HistoryDto.interests dto){
+        dto.setMemberId(memberId);
 
         body.put("data",historyService.interests(dto));
 
@@ -55,7 +59,8 @@ public class HistoryController {
     }
 
     @GetMapping("/itemStatus")
-    public ResponseEntity itemStatus(@Valid HistoryDto.itemStatus dto){
+    public ResponseEntity itemStatus(@RequestHeader(name = "memberId") int memberId,@Valid HistoryDto.itemStatus dto){
+        dto.setMemberId(memberId);
 
         body.put("data",historyService.itemStatus(dto));
 
