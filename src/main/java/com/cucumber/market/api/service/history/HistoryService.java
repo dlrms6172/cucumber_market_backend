@@ -1,7 +1,6 @@
 package com.cucumber.market.api.service.history;
 
 
-import com.cucumber.market.api.dto.history.HistoryDto;
 import com.cucumber.market.api.mapper.history.HistoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,40 +15,40 @@ public class HistoryService {
     @Autowired
     HistoryMapper historyMapper;
 
-    public Map sales(HistoryDto.sales dto){
+    public Map sales(int memberId, Integer itemStatusId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
-        List<Map> selectSales = historyMapper.selectSales(dto);
+        List<Map> selectSales = historyMapper.selectSales(memberId, itemStatusId);
 
         result.put("sales",selectSales);
 
         return result;
     }
 
-    public Map purchases(HistoryDto.purchase dto){
+    public Map purchases(int memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
-        List<Map> selectPurchases = historyMapper.selectPurchases(dto);
+        List<Map> selectPurchases = historyMapper.selectPurchases(memberId);
 
         result.put("purchases",selectPurchases);
 
         return result;
     }
 
-    public Map interests(HistoryDto.interests dto){
+    public Map interests(int memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
-        List<Map> selectInterests = historyMapper.selectInterests(dto);
+        List<Map> selectInterests = historyMapper.selectInterests(memberId);
 
         result.put("interests",selectInterests);
 
         return result;
     }
 
-    public Map itemStatus(HistoryDto.itemStatus dto){
+    public Map itemStatus(int memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
-        List<Map> selectItemStatus = historyMapper.selectItemStatus(dto);
+        List<Map> selectItemStatus = historyMapper.selectItemStatus(memberId);
 
         result.put("itemStatus",selectItemStatus);
 

@@ -36,14 +36,12 @@ public class UserDto {
     @Getter
     @Setter
     public static class userProfileGet {
-        @NotNull
         private Integer memberId;
     }
 
     @Getter
     @Setter
     public static class userProfilePut {
-        @NotNull
         private Integer memberId;
 
         @NotNull
