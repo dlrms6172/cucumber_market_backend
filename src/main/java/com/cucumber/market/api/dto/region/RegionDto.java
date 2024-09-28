@@ -28,7 +28,6 @@ public class RegionDto {
     @Getter
     @Setter
     public static class level2 {
-        private Integer memberId;
 
         private String level1;
     }
@@ -36,7 +35,6 @@ public class RegionDto {
     @Getter
     @Setter
     public static class level3 {
-        private Integer memberId;
 
         private String level2;
     }
@@ -44,7 +42,6 @@ public class RegionDto {
     @Getter
     @Setter
     public static class level4 {
-        private Integer memberId;
 
         private String level3;
     }
@@ -52,15 +49,12 @@ public class RegionDto {
     @Getter
     @Setter
     public static class level5 {
-        private Integer memberId;
-
         private String level4;
     }
 
     @Getter
     @Setter
     public static class id {
-        private Integer memberId;
 
         @NotBlank
         private String level1;

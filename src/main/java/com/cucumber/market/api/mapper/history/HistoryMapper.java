@@ -1,6 +1,5 @@
 package com.cucumber.market.api.mapper.history;
 
-import com.cucumber.market.api.dto.history.HistoryDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -11,11 +10,11 @@ import java.util.Map;
 @Mapper
 public interface HistoryMapper {
 
-    List<Map> selectSales(HistoryDto.sales dto);
+    List<Map> selectSales(int memberId, Integer itemStatusId);
 
-    List<Map> selectPurchases(HistoryDto.purchase dto);
+    List<Map> selectPurchases(int memberId);
 
-    List<Map> selectInterests(HistoryDto.interests dto);
+    List<Map> selectInterests(int memberId);
 
-    List<Map> selectItemStatus(HistoryDto.itemStatus dto);
+    List<Map> selectItemStatus(int memberId);
 }

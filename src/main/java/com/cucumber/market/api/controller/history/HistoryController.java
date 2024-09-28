@@ -1,16 +1,11 @@
 package com.cucumber.market.api.controller.history;
 
-import com.cucumber.market.api.dto.history.HistoryDto;
 import com.cucumber.market.api.service.history.HistoryService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,37 +27,33 @@ public class HistoryController {
     HistoryService historyService;
 
     @GetMapping("/sales")
-    public ResponseEntity sales(@RequestHeader(name = "memberId") int memberId, @Valid HistoryDto.sales dto){
-        dto.setMemberId(memberId);
+    public ResponseEntity sales(@RequestHeader(name = "memberId") int memberId, @RequestParam(required = false) Integer itemStatusId){
 
-        body.put("data",historyService.sales(dto));
+        body.put("data",historyService.sales(memberId, itemStatusId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
     @GetMapping("/purchases")
-    public ResponseEntity purchases(@RequestHeader(name = "memberId") int memberId,@Valid HistoryDto.purchase dto){
-        dto.setMemberId(memberId);
+    public ResponseEntity purchases(@RequestHeader(name = "memberId") int memberId){
 
-        body.put("data",historyService.purchases(dto));
+        body.put("data",historyService.purchases(memberId));
 
         return new ResponseEntity(body,headers,HttpStatus.OK);
     }
 
     @GetMapping("/interests")
-    public ResponseEntity interests(@RequestHeader(name = "memberId") int memberId,@Valid HistoryDto.interests dto){
-        dto.setMemberId(memberId);
+    public ResponseEntity interests(@RequestHeader(name = "memberId") int memberId){
 
-        body.put("data",historyService.interests(dto));
+        body.put("data",historyService.interests(memberId));
 
         return new ResponseEntity(body, headers,HttpStatus.OK);
     }
 
     @GetMapping("/itemStatus")
-    public ResponseEntity itemStatus(@RequestHeader(name = "memberId") int memberId,@Valid HistoryDto.itemStatus dto){
-        dto.setMemberId(memberId);
+    public ResponseEntity itemStatus(@RequestHeader(name = "memberId") int memberId){
 
-        body.put("data",historyService.itemStatus(dto));
+        body.put("data",historyService.itemStatus(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }

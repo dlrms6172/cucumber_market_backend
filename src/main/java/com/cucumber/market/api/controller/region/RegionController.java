@@ -43,7 +43,6 @@ public class RegionController {
 
     @GetMapping("/level2")
     public ResponseEntity level2(@RequestHeader(name = "memberId") int memberId, @ParameterObject @Valid RegionDto.level2 dto) {
-        dto.setMemberId(memberId);
 
         body.put("data",regionService.level2(dto));
 
@@ -52,7 +51,6 @@ public class RegionController {
 
     @GetMapping("/level3")
     public ResponseEntity level3(@RequestHeader(name = "memberId") int memberId, @Valid RegionDto.level3 dto){
-        dto.setMemberId(memberId);
 
         body.put("data",regionService.level3(dto));
 
@@ -61,7 +59,6 @@ public class RegionController {
 
     @GetMapping("/level4")
     public ResponseEntity level4(@RequestHeader(name = "memberId") int memberId, @Valid RegionDto.level4 dto){
-        dto.setMemberId(memberId);
 
         body.put("data",regionService.level4(dto));
 
@@ -70,7 +67,6 @@ public class RegionController {
 
     @GetMapping("/level5")
     public ResponseEntity level5(@RequestHeader(name = "memberId") int memberId, @Valid RegionDto.level5 dto){
-        dto.setMemberId(memberId);
 
         body.put("data",regionService.level5(dto));
 
@@ -79,7 +75,6 @@ public class RegionController {
 
     @GetMapping("/id")
     public ResponseEntity id(@RequestHeader(name = "memberId") int memberId, @Valid RegionDto.id dto) {
-        dto.setMemberId(memberId);
 
         body.put("data",regionService.id(dto));
 
