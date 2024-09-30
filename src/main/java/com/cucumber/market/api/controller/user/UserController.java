@@ -31,7 +31,7 @@ public class UserController {
      * @return
      */
     @GetMapping(value="/signin")
-    public ResponseEntity signInController(@Valid UserDto.signInDto dto){
+    public ResponseEntity signIn(@Valid UserDto.signInDto dto){
 
         body.put("data",userService.signInService(dto));
 
@@ -45,7 +45,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/singin/callback/{platform}")
-    public ResponseEntity signInCallBackController(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto){
+    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto){
         dto.setPlatform(platform);
 
         body.put("data",userService.signInCallBackService(dto));
@@ -59,7 +59,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(@Valid UserDto.userProfileGet dto){
+    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId, @Valid UserDto.userProfileGet dto){
+        dto.setMemberId(memberId);
 
         body.put("data",userService.userProfileGet(dto));
 
@@ -72,7 +73,8 @@ public class UserController {
      * @return
      */
     @PutMapping("/profile")
-    public ResponseEntity userProfile(@RequestBody @Valid UserDto.userProfilePut dto){
+    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId, @RequestBody @Valid UserDto.userProfilePut dto){
+        dto.setMemberId(memberId);
 
         body.put("data",userService.userProfilePut(dto));
 

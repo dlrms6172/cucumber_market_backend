@@ -33,7 +33,7 @@ public class ReviewController {
      * @return
      */
     @GetMapping
-    public ResponseEntity getReviewsOfMe(@RequestParam(name = "member_id") Integer memberId,  //추후 수정
+    public ResponseEntity getReviewsOfMe(@RequestHeader(name = "memberId") Integer memberId,
                                          @Nullable @RequestParam(name = "sender") ReviewSender reviewSender) {
 
         body.put("data", reviewService.getReviewsOfMe(memberId, reviewSender));
@@ -51,7 +51,7 @@ public class ReviewController {
      */
     @GetMapping("/{item_id}")
     public ResponseEntity getReview(@PathVariable(name = "item_id") Integer itemId,
-                                    @RequestParam(name = "member_id") Integer memberId,
+                                    @RequestHeader(name = "memberId") Integer memberId,
                                     @RequestParam(name = "review_sort") ReviewSort reviewSort) {
 
         body.put("data", reviewService.getReview(memberId, itemId, reviewSort));
