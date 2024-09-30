@@ -47,6 +47,7 @@
             eup_myeon_dong_gu as level3
         from cucumber.region
         where 1=1
+            and si_do = #{level1}
             and si_gun_gu = #{level2}
             and eup_myeon_dong_gu is not null
     </select>
@@ -56,6 +57,8 @@
             eup_myeon_li_dong as level4
         from cucumber.region
         where 1=1
+            and si_do = #{level1}
+            and si_gun_gu = #{level2}
             and eup_myeon_dong_gu = #{level3}
             and eup_myeon_li_dong is not null
     </select>
@@ -65,6 +68,9 @@
             li as level5
         from cucumber.region
         where 1=1
+            and si_do = #{level1}
+            and si_gun_gu = #{level2}
+            and eup_myeon_dong_gu = #{level3}
             and eup_myeon_li_dong = #{level4}
             and li is not null
     </select>

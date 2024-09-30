@@ -28,13 +28,13 @@ public class RegionDto {
     @Getter
     @Setter
     public static class level2 {
-
         private String level1;
     }
 
     @Getter
     @Setter
     public static class level3 {
+        private String level1;
 
         private String level2;
     }
@@ -42,6 +42,9 @@ public class RegionDto {
     @Getter
     @Setter
     public static class level4 {
+        private String level1;
+
+        private String level2;
 
         private String level3;
     }
@@ -49,6 +52,12 @@ public class RegionDto {
     @Getter
     @Setter
     public static class level5 {
+        private String level1;
+
+        private String level2;
+
+        private String level3;
+
         private String level4;
     }
 
