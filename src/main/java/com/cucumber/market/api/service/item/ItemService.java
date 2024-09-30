@@ -24,8 +24,6 @@ public class ItemService {
     public Map addItem(Integer memberId, ItemDto.addItemDto itemDto) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        //userMapper.findById(memberId); -> 상품 등록 권한 확인
-
         itemMapper.insertItem(memberId, itemDto);
         result.put("item", itemDto);
 
@@ -52,6 +50,8 @@ public class ItemService {
 
             itemMapper.updateItem(itemId, itemDto);
             result.put("item", itemDto);
+        } else {
+            throw new IllegalArgumentException("상품 수정 권한이 없습니다.");
         }
 
         return result;
@@ -66,12 +66,12 @@ public class ItemService {
 
         if (item.get("memberId").equals(memberId)) {  //상품 상태 수정 권한 확인
 
-            if (item.get("itemStatusId").equals(ItemStatus.CLOSED.getDbCode())) {  //거래완료 상태인 상품일 경우
+            if (item.get("itemStatusId").equals(ItemStatus.CLOSED.getDbCode())) {  //기존 거래완료 상태인 상품일 경우
                 itemMapper.deleteBuyerReview(itemId);  //기존 구매자 리뷰 삭제
                 itemMapper.deleteSellerReview(itemId);  //기존 판매자 리뷰 삭제
             }
 
-            if (itemStatus == ItemStatus.CLOSED) {  //거래완료 시
+            if (itemStatus == ItemStatus.CLOSED) {  //상품 상태를 거래완료로 변경할 경우
                 itemMapper.insertBuyerReview(itemId, itemDto.getClientId(), null);  //구매자 후기 테이블에 등록
                 itemMapper.insertSellerReview(itemId, null);  //판매자 후기 테이블에 등록
             }
@@ -79,6 +79,8 @@ public class ItemService {
             itemMapper.updateItemStatus(itemId, itemStatus);
             result.put("itemId", itemId);
             result.put("itemStatus", itemStatus);
+        } else {
+            throw new IllegalArgumentException("상품 상태 수정 권한이 없습니다.");
         }
 
         return result;
@@ -105,6 +107,8 @@ public class ItemService {
 
             itemMapper.deleteItem(itemId);
             result.put("itemId", itemId);
+        } else {
+            throw new IllegalArgumentException("상품 삭제 권한이 없습니다.");
         }
 
         return result;
@@ -113,8 +117,6 @@ public class ItemService {
 
     public Map addLike(Integer itemId, Integer memberId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        //userMapper.findById(memberId); -> 상품 좋아요 등록 권한 확인
 
         itemMapper.insertLike(itemId, memberId);
         result.put("itemId", itemId);
@@ -125,8 +127,6 @@ public class ItemService {
 
     public Map deleteLike(Integer itemId, Integer memberId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        //userMapper.findById(memberId); -> 상품 좋아요 삭제 권한 확인
 
         itemMapper.deleteLike(itemId, memberId);
         result.put("itemId", itemId);
@@ -147,7 +147,7 @@ public class ItemService {
             Map buyerReview = itemMapper.selectBuyerReview(itemId).orElseThrow(IllegalArgumentException::new);
 
             if (!buyerReview.get("memberId").equals(memberId)) {   //구매자 여부 판별
-                //throw Exception
+                throw new IllegalArgumentException("상품 후기 수정 권한이 없습니다.");
             }
             itemMapper.updateBuyerReview(itemId, reviewDto);
 
@@ -171,7 +171,7 @@ public class ItemService {
             Map buyerReview = itemMapper.selectBuyerReview(itemId).orElseThrow(IllegalArgumentException::new);
 
             if (!buyerReview.get("memberId").equals(memberId)) {   //구매자 여부 판별
-                //throw Exception
+                throw new IllegalArgumentException("상품 후기 삭제 권한이 없습니다.");
             }
             itemMapper.deleteBuyerReview(itemId);
 
