@@ -3,12 +3,12 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url:
-    username:
-    password:
+    url: ${{secrets.SPRING_DATASOURCE_URL}}
+    username: ${{secrets.SPRING_DATASOURCE_USERNAME}}
+    password: ${{secrets.SPRING_DATASOURCE_PASSWORD}}
     maximum-pool-size: 20
 mybatis:
-#  check-config-location: true
+  #  check-config-location: true
   mapper-locations: classpath:/sqlmapper/mappers/**/*.xml
   config-location: classpath:/sqlmapper/sql-mapper-config.xml
 
@@ -32,10 +32,10 @@ logging:
 # Google
 google:
   client:
-    id:
-    pw:
-    scope:
-    callback-url:
-    auth-url:
-    token-request-url:
-    userinfo-request-url:
+    id: ${{secrets.GOOGLE_CLIENT_ID}}
+    pw: ${{secrets.GOOGLE_CLIENT_PW}}
+    scope: ${{secrets.GOOGLE_CLIENT_SCOPE}}
+    callback-url: ${{secrets.GOOGLE_CLIENT_CALLBACK_URL}}
+    auth-url: ${{secrets.GOOGLE_CLIENT_AUTH_URL}}
+    token-request-url: ${{secrets.GOOGLE_CLIENT_TOKEN_REQUEST_URL}}
+    userinfo-request-url: ${{secrets.GOOGLE_CLIENT_USERINFO_REQUEST_URL}}
