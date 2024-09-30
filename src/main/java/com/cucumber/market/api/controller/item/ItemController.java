@@ -31,7 +31,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity addItem(@Valid @RequestBody ItemDto.addItemDto itemDto,
-                                  @RequestHeader(name = "member_id") Integer memberId) {
+                                  @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("resultCode", 201);
         body.put("data", itemService.addItem(memberId, itemDto));
@@ -52,7 +52,7 @@ public class ItemController {
     @PutMapping("/{item_id}")
     public ResponseEntity modifyItem(@Valid @RequestBody ItemDto.modifyItemDto itemDto,
                                      @PathVariable(name = "item_id") Integer itemId,
-                                     @RequestHeader(name = "member_id") Integer memberId) {
+                                     @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.modifyItem(memberId, itemId, itemDto));
 
@@ -63,7 +63,7 @@ public class ItemController {
     @PutMapping("/{item_id}/status")
     public ResponseEntity modifyItemStatus(@Valid @RequestBody ItemDto.modifyItemStatusDto dto,
                                            @PathVariable(name = "item_id") Integer itemId,
-                                           @RequestHeader(name = "member_id") Integer memberId) {
+                                           @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.modifyItemStatus(memberId, itemId, dto));
 
@@ -85,7 +85,7 @@ public class ItemController {
 
     @DeleteMapping("/{item_id}")
     public ResponseEntity deleteItem(@PathVariable(name = "item_id") Integer itemId,
-                                     @RequestHeader(name = "member_id") Integer memberId) {
+                                     @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.deleteItem(memberId, itemId));
 
@@ -95,7 +95,7 @@ public class ItemController {
 
     @PostMapping("/{item_id}/like")
     public ResponseEntity addLike(@PathVariable(name = "item_id") Integer itemId,
-                                  @RequestHeader(name = "member_id") Integer memberId) {
+                                  @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("resultCode", 201);
         body.put("data", itemService.addLike(itemId, memberId));
@@ -106,7 +106,7 @@ public class ItemController {
 
     @DeleteMapping("/{item_id}/like")
     public ResponseEntity deleteLike(@PathVariable(name = "item_id") Integer itemId,
-                                     @RequestHeader(name = "member_id") Integer memberId) {
+                                     @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.deleteLike(itemId, memberId));
 
@@ -116,7 +116,7 @@ public class ItemController {
 
     @PutMapping("/{item_id}/review")
     public ResponseEntity modifyReview(@PathVariable(name = "item_id") Integer itemId,
-                                       @RequestHeader(name = "member_id") Integer memberId,
+                                       @RequestHeader(name = "memberId") Integer memberId,
                                        @RequestBody ItemDto.reviewDto reviewDto) {
 
         body.put("data", itemService.modifyReview(itemId, memberId, reviewDto));
@@ -126,7 +126,7 @@ public class ItemController {
 
     @DeleteMapping("/{item_id}/review")
     public ResponseEntity deleteReview(@PathVariable(name = "item_id") Integer itemId,
-                                       @RequestHeader(name = "member_id") Integer memberId) {
+                                       @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.deleteReview(itemId, memberId));
 
