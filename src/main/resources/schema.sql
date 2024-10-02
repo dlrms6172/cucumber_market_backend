@@ -10,7 +10,6 @@ create table sns(
 insert into cucumber.sns(sns_name)
 values('google');
 
-
 /* region 지역 **/
 create table region(
     region_id int(11) not null comment '지역 id' auto_increment primary key,
@@ -43,8 +42,6 @@ create table item_status(
 insert into cucumber.item_status(item_status_name)
 values('판매중');
 
-
-
 /** 상품 item */
 create table item(
     item_id int(11) not null comment '상품 id' auto_increment primary key,
@@ -68,7 +65,6 @@ create table favorite(
     foreign key (member_id) references member(member_id) on delete cascade
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='관심';
 
-
 /** 판매자 후기 seller_review */
 create table seller_review(
     item_id int(11) comment '상품 id',
@@ -84,3 +80,11 @@ create table buyer_review(
     foreign key (item_id) references item(item_id) on delete cascade,
     foreign key (member_id) references member(member_id) on delete cascade
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='구매자 후기';
+
+/** 구매 신청 purchase_request */
+create table purchase_request(
+    item_id int(11) comment '상품 id',
+    member_id int(11) comment '멤버 id',
+    foreign key (item_id) references item(item_id) on delete cascade,
+    foreign key (member_id) references member(member_id) on delete cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='구매 신청';
