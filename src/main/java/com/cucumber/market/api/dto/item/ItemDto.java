@@ -1,6 +1,7 @@
 package com.cucumber.market.api.dto.item;
 
 import com.cucumber.market.api.service.item.ItemStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -19,6 +20,7 @@ public class ItemDto {
         private String itemName;
         @NotBlank
         private String itemInfo;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime postDate;
         @Positive
         private int price;
