@@ -4,7 +4,7 @@
 
     <insert id="insertItem" useGeneratedKeys="true" keyProperty="itemDto.itemId">
         insert into item (member_id, item_name, item_info, price, post_date, view_count)
-        values (#{memberId}, #{itemDto.itemName}, #{itemDto.itemInfo} ,#{itemDto.price}, NOW(), 0)
+        values (#{memberId}, #{itemDto.itemName}, #{itemDto.itemInfo} ,#{itemDto.price}, #{itemDto.postDate}, 0)
     </insert>
 
     <select id="selectItem" resultType="resultMap">

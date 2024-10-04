@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ public class ItemController {
                                   @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("resultCode", 201);
+        itemDto.setPostDate(LocalDateTime.now());
         body.put("data", itemService.addItem(memberId, itemDto));
 
         return new ResponseEntity(body, HttpStatus.CREATED);
