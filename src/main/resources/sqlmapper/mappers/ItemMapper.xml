@@ -148,4 +148,22 @@
         where item_id = #{item_id}
     </delete>
 
+    <insert id="insertOrder">
+        insert into purchase_request (item_id, member_id)
+        values (#{itemId}, #{memberId})
+    </insert>
+
+    <select id="selectOrder" resultType="resultMap">
+        select *
+        from purchase_request
+        where item_id = #{itemId}
+        and member_id = #{memberId}
+    </select>
+
+    <delete id="deleteOrder">
+        delete from purchase_request
+        where item_id = #{itemId}
+        and member_id = #{memberId}
+    </delete>
+
 </mapper>

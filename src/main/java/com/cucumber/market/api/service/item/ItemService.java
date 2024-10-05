@@ -188,5 +188,28 @@ public class ItemService {
 
         return result;
     }
+
+
+    public Map addOrder(Integer itemId, Integer memberId) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        itemMapper.insertOrder(itemId, memberId);
+        result.put("itemId", itemId);
+
+        return result;
+    }
+
+
+    public Map deleteOrder(Integer itemId, Integer memberId) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        Map order = itemMapper.selectOrder(itemId, memberId).orElseThrow(IllegalArgumentException::new);  //구매자 신청 존재 및 구매자 신청 삭제 권한 확인
+
+        itemMapper.deleteOrder(itemId, memberId);
+        result.put("itemId", itemId);
+
+        return result;
+    }
+
 }
 
