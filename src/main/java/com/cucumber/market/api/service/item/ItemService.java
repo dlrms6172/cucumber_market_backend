@@ -31,7 +31,6 @@ public class ItemService {
     }
 
 
-    @Transactional(readOnly = true)
     public Map getItem(Integer itemId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
@@ -77,8 +76,13 @@ public class ItemService {
             }
 
             itemMapper.updateItemStatus(itemId, itemStatus);
+
             result.put("itemId", itemId);
             result.put("itemStatus", itemStatus);
+            if (itemDto.getClientId() != null) {
+                result.put("clientId", itemDto.getClientId());
+            }
+
         } else {
             throw new IllegalArgumentException("상품 상태 수정 권한이 없습니다.");
         }
@@ -128,6 +132,8 @@ public class ItemService {
     public Map deleteLike(Integer itemId, Integer memberId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
+        Map like = itemMapper.selectLike(itemId, memberId).orElseThrow(IllegalArgumentException::new);  //좋아요 존재 및 좋아요 삭제 권한 확인
+
         itemMapper.deleteLike(itemId, memberId);
         result.put("itemId", itemId);
 
@@ -151,9 +157,10 @@ public class ItemService {
             }
             itemMapper.updateBuyerReview(itemId, reviewDto);
 
-            result.put("itemId", itemId);
-            result.put("review", reviewDto.getReview());
         }
+
+        result.put("itemId", itemId);
+        result.put("review", reviewDto.getReview());
 
         return result;
     }
@@ -175,8 +182,9 @@ public class ItemService {
             }
             itemMapper.deleteBuyerReview(itemId);
 
-            result.put("itemId", itemId);
         }
+
+        result.put("itemId", itemId);
 
         return result;
     }

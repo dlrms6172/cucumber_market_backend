@@ -20,7 +20,7 @@ public class ItemDto {
         private String itemName;
         @NotBlank
         private String itemInfo;
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime postDate;
         @Positive
         private int price;
@@ -34,6 +34,7 @@ public class ItemDto {
         private String itemName;
         @NotBlank
         private String itemInfo;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime updateDate;
         @Positive
         private int price;

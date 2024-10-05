@@ -49,10 +49,10 @@ public class ReviewController {
      * @param reviewSort
      * @return
      */
-    @GetMapping("/{item_id}")
-    public ResponseEntity getReview(@PathVariable(name = "item_id") Integer itemId,
+    @GetMapping("/{itemId}")
+    public ResponseEntity getReview(@PathVariable(name = "itemId") Integer itemId,
                                     @RequestHeader(name = "memberId") Integer memberId,
-                                    @RequestParam(name = "review_sort") ReviewSort reviewSort) {
+                                    @RequestParam(name = "reviewSort") ReviewSort reviewSort) {
 
         body.put("data", reviewService.getReview(memberId, itemId, reviewSort));
 

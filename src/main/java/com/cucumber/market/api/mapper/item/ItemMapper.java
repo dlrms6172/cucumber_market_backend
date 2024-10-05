@@ -30,6 +30,8 @@ public interface ItemMapper {
     
     int insertLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
+    Optional<Map> selectLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
+
     void deleteLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
     int insertBuyerReview(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId, @Param("reviewDto") ItemDto.reviewDto reviewDto);

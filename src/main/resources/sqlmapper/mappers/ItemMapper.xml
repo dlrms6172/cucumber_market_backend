@@ -23,7 +23,7 @@
         update item
         set item_name = #{itemDto.itemName},
         item_info = #{itemDto.itemInfo},
-        update_date = NOW(),
+        update_date = #{itemDto.updateDate},
         price = #{itemDto.price}
         where item_id = #{itemId}
     </update>
@@ -70,6 +70,13 @@
         insert into favorite (item_id, member_id)
         values (#{itemId}, #{memberId})
     </insert>
+
+    <select id="selectLike" resultType="resultMap">
+        select *
+        from favorite
+        where item_id = #{itemId}
+        and member_id = #{memberId}
+    </select>
 
     <delete id="deleteLike">
         delete from favorite
