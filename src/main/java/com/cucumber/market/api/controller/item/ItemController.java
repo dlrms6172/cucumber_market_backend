@@ -34,7 +34,13 @@ public class ItemController {
     public ResponseEntity addItem(@Valid @RequestBody ItemDto.addItemDto itemDto,
                                   @RequestHeader(name = "memberId") Integer memberId) {
 
-        body.put("resultCode", 201);
+        Map<String, Object> body = new LinkedHashMap<>() {
+            {
+                put("resultCode", 201);
+                put("resultMsg", "success");
+            }
+        };
+
         itemDto.setPostDate(LocalDateTime.now());
         body.put("data", itemService.addItem(memberId, itemDto));
 
@@ -42,8 +48,8 @@ public class ItemController {
     }
 
 
-    @GetMapping("/{item_id}")
-    public ResponseEntity getItem(@PathVariable(name = "item_id") Integer itemId) {
+    @GetMapping("/{itemId}")
+    public ResponseEntity getItem(@PathVariable(name = "itemId") Integer itemId) {
 
         body.put("data", itemService.getItem(itemId));
 
@@ -51,20 +57,22 @@ public class ItemController {
     }
 
 
-    @PutMapping("/{item_id}")
+    @PutMapping("/{itemId}")
     public ResponseEntity modifyItem(@Valid @RequestBody ItemDto.modifyItemDto itemDto,
-                                     @PathVariable(name = "item_id") Integer itemId,
+                                     @PathVariable(name = "itemId") Integer itemId,
                                      @RequestHeader(name = "memberId") Integer memberId) {
 
+        itemDto.setUpdateDate(LocalDateTime.now());
+        itemDto.setItemId(itemId);
         body.put("data", itemService.modifyItem(memberId, itemId, itemDto));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
 
-    @PutMapping("/{item_id}/status")
+    @PutMapping("/{itemId}/status")
     public ResponseEntity modifyItemStatus(@Valid @RequestBody ItemDto.modifyItemStatusDto dto,
-                                           @PathVariable(name = "item_id") Integer itemId,
+                                           @PathVariable(name = "itemId") Integer itemId,
                                            @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.modifyItemStatus(memberId, itemId, dto));
@@ -74,19 +82,20 @@ public class ItemController {
 
 
     @GetMapping
-    public ResponseEntity getItems(@RequestHeader(name = "memberId") int memberId, @Valid UserDto.userProfileGet dto,
+    public ResponseEntity getItems(@RequestHeader(name = "memberId") int memberId,
                                    @Nullable @RequestParam("name") String itemName,
                                    @Nullable @RequestParam("status") ItemStatus itemStatus) {
 
-        dto.setMemberId(memberId);
-        body.put("data", itemService.getItems(dto, itemName, itemStatus));
+        UserDto.userProfileGet userDto = new UserDto.userProfileGet();
+        userDto.setMemberId(memberId);
+        body.put("data", itemService.getItems(userDto, itemName, itemStatus));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/{item_id}")
-    public ResponseEntity deleteItem(@PathVariable(name = "item_id") Integer itemId,
+    @DeleteMapping("/{itemId}")
+    public ResponseEntity deleteItem(@PathVariable(name = "itemId") Integer itemId,
                                      @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.deleteItem(memberId, itemId));
@@ -95,19 +104,25 @@ public class ItemController {
     }
 
 
-    @PostMapping("/{item_id}/like")
-    public ResponseEntity addLike(@PathVariable(name = "item_id") Integer itemId,
+    @PostMapping("/{itemId}/like")
+    public ResponseEntity addLike(@PathVariable(name = "itemId") Integer itemId,
                                   @RequestHeader(name = "memberId") Integer memberId) {
 
-        body.put("resultCode", 201);
+        Map<String, Object> body = new LinkedHashMap<>() {
+            {
+                put("resultCode", 201);
+                put("resultMsg", "success");
+            }
+        };
+
         body.put("data", itemService.addLike(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.CREATED);
     }
 
 
-    @DeleteMapping("/{item_id}/like")
-    public ResponseEntity deleteLike(@PathVariable(name = "item_id") Integer itemId,
+    @DeleteMapping("/{itemId}/like")
+    public ResponseEntity deleteLike(@PathVariable(name = "itemId") Integer itemId,
                                      @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.deleteLike(itemId, memberId));
@@ -116,8 +131,8 @@ public class ItemController {
     }
 
 
-    @PutMapping("/{item_id}/review")
-    public ResponseEntity modifyReview(@PathVariable(name = "item_id") Integer itemId,
+    @PutMapping("/{itemId}/review")
+    public ResponseEntity modifyReview(@PathVariable(name = "itemId") Integer itemId,
                                        @RequestHeader(name = "memberId") Integer memberId,
                                        @RequestBody ItemDto.reviewDto reviewDto) {
 
@@ -126,8 +141,8 @@ public class ItemController {
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{item_id}/review")
-    public ResponseEntity deleteReview(@PathVariable(name = "item_id") Integer itemId,
+    @DeleteMapping("/{itemId}/review")
+    public ResponseEntity deleteReview(@PathVariable(name = "itemId") Integer itemId,
                                        @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.deleteReview(itemId, memberId));
