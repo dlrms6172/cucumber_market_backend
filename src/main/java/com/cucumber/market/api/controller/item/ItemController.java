@@ -169,6 +169,16 @@ public class ItemController {
     }
 
 
+    @GetMapping("/{itemId}/orders")
+    public ResponseEntity getOrders(@PathVariable(name = "itemId") Integer itemId,
+                                    @RequestHeader(name = "memberId") Integer memberId) {
+
+        body.put("data", itemService.getOrders(itemId, memberId));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+
     @DeleteMapping("/{itemId}/order")
     public ResponseEntity deleteOrder(@PathVariable(name = "itemId") Integer itemId,
                                       @RequestHeader(name = "memberId") Integer memberId) {

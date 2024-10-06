@@ -160,6 +160,13 @@
         and member_id = #{memberId}
     </select>
 
+    <select id="selectOrders" resultType="resultMap">
+        select member.member_id, member.name
+        from purchase_request as pr
+        join member on pr.member_id = member.member_id
+        where pr.item_id = #{itemId}
+    </select>
+
     <delete id="deleteOrder">
         delete from purchase_request
         where item_id = #{itemId}

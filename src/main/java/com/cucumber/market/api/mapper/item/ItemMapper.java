@@ -58,6 +58,8 @@ public interface ItemMapper {
 
     Optional<Map> selectOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
+    List<Map> selectOrders(Integer itemId);
+
     void deleteOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
 }
