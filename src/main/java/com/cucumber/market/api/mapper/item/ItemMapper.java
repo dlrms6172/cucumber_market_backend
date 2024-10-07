@@ -53,4 +53,13 @@ public interface ItemMapper {
     void updateSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
     void deleteSellerReview(Integer itemId);
+
+    int insertOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
+
+    Optional<Map> selectOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
+
+    List<Map> selectOrders(Integer itemId);
+
+    void deleteOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
+
 }

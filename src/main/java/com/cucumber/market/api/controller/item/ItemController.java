@@ -141,11 +141,49 @@ public class ItemController {
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{itemId}/review")
     public ResponseEntity deleteReview(@PathVariable(name = "itemId") Integer itemId,
                                        @RequestHeader(name = "memberId") Integer memberId) {
 
         body.put("data", itemService.deleteReview(itemId, memberId));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/{itemId}/order")
+    public ResponseEntity addOrder(@PathVariable(name = "itemId") Integer itemId,
+                                   @RequestHeader(name = "memberId") Integer memberId) {
+
+        Map<String, Object> body = new LinkedHashMap<>() {
+            {
+                put("resultCode", 201);
+                put("resultMsg", "success");
+            }
+        };
+
+        body.put("data", itemService.addOrder(itemId, memberId));
+
+        return new ResponseEntity(body, HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/{itemId}/orders")
+    public ResponseEntity getOrders(@PathVariable(name = "itemId") Integer itemId,
+                                    @RequestHeader(name = "memberId") Integer memberId) {
+
+        body.put("data", itemService.getOrders(itemId, memberId));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/{itemId}/order")
+    public ResponseEntity deleteOrder(@PathVariable(name = "itemId") Integer itemId,
+                                      @RequestHeader(name = "memberId") Integer memberId) {
+
+        body.put("data", itemService.deleteOrder(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
