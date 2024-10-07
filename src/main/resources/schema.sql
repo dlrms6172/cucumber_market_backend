@@ -42,6 +42,12 @@ create table item_status(
 insert into cucumber.item_status(item_status_name)
 values('판매중');
 
+/** 상품 카테고리 category */
+create table category(
+    category_id int(11) comment '상품 카테고리 id' auto_increment primary key,
+    category_name varchar(50) not null comment '상품 카테고리 이름'
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='상품 카테고리';
+
 /** 상품 item */
 create table item(
     item_id int(11) not null comment '상품 id' auto_increment primary key,
@@ -50,10 +56,14 @@ create table item(
     item_info varchar(100) comment '상품 설명',
     post_date datetime comment '게시 일자',
     update_date datetime comment '수정 일자',
+    donation_flag tinyint(1) not null comment '나눔 여부',
     price int(11) comment '가격',
-    view_count int(11) comment '조회 수',
+    category_id int(11) comment '상품 카테고리 id',
+    price_negotiation_yn tinyint(1) default 0 comment '가격 제안가능 여부',
     item_status_id int(11) default 1 comment '상태 id',
+    view_count int(11) comment '조회 수',
     foreign key (member_id) references member(member_id) on delete cascade,
+    foreign key (category_id) references category(category_id) on update cascade,
     foreign key (item_status_id) references item_status(item_status_id) on update cascade
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='상품';
 
@@ -62,12 +72,13 @@ create table favorite(
     item_id int(11) comment '상품 id',
     member_id int(11) comment '멤버 id',
     foreign key (item_id) references item(item_id) on delete cascade,
-    foreign key (member_id) references member(member_id) on delete cascade
+    foreign key (member_id) references member(member_id) on delete cascade,
+    primary key (item_id, member_id)
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='관심';
 
 /** 판매자 후기 seller_review */
 create table seller_review(
-    item_id int(11) comment '상품 id',
+    item_id int(11) comment '상품 id' primary key,
     review varchar(100) comment '후기',
     foreign key (item_id) references item(item_id) on delete cascade
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='판매자 후기';
@@ -78,13 +89,15 @@ create table buyer_review(
     member_id int(11) comment '멤버 id',
     review varchar(100) comment '후기',
     foreign key (item_id) references item(item_id) on delete cascade,
-    foreign key (member_id) references member(member_id) on delete cascade
+    foreign key (member_id) references member(member_id) on delete cascade,
+    primary key (item_id, member_id)
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='구매자 후기';
 
 /** 구매 신청 purchase_request */
 create table purchase_request(
-    item_id int(11) comment '상품 id',
-    member_id int(11) comment '멤버 id',
+    item_id int(11) not null comment '상품 id',
+    member_id int(11) not null comment '멤버 id',
     foreign key (item_id) references item(item_id) on delete cascade,
-    foreign key (member_id) references member(member_id) on delete cascade
+    foreign key (member_id) references member(member_id) on delete cascade,
+    primary key (item_id, member_id)
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='구매 신청';

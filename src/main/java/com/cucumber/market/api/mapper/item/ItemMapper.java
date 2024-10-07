@@ -24,6 +24,8 @@ public interface ItemMapper {
 
     void updateItemStatus(@Param("itemId") Integer itemId, @Param("itemStatus") ItemStatus itemStatus);
 
+    List<Map> selectAllItems(@Param("regionId") Integer regionId);
+
     List<Map> selectItems(@Param("regionId") Integer regionId, @Param("itemName") String itemName, @Param("itemStatus") ItemStatus itemStatus);
 
     void deleteItem(Integer itemId);
