@@ -3,12 +3,14 @@
 <mapper namespace="com.cucumber.market.api.mapper.item.ItemMapper">
 
     <insert id="insertItem" useGeneratedKeys="true" keyProperty="itemDto.itemId">
-        insert into item (member_id, item_name, item_info, price, post_date, view_count)
-        values (#{memberId}, #{itemDto.itemName}, #{itemDto.itemInfo} ,#{itemDto.price}, #{itemDto.postDate}, 0)
+        insert into item (member_id, item_name, item_info, donation_flag, price, category_id, price_negotiation_yn, post_date, view_count)
+        values (#{memberId}, #{itemDto.itemName}, #{itemDto.itemInfo}, #{itemDto.donationFlag}, #{itemDto.price}, #{itemDto.categoryId}, #{itemDto.priceNegotiationYn}, #{itemDto.postDate}, 0)
     </insert>
 
     <select id="selectItem" resultType="resultMap">
-        select *
+        select *, (select count(*)
+                    from favorite
+                    where item_id = #{itemId}) as like_count
         from item
         where item_id = #{itemId}
     </select>
@@ -24,6 +26,9 @@
         set item_name = #{itemDto.itemName},
         item_info = #{itemDto.itemInfo},
         update_date = #{itemDto.updateDate},
+        donation_flag = #{itemDto.donationFlag},
+        category_id = #{itemDto.categoryId},
+        price_negotiation_yn = #{itemDto.priceNegotiationYn},
         price = #{itemDto.price}
         where item_id = #{itemId}
     </update>
@@ -34,8 +39,33 @@
         where item_id = #{itemId}
     </update>
 
+    <select id="selectAllItems" resultType="resultMap">
+        SELECT *, (select count(*)
+                    from favorite
+                    where item.item_id = favorite.item_id) as like_count
+        FROM item
+        WHERE member_id IN (
+            SELECT member_id
+            FROM member
+            WHERE region_id IN (
+                SELECT region_id
+                FROM (
+                        SELECT region_id, (6371*ACOS(COS(RADIANS((SELECT lati_tude FROM region WHERE region_id = #{regionId})))
+                                    *COS(RADIANS(lati_tude))*COS(RADIANS(longi_tude)-RADIANS((SELECT longi_tude FROM region WHERE region_id = #{regionId})))
+                                    +SIN(RADIANS((SELECT lati_tude FROM region WHERE region_id = #{regionId})))*SIN(RADIANS(lati_tude))))
+                                    AS distance
+                        FROM region) AS a
+                        <![CDATA[
+                        WHERE distance <= 6
+                        ]]>
+                )
+            )
+    </select>
+
     <select id="selectItems" resultType="resultMap">
-        SELECT *
+        SELECT *, (select count(*)
+                    from favorite
+                    where item.item_id = favorite.item_id) as like_count
         FROM item
         WHERE member_id IN (
             SELECT member_id

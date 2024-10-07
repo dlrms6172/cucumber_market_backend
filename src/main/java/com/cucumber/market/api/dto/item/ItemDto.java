@@ -22,8 +22,12 @@ public class ItemDto {
         private String itemInfo;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime postDate;
+        private Integer donationFlag;
+        private String categoryId;
+        private Integer priceNegotiationYn;
         @Positive
-        private int price;
+        private Integer price;
+
     }
 
     @Getter
@@ -36,8 +40,11 @@ public class ItemDto {
         private String itemInfo;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime updateDate;
+        private Integer donationFlag;
+        private String categoryId;
+        private Integer priceNegotiationYn;
         @Positive
-        private int price;
+        private Integer price;
     }
 
     @Getter
