@@ -1,5 +1,6 @@
 package com.cucumber.market.api.mapper.user;
 
+import com.cucumber.market.api.dto.item.ItemDto;
 import com.cucumber.market.api.dto.user.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,12 @@ public interface UserMapper {
     Map selectUserInfo(UserDto.userProfileGet dto);
 
     int updateUserInfo(UserDto.userProfilePut dto);
+
+    Map selectSellerMannersTemperature(Integer memberId);
+
+    int updateSellerMannersTemperature(Integer memberId, ItemDto.modifyItemStatusDto dto);
+
+    Map selectBuyerMannersTemperature(Integer clientId);
+
+    int updateBuyerMannersTemperature(Integer clientId, ItemDto.modifyItemStatusDto dto);
 }

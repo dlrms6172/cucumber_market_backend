@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class ItemDto {
@@ -46,6 +47,8 @@ public class ItemDto {
         @NotNull
         private ItemStatus itemStatus;
         private Integer clientId;
+        private BigDecimal incSellerMannersTemperature;
+        private BigDecimal incBuyerMannersTemperature;
     }
 
     @Getter

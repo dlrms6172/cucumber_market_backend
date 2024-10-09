@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -73,6 +74,31 @@ public class ItemService {
             if (itemStatus == ItemStatus.CLOSED) {  //상품 상태를 거래완료로 변경할 경우
                 itemMapper.insertBuyerReview(itemId, itemDto.getClientId(), null);  //구매자 후기 테이블에 등록
                 itemMapper.insertSellerReview(itemId, null);  //판매자 후기 테이블에 등록
+
+                BigDecimal maxMannersTemperature = new BigDecimal("99");
+                BigDecimal stdManTemp = new BigDecimal("0.2"); //매너온도 증가 기준값
+
+                BigDecimal sellerMannersTemperature = (BigDecimal) userMapper.selectSellerMannersTemperature(memberId).get("mannersTemperature"); //판매자:매너온도
+                sellerMannersTemperature = sellerMannersTemperature.add(stdManTemp); //판매자 매너온도 + 매너온도 증가 기준값
+
+                BigDecimal buyerMannersTemperature = (BigDecimal) userMapper.selectBuyerMannersTemperature(itemDto.getClientId()).get("mannersTemperature"); //구매자:매너온도
+                buyerMannersTemperature = buyerMannersTemperature.add(stdManTemp); //구매자 매너온도 + 매너온도 증가 기준값
+
+                //증가 기준값을 더한 판매자 매너온도가 최대 매너온도보다 클 경우
+                if(sellerMannersTemperature.compareTo(maxMannersTemperature) == 1){
+                    sellerMannersTemperature = new BigDecimal("99");
+                }
+
+                //증가 기준값을 더한 구매자 매너온도가 최대 매너온도보다 클 경우
+                if(buyerMannersTemperature.compareTo(maxMannersTemperature) == 1){
+                    buyerMannersTemperature = new BigDecimal("99");
+                }
+
+                itemDto.setIncSellerMannersTemperature(sellerMannersTemperature); //판매자:증가된 매너온도 셋팅
+                userMapper.updateSellerMannersTemperature(memberId, itemDto); //판매자:매너온도 업데이트
+
+                itemDto.setIncBuyerMannersTemperature(sellerMannersTemperature); //구매자:증가된 매너온도 셋팅
+                userMapper.updateBuyerMannersTemperature(memberId, itemDto); //구매자:매너온도 업데이트
             }
 
             itemMapper.updateItemStatus(itemId, itemStatus);
@@ -230,4 +256,5 @@ public class ItemService {
     }
 
 }
+
 
