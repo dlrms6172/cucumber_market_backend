@@ -118,7 +118,19 @@ public class ItemService {
 
 
     @Transactional(readOnly = true)
-    public Map getItems(UserDto.userProfileGet dto, String itemName, ItemStatus itemStatus) {
+    public Map getItems(UserDto.userProfileGet dto) {
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+
+        Map userInfo = userMapper.selectUserInfo(dto);
+        Integer regionId = (Integer) userInfo.get("regionId");
+        result.put("items", itemMapper.selectAllItems(regionId));
+
+        return result;
+    }
+
+
+    @Transactional(readOnly = true)
+    public Map searchItems(UserDto.userProfileGet dto, String itemName, ItemStatus itemStatus) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         Map userInfo = userMapper.selectUserInfo(dto);

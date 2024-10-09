@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/items")
 public class ItemController {
 
     private final ItemService itemService;
@@ -30,9 +29,9 @@ public class ItemController {
     };
 
 
-    @PostMapping
+    @PostMapping("/items")
     public ResponseEntity addItem(@Valid @RequestBody ItemDto.addItemDto itemDto,
-                                  @RequestHeader(name = "memberId") Integer memberId) {
+                                  @RequestHeader(name = "memberId") int memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
             {
@@ -48,8 +47,8 @@ public class ItemController {
     }
 
 
-    @GetMapping("/{itemId}")
-    public ResponseEntity getItem(@PathVariable(name = "itemId") Integer itemId) {
+    @GetMapping("/items/{itemId}")
+    public ResponseEntity getItem(@PathVariable(name = "itemId") int itemId) {
 
         body.put("data", itemService.getItem(itemId));
 
@@ -57,10 +56,10 @@ public class ItemController {
     }
 
 
-    @PutMapping("/{itemId}")
+    @PutMapping("/items/{itemId}")
     public ResponseEntity modifyItem(@Valid @RequestBody ItemDto.modifyItemDto itemDto,
-                                     @PathVariable(name = "itemId") Integer itemId,
-                                     @RequestHeader(name = "memberId") Integer memberId) {
+                                     @PathVariable(name = "itemId") int itemId,
+                                     @RequestHeader(name = "memberId") int memberId) {
 
         itemDto.setUpdateDate(LocalDateTime.now());
         itemDto.setItemId(itemId);
@@ -70,10 +69,10 @@ public class ItemController {
     }
 
 
-    @PutMapping("/{itemId}/status")
+    @PutMapping("/items/{itemId}/status")
     public ResponseEntity modifyItemStatus(@Valid @RequestBody ItemDto.modifyItemStatusDto dto,
-                                           @PathVariable(name = "itemId") Integer itemId,
-                                           @RequestHeader(name = "memberId") Integer memberId) {
+                                           @PathVariable(name = "itemId") int itemId,
+                                           @RequestHeader(name = "memberId") int memberId) {
 
         body.put("data", itemService.modifyItemStatus(memberId, itemId, dto));
 
@@ -81,22 +80,33 @@ public class ItemController {
     }
 
 
-    @GetMapping
-    public ResponseEntity getItems(@RequestHeader(name = "memberId") int memberId,
-                                   @Nullable @RequestParam("name") String itemName,
-                                   @Nullable @RequestParam("status") ItemStatus itemStatus) {
+    @GetMapping("/items")
+    public ResponseEntity getItems(@RequestHeader(name = "memberId") int memberId) {
 
         UserDto.userProfileGet userDto = new UserDto.userProfileGet();
         userDto.setMemberId(memberId);
-        body.put("data", itemService.getItems(userDto, itemName, itemStatus));
+        body.put("data", itemService.getItems(userDto));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/{itemId}")
-    public ResponseEntity deleteItem(@PathVariable(name = "itemId") Integer itemId,
-                                     @RequestHeader(name = "memberId") Integer memberId) {
+    @GetMapping("/search")
+    public ResponseEntity searchItems(@RequestHeader(name = "memberId") int memberId,
+                                      @RequestParam("name") String itemName,
+                                      @Nullable @RequestParam("status") ItemStatus itemStatus) {
+
+        UserDto.userProfileGet userDto = new UserDto.userProfileGet();
+        userDto.setMemberId(memberId);
+        body.put("data", itemService.searchItems(userDto, itemName, itemStatus));
+
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/items/{itemId}")
+    public ResponseEntity deleteItem(@PathVariable(name = "itemId") int itemId,
+                                     @RequestHeader(name = "memberId") int memberId) {
 
         body.put("data", itemService.deleteItem(memberId, itemId));
 
@@ -104,9 +114,9 @@ public class ItemController {
     }
 
 
-    @PostMapping("/{itemId}/like")
-    public ResponseEntity addLike(@PathVariable(name = "itemId") Integer itemId,
-                                  @RequestHeader(name = "memberId") Integer memberId) {
+    @PostMapping("/items/{itemId}/like")
+    public ResponseEntity addLike(@PathVariable(name = "itemId") int itemId,
+                                  @RequestHeader(name = "memberId") int memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
             {
@@ -121,9 +131,9 @@ public class ItemController {
     }
 
 
-    @DeleteMapping("/{itemId}/like")
-    public ResponseEntity deleteLike(@PathVariable(name = "itemId") Integer itemId,
-                                     @RequestHeader(name = "memberId") Integer memberId) {
+    @DeleteMapping("/items/{itemId}/like")
+    public ResponseEntity deleteLike(@PathVariable(name = "itemId") int itemId,
+                                     @RequestHeader(name = "memberId") int memberId) {
 
         body.put("data", itemService.deleteLike(itemId, memberId));
 
@@ -131,9 +141,9 @@ public class ItemController {
     }
 
 
-    @PutMapping("/{itemId}/review")
-    public ResponseEntity modifyReview(@PathVariable(name = "itemId") Integer itemId,
-                                       @RequestHeader(name = "memberId") Integer memberId,
+    @PutMapping("/items/{itemId}/review")
+    public ResponseEntity modifyReview(@PathVariable(name = "itemId") int itemId,
+                                       @RequestHeader(name = "memberId") int memberId,
                                        @RequestBody ItemDto.reviewDto reviewDto) {
 
         body.put("data", itemService.modifyReview(itemId, memberId, reviewDto));
@@ -142,9 +152,9 @@ public class ItemController {
     }
 
 
-    @DeleteMapping("/{itemId}/review")
-    public ResponseEntity deleteReview(@PathVariable(name = "itemId") Integer itemId,
-                                       @RequestHeader(name = "memberId") Integer memberId) {
+    @DeleteMapping("/items/{itemId}/review")
+    public ResponseEntity deleteReview(@PathVariable(name = "itemId") int itemId,
+                                       @RequestHeader(name = "memberId") int memberId) {
 
         body.put("data", itemService.deleteReview(itemId, memberId));
 
@@ -152,9 +162,9 @@ public class ItemController {
     }
 
 
-    @PostMapping("/{itemId}/order")
-    public ResponseEntity addOrder(@PathVariable(name = "itemId") Integer itemId,
-                                   @RequestHeader(name = "memberId") Integer memberId) {
+    @PostMapping("/items/{itemId}/order")
+    public ResponseEntity addOrder(@PathVariable(name = "itemId") int itemId,
+                                   @RequestHeader(name = "memberId") int memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
             {
@@ -169,9 +179,9 @@ public class ItemController {
     }
 
 
-    @GetMapping("/{itemId}/orders")
-    public ResponseEntity getOrders(@PathVariable(name = "itemId") Integer itemId,
-                                    @RequestHeader(name = "memberId") Integer memberId) {
+    @GetMapping("/items/{itemId}/orders")
+    public ResponseEntity getOrders(@PathVariable(name = "itemId") int itemId,
+                                    @RequestHeader(name = "memberId") int memberId) {
 
         body.put("data", itemService.getOrders(itemId, memberId));
 
@@ -179,9 +189,9 @@ public class ItemController {
     }
 
 
-    @DeleteMapping("/{itemId}/order")
-    public ResponseEntity deleteOrder(@PathVariable(name = "itemId") Integer itemId,
-                                      @RequestHeader(name = "memberId") Integer memberId) {
+    @DeleteMapping("/items/{itemId}/order")
+    public ResponseEntity deleteOrder(@PathVariable(name = "itemId") int itemId,
+                                      @RequestHeader(name = "memberId") int memberId) {
 
         body.put("data", itemService.deleteOrder(itemId, memberId));
 
