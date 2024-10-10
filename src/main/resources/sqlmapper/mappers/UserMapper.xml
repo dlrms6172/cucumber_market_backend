@@ -52,4 +52,34 @@
             and member_id = #{memberId}
             and sns_id = #{snsId}
     </update>
+
+    <select id="selectSellerMannersTemperature" resultType="resultMap">
+        select
+            manners_temperature
+        from cucumber.member
+        where 1=1
+            and member_id = #{memberId}
+    </select>
+
+    <update id="updateSellerMannersTemperature">
+        update cucumber.member
+        set manners_temperature = #{dto.incSellerMannersTemperature}
+        where 1=1
+            and member_id = #{memberId}
+    </update>
+
+    <select id="selectBuyerMannersTemperature" resultType="resultMap">
+        select
+            manners_temperature
+        from cucumber.member
+        where 1=1
+          and member_id = #{dto.clientId}
+    </select>
+
+    <update id="updateBuyerMannersTemperature">
+        update cucumber.member
+        set manners_temperature = #{dto.incBuyerMannersTemperature}
+        where 1=1
+          and member_id = #{dto.clientId}
+    </update>
 </mapper>
