@@ -23,7 +23,7 @@ public interface UserMapper {
 
     int updateSellerMannersTemperature(Integer memberId, ItemDto.modifyItemStatusDto dto);
 
-    Map selectBuyerMannersTemperature(Integer clientId);
+    Map selectBuyerMannersTemperature(ItemDto.modifyItemStatusDto dto);
 
-    int updateBuyerMannersTemperature(Integer clientId, ItemDto.modifyItemStatusDto dto);
+    int updateBuyerMannersTemperature(ItemDto.modifyItemStatusDto dto);
 }

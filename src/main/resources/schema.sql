@@ -29,6 +29,7 @@ create table member(
     name varchar(100) comment '이름',
     email varchar(100) comment '이메일',
     region_id int(11) comment '지역 id',
+    manners_temperature decimal(4,1) default 36.5 comment '매너온도',
     foreign key (sns_id) references sns(sns_id) on update cascade,
     foreign key (region_id) references region(region_id) on update cascade
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='회원';
