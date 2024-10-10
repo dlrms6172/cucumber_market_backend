@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,7 +32,8 @@ public class ItemController {
 
 
     @PostMapping("/items")
-    public ResponseEntity addItem(@Valid @RequestBody ItemDto.addItemDto itemDto,
+    public ResponseEntity addItem(@RequestPart(value = "files") List<MultipartFile> files,
+                                  @RequestPart(value = "addItemRequest") ItemDto.addItemDto itemDto,
                                   @RequestHeader(name = "memberId") int memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
@@ -41,7 +44,7 @@ public class ItemController {
         };
 
         itemDto.setPostDate(LocalDateTime.now());
-        body.put("data", itemService.addItem(memberId, itemDto));
+        body.put("data", itemService.addItem(memberId, itemDto, files));
 
         return new ResponseEntity(body, HttpStatus.CREATED);
     }
@@ -56,14 +59,22 @@ public class ItemController {
     }
 
 
+    /**
+     * 상품 수정
+     * @param files - 사용자가 새로 추가한 이미지들
+     * @param itemDto
+     * @param itemId
+     * @param memberId
+     * @return
+     */
     @PutMapping("/items/{itemId}")
-    public ResponseEntity modifyItem(@Valid @RequestBody ItemDto.modifyItemDto itemDto,
+    public ResponseEntity modifyItem(@RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                     @RequestPart(value = "modifyItemRequest") ItemDto.modifyItemDto itemDto,
                                      @PathVariable(name = "itemId") int itemId,
                                      @RequestHeader(name = "memberId") int memberId) {
 
         itemDto.setUpdateDate(LocalDateTime.now());
-        itemDto.setItemId(itemId);
-        body.put("data", itemService.modifyItem(memberId, itemId, itemDto));
+        body.put("data", itemService.modifyItem(memberId, itemId, itemDto, files));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }

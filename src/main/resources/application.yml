@@ -39,3 +39,11 @@ google:
     auth-url:
     token-request-url:
     userinfo-request-url:
+
+#AWS S3
+cloud:
+  aws:
+    s3:
+      bucket:
+      accessKey:
+      secretAccessKey:

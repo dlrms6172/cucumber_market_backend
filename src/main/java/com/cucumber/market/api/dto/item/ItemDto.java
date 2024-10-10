@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ItemDto {
 
@@ -46,6 +47,7 @@ public class ItemDto {
         private Integer priceNegotiationYn;
         @Positive
         private Integer price;
+        private List<String> unchangedImageUrls;
     }
 
     @Getter

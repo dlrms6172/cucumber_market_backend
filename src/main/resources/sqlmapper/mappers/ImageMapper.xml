@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cucumber.market.api.mapper.item.ImageMapper">
+
+    <insert id="insertImage">
+        insert into item_image (item_id, original_name, key_name)
+        values (#{itemId}, #{originalName}, #{keyName})
+    </insert>
+
+    <select id="selectImageKeyNames" resultType="java.lang.String">
+        select key_name
+        from item_image
+        where item_id = #{itemId}
+    </select>
+
+    <delete id="deleteImage">
+        delete from item_image
+        where key_name = #{keyName}
+    </delete>
+
+    <delete id="deleteImages">
+        delete from item_image
+        where item_id = #{itemId}
+    </delete>
+
+
+</mapper>
+
