@@ -36,7 +36,8 @@
             sns.sns_name,
             member.name,
             member.email,
-            member.region_id
+            member.region_id,
+            member.manners_temperature
         from cucumber.member as member
         join cucumber.sns as sns on member.sns_id = sns.sns_id
         where 1=1
