@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -21,12 +23,16 @@ public class ItemService {
 
     private final ItemMapper itemMapper;
     private final UserMapper userMapper;
+    private final ImageService imageService;
 
-    public Map addItem(Integer memberId, ItemDto.addItemDto itemDto) {
+    public Map addItem(Integer memberId, ItemDto.addItemDto itemDto, List<MultipartFile> files) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.insertItem(memberId, itemDto);
+        List<String> imageUrls = imageService.addImages(itemDto.getItemId(), files);
+
         result.put("item", itemDto);
+        result.put("imageUrls", imageUrls);
 
         return result;
     }
@@ -37,19 +43,25 @@ public class ItemService {
 
         itemMapper.updateViewCount(itemId);  //조회 수 증가
         result.put("item", itemMapper.selectItem(itemId));
+        result.put("imageUrls", imageService.getImageUrls(itemId));
 
         return result;
     }
 
 
-    public Map modifyItem(Integer memberId, Integer itemId, ItemDto.modifyItemDto itemDto) {
+    public Map modifyItem(Integer memberId, Integer itemId, ItemDto.modifyItemDto itemDto, List<MultipartFile> files) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
         if (item.get("memberId").equals(memberId)) {  //상품 수정 권한 확인
 
             itemMapper.updateItem(itemId, itemDto);
+            List<String> imageUrls = imageService.updateImages(itemId, itemDto.getUnchangedImageUrls(), files);
+
+            itemDto.setItemId(itemId);
+            itemDto.setUnchangedImageUrls(null);
             result.put("item", itemDto);
+            result.put("imageUrls", imageUrls);
         } else {
             throw new IllegalArgumentException("상품 수정 권한이 없습니다.");
         }
@@ -124,6 +136,7 @@ public class ItemService {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
         if (item.get("memberId").equals(memberId)) {  //상품 삭제 권한 확인
 
+            imageService.deleteImages(itemId);
             itemMapper.deleteItem(itemId);
             result.put("itemId", itemId);
         } else {

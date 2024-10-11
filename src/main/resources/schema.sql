@@ -102,3 +102,12 @@ create table purchase_request(
     foreign key (member_id) references member(member_id) on delete cascade,
     primary key (item_id, member_id)
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='구매 신청';
+
+/** 상품 이미지 item_image */
+create table item_image(
+    image_id int(11) comment '이미지 id' auto_increment primary key,
+    original_name varchar(1000) comment '기존 이미지명',
+    key_name varchar(1000) comment '저장된 이미지명',
+    item_id int(11) not null comment '상품 id',
+    foreign key (item_id) references item(item_id) on delete cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='이미지';
