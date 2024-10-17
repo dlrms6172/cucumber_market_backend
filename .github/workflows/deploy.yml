@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: ap-northeast-2
   CODE_DEPLOY_APPLICATION_NAME: cucumber-codedeploy-app
-  CODE_DEPLOY_DEPLOYMNET_GROUP_NAME: cucumber-codedeploy-deployment-group
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: cucumber-codedeploy-deployment-group
 
 permissions:
   contents: read
