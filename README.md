@@ -1,4 +1,4 @@
-[![Java CI with Gradle](https://github.com/dlrms6172/cucumber_market_backend/actions/workflows/gradle.yml/badge.svg)](https://github.com/dlrms6172/cucumber_market_backend/actions/workflows/gradle.yml)
+[![Java CI with Gradle](https://github.com/dlrms6172/cucumber_market_backend/actions/workflows/integrate.yml/badge.svg)](https://github.com/dlrms6172/cucumber_market_backend/actions/workflows/integrate.yml)
 [![Deploy to Amazon EC2](https://github.com/dlrms6172/cucumber_market_backend/actions/workflows/deploy.yml/badge.svg)](https://github.com/dlrms6172/cucumber_market_backend/actions/workflows/deploy.yml)
 
 # 중고거래 플랫폼 오이마켓 (백엔드)
