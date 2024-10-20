@@ -26,3 +26,4 @@
  * 구글 계정을 이용한 로그인
  * MultiPartFile과 AWS S3를 이용한 상품 이미지 관리
  * 위도, 경도를 이용한 주변 동네와의 거리 계산
+ * GitHub Actions를 통한 CI/CD 구축
