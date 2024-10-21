@@ -1,5 +1,5 @@
 
-# mysql setting
+# Mysql setting
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
