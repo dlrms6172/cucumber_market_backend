@@ -3,9 +3,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url:
-    username:
-    password:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     maximum-pool-size: 20
 mybatis:
 #  check-config-location: true
@@ -32,13 +32,13 @@ logging:
 # Google
 google:
   client:
-    id:
-    pw:
-    scope:
-    callback-url:
-    auth-url:
-    token-request-url:
-    userinfo-request-url:
+    id: ${GOOGLE_CLIENT_ID}
+    pw: ${GOOGLE_CLIENT_PW}
+    scope: ${GOOGLE_CLIENT_SCOPE}
+    callback-url: ${GOOGLE_CLIENT_CALLBACK_URL}
+    auth-url: ${GOOGLE_CLIENT_AUTH_URL}
+    token-request-url: ${GOOGLE_CLIENT_TOKEN_REQUEST_URL}
+    userinfo-request-url: ${GOOGLE_CLIENT_USERINFO_REQUEST_URL}
 
 #AWS S3
 cloud:
