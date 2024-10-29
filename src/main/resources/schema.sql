@@ -10,7 +10,7 @@ create table sns(
 insert into cucumber.sns(sns_name)
 values('google');
 
-/* region 지역 **/
+/* 지역 region **/
 create table region(
     region_id int(11) not null comment '지역 id' auto_increment primary key,
     region_name varchar(100) comment '시도',
@@ -110,4 +110,18 @@ create table item_image(
     key_name varchar(1000) comment '저장된 이미지명',
     item_id int(11) not null comment '상품 id',
     foreign key (item_id) references item(item_id) on delete cascade
-)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='이미지';
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='상품 이미지';
+
+/** 대표 상품 이미지 rep_item_image */
+create table rep_item_image(
+    image_id int(11) comment '이미지 id' primary key,
+    foreign key (image_id) references item_image(image_id) on delete cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='대표 상품 이미지';
+
+/** 프로필 이미지 profile_image */
+create table profile_image(
+    member_id int(11) not null comment '멤버 id' primary key,
+    original_name varchar(1000) comment '기존 이미지명',
+    key_name varchar(1000) comment '저장된 이미지명',
+    foreign key (member_id) references member(member_id) on delete cascade
+)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='프로필 이미지';

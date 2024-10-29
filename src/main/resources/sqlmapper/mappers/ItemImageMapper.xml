@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cucumber.market.api.mapper.item.ImageMapper">
+<mapper namespace="com.cucumber.market.api.mapper.item.ItemImageMapper">
 
-    <insert id="insertImage">
-        insert into item_image (item_id, original_name, key_name)
-        values (#{itemId}, #{originalName}, #{keyName})
+    <insert id="insertImage" useGeneratedKeys="true" keyProperty="imageId">
+        insert into item_image (original_name, key_name, item_id)
+        values (#{originalName}, #{keyName}, #{itemId})
     </insert>
 
     <select id="selectImageKeyNames" resultType="java.lang.String">
@@ -23,6 +23,10 @@
         where item_id = #{itemId}
     </delete>
 
+    <insert id="insertRepImage">
+        insert into rep_item_image
+        values (#{imageId})
+    </insert>
 
 </mapper>
 

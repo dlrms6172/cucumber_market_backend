@@ -1,9 +1,9 @@
 package com.cucumber.market.api.service.item;
 
 import com.cucumber.market.api.dto.item.ItemDto;
-import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.mapper.item.ItemMapper;
 import com.cucumber.market.api.mapper.user.UserMapper;
+import com.cucumber.market.api.service.user.ProfileImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,13 +23,14 @@ public class ItemService {
 
     private final ItemMapper itemMapper;
     private final UserMapper userMapper;
-    private final ImageService imageService;
+    private final ItemImageService itemImageService;
+    private final ProfileImageService profileImageService;
 
     public Map addItem(Integer memberId, ItemDto.addItemDto itemDto, List<MultipartFile> files) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.insertItem(memberId, itemDto);
-        List<String> imageUrls = imageService.addImages(itemDto.getItemId(), files);
+        List<String> imageUrls = itemImageService.addImages(itemDto.getItemId(), files);
 
         result.put("item", itemDto);
         result.put("imageUrls", imageUrls);
@@ -42,8 +43,11 @@ public class ItemService {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.updateViewCount(itemId);  //조회 수 증가
-        result.put("item", itemMapper.selectItem(itemId));
-        result.put("imageUrls", imageService.getImageUrls(itemId));
+        Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
+
+        result.put("item", item);
+        result.put("itemImageUrls", itemImageService.getImageUrls(itemId));
+        result.put("profileImageUrl", profileImageService.getImageUrl((Integer) item.get("memberId")));
 
         return result;
     }
@@ -56,7 +60,7 @@ public class ItemService {
         if (item.get("memberId").equals(memberId)) {  //상품 수정 권한 확인
 
             itemMapper.updateItem(itemId, itemDto);
-            List<String> imageUrls = imageService.updateImages(itemId, itemDto.getUnchangedImageUrls(), files);
+            List<String> imageUrls = itemImageService.updateImages(itemId, itemDto.getUnchangedImageUrls(), files);
 
             itemDto.setItemId(itemId);
             itemDto.setUnchangedImageUrls(null);
@@ -107,10 +111,10 @@ public class ItemService {
 
 
     @Transactional(readOnly = true)
-    public Map getItems(UserDto.userProfileGet dto) {
+    public Map getItems(Integer memberId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        Map userInfo = userMapper.selectUserInfo(dto);
+        Map userInfo = userMapper.selectUserInfo(memberId);
         Integer regionId = (Integer) userInfo.get("regionId");
         result.put("items", itemMapper.selectAllItems(regionId));
 
@@ -119,10 +123,10 @@ public class ItemService {
 
 
     @Transactional(readOnly = true)
-    public Map searchItems(UserDto.userProfileGet dto, String itemName, ItemStatus itemStatus) {
+    public Map searchItems(Integer memberId, String itemName, ItemStatus itemStatus) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        Map userInfo = userMapper.selectUserInfo(dto);
+        Map userInfo = userMapper.selectUserInfo(memberId);
         Integer regionId = (Integer) userInfo.get("regionId");
         result.put("items", itemMapper.selectItems(regionId, itemName, itemStatus));
 
@@ -136,9 +140,10 @@ public class ItemService {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
         if (item.get("memberId").equals(memberId)) {  //상품 삭제 권한 확인
 
-            imageService.deleteImages(itemId);
+            itemImageService.deleteImages(itemId);
             itemMapper.deleteItem(itemId);
             result.put("itemId", itemId);
+
         } else {
             throw new IllegalArgumentException("상품 삭제 권한이 없습니다.");
         }
@@ -256,6 +261,7 @@ public class ItemService {
 
         return result;
     }
+
 
     //매너온도 증가 로직
     public void incMannersTemperature(Integer memberId, ItemDto.modifyItemStatusDto itemDto){

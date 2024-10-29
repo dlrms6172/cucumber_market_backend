@@ -67,4 +67,15 @@ public class ItemDto {
         private String review;
     }
 
+    @Getter
+    @Setter
+    public static class itemImageDto {
+
+        private Integer imageId;
+        private Integer itemId;
+        private String originalName;
+        private String keyName;
+
+    }
+
 }

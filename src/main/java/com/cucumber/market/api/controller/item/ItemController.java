@@ -1,7 +1,6 @@
 package com.cucumber.market.api.controller.item;
 
 import com.cucumber.market.api.dto.item.ItemDto;
-import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.item.ItemService;
 import com.cucumber.market.api.service.item.ItemStatus;
 import jakarta.annotation.Nullable;
@@ -94,9 +93,7 @@ public class ItemController {
     @GetMapping("/items")
     public ResponseEntity getItems(@RequestHeader(name = "memberId") int memberId) {
 
-        UserDto.userProfileGet userDto = new UserDto.userProfileGet();
-        userDto.setMemberId(memberId);
-        body.put("data", itemService.getItems(userDto));
+        body.put("data", itemService.getItems(memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
@@ -107,9 +104,7 @@ public class ItemController {
                                       @RequestParam("name") String itemName,
                                       @Nullable @RequestParam("status") ItemStatus itemStatus) {
 
-        UserDto.userProfileGet userDto = new UserDto.userProfileGet();
-        userDto.setMemberId(memberId);
-        body.put("data", itemService.searchItems(userDto, itemName, itemStatus));
+        body.put("data", itemService.searchItems(memberId, itemName, itemStatus));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
