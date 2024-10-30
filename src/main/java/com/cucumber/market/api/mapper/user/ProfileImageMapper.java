@@ -1,0 +1,19 @@
+package com.cucumber.market.api.mapper.user;
+
+import com.cucumber.market.api.dto.user.UserDto;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+@Mapper
+public interface ProfileImageMapper {
+
+    void insertImage(UserDto.profileImageDto imageDto);
+
+    Optional<String> selectImageKeyName(Integer memberId);
+
+    void deleteImage(Integer memberId);
+
+}

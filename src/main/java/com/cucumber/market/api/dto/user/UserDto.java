@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Description;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UserDto {
 
@@ -35,12 +35,6 @@ public class UserDto {
 
     @Getter
     @Setter
-    public static class userProfileGet {
-        private Integer memberId;
-    }
-
-    @Getter
-    @Setter
     public static class userProfilePut {
         private Integer memberId;
 
@@ -55,5 +49,20 @@ public class UserDto {
 
         @NotNull
         private Integer regionId;
+
+        private MultipartFile profileImage;
+
+        private boolean deletedOldProfileImage = false;  //프로필 이미지 삭제, 교체의 경우 프론트에서 true 로 입력
+
+    }
+
+    @Getter
+    @Setter
+    public static class profileImageDto {
+
+        private Integer memberId;
+        private String originalName;
+        private String keyName;
+
     }
 }
