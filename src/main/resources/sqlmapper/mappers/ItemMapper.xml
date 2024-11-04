@@ -15,6 +15,20 @@
         where item_id = #{itemId}
     </select>
 
+    <select id="selectItemSeller" resultType="resultMap">
+        select
+                m.member_id,
+                m.manners_temperature,
+                r.si_do,
+                r.si_gun_gu,
+                r.eup_myeon_dong_gu,
+                r.eup_myeon_li_dong,
+                r.li
+        from member as m
+        join region as r on m.region_id = r.region_id
+        where m.member_id = #{memberId}
+    </select>
+
     <update id="updateViewCount">
         update item
         set view_count = view_count + 1
@@ -96,24 +110,6 @@
         where item_id = #{itemId}
     </delete>
 
-    <insert id="insertLike">
-        insert into favorite (item_id, member_id)
-        values (#{itemId}, #{memberId})
-    </insert>
-
-    <select id="selectLike" resultType="resultMap">
-        select *
-        from favorite
-        where item_id = #{itemId}
-        and member_id = #{memberId}
-    </select>
-
-    <delete id="deleteLike">
-        delete from favorite
-        where item_id = #{itemId}
-        and member_id = #{memberId}
-    </delete>
-
     <insert id="insertBuyerReview">
         insert into buyer_review (item_id, member_id, review)
         values (#{itemId}, #{memberId}, #{reviewDto.review})
@@ -176,31 +172,6 @@
     <delete id="deleteSellerReview">
         delete from seller_review
         where item_id = #{item_id}
-    </delete>
-
-    <insert id="insertOrder">
-        insert into purchase_request (item_id, member_id)
-        values (#{itemId}, #{memberId})
-    </insert>
-
-    <select id="selectOrder" resultType="resultMap">
-        select *
-        from purchase_request
-        where item_id = #{itemId}
-        and member_id = #{memberId}
-    </select>
-
-    <select id="selectOrders" resultType="resultMap">
-        select member.member_id, member.name
-        from purchase_request as pr
-        join member on pr.member_id = member.member_id
-        where pr.item_id = #{itemId}
-    </select>
-
-    <delete id="deleteOrder">
-        delete from purchase_request
-        where item_id = #{itemId}
-        and member_id = #{memberId}
     </delete>
 
 </mapper>

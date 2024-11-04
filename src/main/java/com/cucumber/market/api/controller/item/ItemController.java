@@ -120,33 +120,6 @@ public class ItemController {
     }
 
 
-    @PostMapping("/items/{itemId}/like")
-    public ResponseEntity addLike(@PathVariable(name = "itemId") int itemId,
-                                  @RequestHeader(name = "memberId") int memberId) {
-
-        Map<String, Object> body = new LinkedHashMap<>() {
-            {
-                put("resultCode", 201);
-                put("resultMsg", "success");
-            }
-        };
-
-        body.put("data", itemService.addLike(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.CREATED);
-    }
-
-
-    @DeleteMapping("/items/{itemId}/like")
-    public ResponseEntity deleteLike(@PathVariable(name = "itemId") int itemId,
-                                     @RequestHeader(name = "memberId") int memberId) {
-
-        body.put("data", itemService.deleteLike(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.OK);
-    }
-
-
     @PutMapping("/items/{itemId}/review")
     public ResponseEntity modifyReview(@PathVariable(name = "itemId") int itemId,
                                        @RequestHeader(name = "memberId") int memberId,
@@ -167,40 +140,4 @@ public class ItemController {
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
-
-    @PostMapping("/items/{itemId}/order")
-    public ResponseEntity addOrder(@PathVariable(name = "itemId") int itemId,
-                                   @RequestHeader(name = "memberId") int memberId) {
-
-        Map<String, Object> body = new LinkedHashMap<>() {
-            {
-                put("resultCode", 201);
-                put("resultMsg", "success");
-            }
-        };
-
-        body.put("data", itemService.addOrder(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.CREATED);
-    }
-
-
-    @GetMapping("/items/{itemId}/orders")
-    public ResponseEntity getOrders(@PathVariable(name = "itemId") int itemId,
-                                    @RequestHeader(name = "memberId") int memberId) {
-
-        body.put("data", itemService.getOrders(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.OK);
-    }
-
-
-    @DeleteMapping("/items/{itemId}/order")
-    public ResponseEntity deleteOrder(@PathVariable(name = "itemId") int itemId,
-                                      @RequestHeader(name = "memberId") int memberId) {
-
-        body.put("data", itemService.deleteOrder(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.OK);
-    }
 }
