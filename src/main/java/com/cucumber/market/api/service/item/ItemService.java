@@ -43,11 +43,17 @@ public class ItemService {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.updateViewCount(itemId);  //조회 수 증가
-        Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
+        Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);  //상품 조회
+        Integer sellerMemberId = (Integer) item.get("memberId");
 
+        Map itemSeller = itemMapper.selectItemSeller(sellerMemberId).orElseThrow(IllegalArgumentException::new);  //판매자 조회
+
+        //응답 값 생성
+        item.remove("memberId");
         result.put("item", item);
         result.put("itemImageUrls", itemImageService.getImageUrls(itemId));
-        result.put("profileImageUrl", profileImageService.getImageUrl((Integer) item.get("memberId")));
+        result.put("itemSeller", itemSeller);
+        result.put("profileImageUrl", profileImageService.getImageUrl(sellerMemberId));
 
         return result;
     }
@@ -152,28 +158,6 @@ public class ItemService {
     }
 
 
-    public Map addLike(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        itemMapper.insertLike(itemId, memberId);
-        result.put("itemId", itemId);
-
-        return result;
-    }
-
-
-    public Map deleteLike(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        Map like = itemMapper.selectLike(itemId, memberId).orElseThrow(IllegalArgumentException::new);  //좋아요 존재 및 좋아요 삭제 권한 확인
-
-        itemMapper.deleteLike(itemId, memberId);
-        result.put("itemId", itemId);
-
-        return result;
-    }
-
-
     public Map modifyReview(Integer itemId, Integer memberId, ItemDto.reviewDto reviewDto) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
@@ -217,46 +201,6 @@ public class ItemService {
 
         }
 
-        result.put("itemId", itemId);
-
-        return result;
-    }
-
-
-    public Map addOrder(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        itemMapper.insertOrder(itemId, memberId);
-        result.put("itemId", itemId);
-
-        return result;
-    }
-
-
-    @Transactional(readOnly = true)
-    public Map getOrders(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
-
-        if (item.get("memberId").equals(memberId)) {  //판매자 여부 판별
-
-            result.put("orders", itemMapper.selectOrders(itemId));
-        } else {
-            throw new IllegalArgumentException("구매를 신청한 사용자들 조회 권한이 없습니다.");
-
-        }
-
-        return result;
-    }
-
-
-    public Map deleteOrder(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        Map order = itemMapper.selectOrder(itemId, memberId).orElseThrow(IllegalArgumentException::new);  //구매자 신청 존재 및 구매자 신청 삭제 권한 확인
-
-        itemMapper.deleteOrder(itemId, memberId);
         result.put("itemId", itemId);
 
         return result;

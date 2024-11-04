@@ -18,6 +18,8 @@ public interface ItemMapper {
 
     Optional<Map> selectItem(Integer itemId);
 
+    Optional<Map> selectItemSeller(Integer memberId);
+
     void updateViewCount(Integer itemId);
 
     int updateItem(@Param("itemId") Integer itemId, @Param("itemDto") ItemDto.modifyItemDto itemDto);
@@ -29,12 +31,6 @@ public interface ItemMapper {
     List<Map> selectItems(@Param("regionId") Integer regionId, @Param("itemName") String itemName, @Param("itemStatus") ItemStatus itemStatus);
 
     void deleteItem(Integer itemId);
-    
-    int insertLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
-
-    Optional<Map> selectLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
-
-    void deleteLike(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
     int insertBuyerReview(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
@@ -55,13 +51,5 @@ public interface ItemMapper {
     void updateSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
 
     void deleteSellerReview(Integer itemId);
-
-    int insertOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
-
-    Optional<Map> selectOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
-
-    List<Map> selectOrders(Integer itemId);
-
-    void deleteOrder(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId);
 
 }
