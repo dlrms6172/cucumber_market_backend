@@ -1,9 +1,9 @@
 package com.cucumber.market.api.service.item;
 
 import com.cucumber.market.api.dto.item.ItemDto;
-import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.mapper.item.ItemMapper;
 import com.cucumber.market.api.mapper.user.UserMapper;
+import com.cucumber.market.api.service.user.ProfileImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,13 +23,14 @@ public class ItemService {
 
     private final ItemMapper itemMapper;
     private final UserMapper userMapper;
-    private final ImageService imageService;
+    private final ItemImageService itemImageService;
+    private final ProfileImageService profileImageService;
 
     public Map addItem(Integer memberId, ItemDto.addItemDto itemDto, List<MultipartFile> files) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.insertItem(memberId, itemDto);
-        List<String> imageUrls = imageService.addImages(itemDto.getItemId(), files);
+        List<String> imageUrls = itemImageService.addImages(itemDto.getItemId(), files);
 
         result.put("item", itemDto);
         result.put("imageUrls", imageUrls);
@@ -42,8 +43,17 @@ public class ItemService {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.updateViewCount(itemId);  //조회 수 증가
-        result.put("item", itemMapper.selectItem(itemId));
-        result.put("imageUrls", imageService.getImageUrls(itemId));
+        Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);  //상품 조회
+        Integer sellerMemberId = (Integer) item.get("memberId");
+
+        Map itemSeller = itemMapper.selectItemSeller(sellerMemberId).orElseThrow(IllegalArgumentException::new);  //판매자 조회
+
+        //응답 값 생성
+        item.remove("memberId");
+        result.put("item", item);
+        result.put("itemImageUrls", itemImageService.getImageUrls(itemId));
+        result.put("itemSeller", itemSeller);
+        result.put("profileImageUrl", profileImageService.getImageUrl(sellerMemberId));
 
         return result;
     }
@@ -56,7 +66,7 @@ public class ItemService {
         if (item.get("memberId").equals(memberId)) {  //상품 수정 권한 확인
 
             itemMapper.updateItem(itemId, itemDto);
-            List<String> imageUrls = imageService.updateImages(itemId, itemDto.getUnchangedImageUrls(), files);
+            List<String> imageUrls = itemImageService.updateImages(itemId, itemDto.getUnchangedImageUrls(), files);
 
             itemDto.setItemId(itemId);
             itemDto.setUnchangedImageUrls(null);
@@ -107,10 +117,10 @@ public class ItemService {
 
 
     @Transactional(readOnly = true)
-    public Map getItems(UserDto.userProfileGet dto) {
+    public Map getItems(Integer memberId) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        Map userInfo = userMapper.selectUserInfo(dto);
+        Map userInfo = userMapper.selectUserInfo(memberId);
         Integer regionId = (Integer) userInfo.get("regionId");
         result.put("items", itemMapper.selectAllItems(regionId));
 
@@ -119,10 +129,10 @@ public class ItemService {
 
 
     @Transactional(readOnly = true)
-    public Map searchItems(UserDto.userProfileGet dto, String itemName, ItemStatus itemStatus) {
+    public Map searchItems(Integer memberId, String itemName, ItemStatus itemStatus) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
-        Map userInfo = userMapper.selectUserInfo(dto);
+        Map userInfo = userMapper.selectUserInfo(memberId);
         Integer regionId = (Integer) userInfo.get("regionId");
         result.put("items", itemMapper.selectItems(regionId, itemName, itemStatus));
 
@@ -136,34 +146,13 @@ public class ItemService {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
         if (item.get("memberId").equals(memberId)) {  //상품 삭제 권한 확인
 
-            imageService.deleteImages(itemId);
+            itemImageService.deleteImages(itemId);
             itemMapper.deleteItem(itemId);
             result.put("itemId", itemId);
+
         } else {
             throw new IllegalArgumentException("상품 삭제 권한이 없습니다.");
         }
-
-        return result;
-    }
-
-
-    public Map addLike(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        itemMapper.insertLike(itemId, memberId);
-        result.put("itemId", itemId);
-
-        return result;
-    }
-
-
-    public Map deleteLike(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        Map like = itemMapper.selectLike(itemId, memberId).orElseThrow(IllegalArgumentException::new);  //좋아요 존재 및 좋아요 삭제 권한 확인
-
-        itemMapper.deleteLike(itemId, memberId);
-        result.put("itemId", itemId);
 
         return result;
     }
@@ -217,45 +206,6 @@ public class ItemService {
         return result;
     }
 
-
-    public Map addOrder(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        itemMapper.insertOrder(itemId, memberId);
-        result.put("itemId", itemId);
-
-        return result;
-    }
-
-
-    @Transactional(readOnly = true)
-    public Map getOrders(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
-
-        if (item.get("memberId").equals(memberId)) {  //판매자 여부 판별
-
-            result.put("orders", itemMapper.selectOrders(itemId));
-        } else {
-            throw new IllegalArgumentException("구매를 신청한 사용자들 조회 권한이 없습니다.");
-
-        }
-
-        return result;
-    }
-
-
-    public Map deleteOrder(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
-        Map order = itemMapper.selectOrder(itemId, memberId).orElseThrow(IllegalArgumentException::new);  //구매자 신청 존재 및 구매자 신청 삭제 권한 확인
-
-        itemMapper.deleteOrder(itemId, memberId);
-        result.put("itemId", itemId);
-
-        return result;
-    }
 
     //매너온도 증가 로직
     public void incMannersTemperature(Integer memberId, ItemDto.modifyItemStatusDto itemDto){

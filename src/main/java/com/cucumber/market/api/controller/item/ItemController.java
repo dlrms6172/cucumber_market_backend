@@ -1,7 +1,6 @@
 package com.cucumber.market.api.controller.item;
 
 import com.cucumber.market.api.dto.item.ItemDto;
-import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.item.ItemService;
 import com.cucumber.market.api.service.item.ItemStatus;
 import jakarta.annotation.Nullable;
@@ -94,9 +93,7 @@ public class ItemController {
     @GetMapping("/items")
     public ResponseEntity getItems(@RequestHeader(name = "memberId") int memberId) {
 
-        UserDto.userProfileGet userDto = new UserDto.userProfileGet();
-        userDto.setMemberId(memberId);
-        body.put("data", itemService.getItems(userDto));
+        body.put("data", itemService.getItems(memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
@@ -107,9 +104,7 @@ public class ItemController {
                                       @RequestParam("name") String itemName,
                                       @Nullable @RequestParam("status") ItemStatus itemStatus) {
 
-        UserDto.userProfileGet userDto = new UserDto.userProfileGet();
-        userDto.setMemberId(memberId);
-        body.put("data", itemService.searchItems(userDto, itemName, itemStatus));
+        body.put("data", itemService.searchItems(memberId, itemName, itemStatus));
 
         return new ResponseEntity(body, HttpStatus.OK);
     }
@@ -122,33 +117,6 @@ public class ItemController {
         body.put("data", itemService.deleteItem(memberId, itemId));
 
         return new ResponseEntity<>(body, HttpStatus.OK);
-    }
-
-
-    @PostMapping("/items/{itemId}/like")
-    public ResponseEntity addLike(@PathVariable(name = "itemId") int itemId,
-                                  @RequestHeader(name = "memberId") int memberId) {
-
-        Map<String, Object> body = new LinkedHashMap<>() {
-            {
-                put("resultCode", 201);
-                put("resultMsg", "success");
-            }
-        };
-
-        body.put("data", itemService.addLike(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.CREATED);
-    }
-
-
-    @DeleteMapping("/items/{itemId}/like")
-    public ResponseEntity deleteLike(@PathVariable(name = "itemId") int itemId,
-                                     @RequestHeader(name = "memberId") int memberId) {
-
-        body.put("data", itemService.deleteLike(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.OK);
     }
 
 
@@ -172,40 +140,4 @@ public class ItemController {
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
-
-    @PostMapping("/items/{itemId}/order")
-    public ResponseEntity addOrder(@PathVariable(name = "itemId") int itemId,
-                                   @RequestHeader(name = "memberId") int memberId) {
-
-        Map<String, Object> body = new LinkedHashMap<>() {
-            {
-                put("resultCode", 201);
-                put("resultMsg", "success");
-            }
-        };
-
-        body.put("data", itemService.addOrder(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.CREATED);
-    }
-
-
-    @GetMapping("/items/{itemId}/orders")
-    public ResponseEntity getOrders(@PathVariable(name = "itemId") int itemId,
-                                    @RequestHeader(name = "memberId") int memberId) {
-
-        body.put("data", itemService.getOrders(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.OK);
-    }
-
-
-    @DeleteMapping("/items/{itemId}/order")
-    public ResponseEntity deleteOrder(@PathVariable(name = "itemId") int itemId,
-                                      @RequestHeader(name = "memberId") int memberId) {
-
-        body.put("data", itemService.deleteOrder(itemId, memberId));
-
-        return new ResponseEntity(body, HttpStatus.OK);
-    }
 }

@@ -39,6 +39,8 @@ public class UserService {
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    ProfileImageService imageService;
 
     public Map signInService(UserDto.signInDto dto) {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
@@ -134,10 +136,11 @@ public class UserService {
         return result;
     }
 
-    public Map userProfileGet(UserDto.userProfileGet dto){
+    public Map userProfileGet(Integer memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
-        result = (LinkedHashMap)userMapper.selectUserInfo(dto);
+        result = (LinkedHashMap)userMapper.selectUserInfo(memberId);
+        result.put("profileImageUrl", imageService.getImageUrl(memberId));
 
         return result;
     }
@@ -147,6 +150,7 @@ public class UserService {
 
         int updateUserInfo = userMapper.updateUserInfo(dto);
         result.put("result",updateUserInfo);
+        result.put("profileImageUrl", imageService.updateImage(dto));
 
         return result;
     }

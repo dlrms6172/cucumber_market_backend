@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -59,14 +61,13 @@ public class UserController {
 
     /**
      * 프로필 조회
-     * @param dto
+     * @param memberId
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId, @Valid UserDto.userProfileGet dto){
-        dto.setMemberId(memberId);
+    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId){
 
-        body.put("data",userService.userProfileGet(dto));
+        body.put("data", userService.userProfileGet(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
@@ -77,9 +78,11 @@ public class UserController {
      * @return
      */
     @PutMapping("/profile")
-    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId, @RequestBody @Valid UserDto.userProfilePut dto){
+    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId,
+                                      @RequestPart(value = "file", required = false) MultipartFile file,
+                                      @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto){
         dto.setMemberId(memberId);
-
+        dto.setProfileImage(file);
         body.put("data",userService.userProfilePut(dto));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
