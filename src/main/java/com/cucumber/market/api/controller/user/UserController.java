@@ -52,6 +52,7 @@ public class UserController {
         dto.setPlatform(platform);
 
         //헤더 로케이션 셋팅
+        headers = new HttpHeaders();
         headers.setLocation(URI.create("/"));
 
         body.put("data",userService.signInCallBackService(dto));
