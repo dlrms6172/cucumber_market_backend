@@ -38,7 +38,7 @@ public class UserController {
 
         body.put("data",userService.signInService(dto));
 
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        return new ResponseEntity(body, headers, HttpStatus.PERMANENT_REDIRECT);
     }
 
     /**
