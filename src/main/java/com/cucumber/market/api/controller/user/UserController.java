@@ -53,7 +53,7 @@ public class UserController {
 
         //헤더 로케이션 셋팅
         headers = new HttpHeaders();
-        headers.setLocation(URI.create("/"));
+        headers.setLocation(URI.create("http://localhost:8080/"));
 
         body.put("data",userService.signInCallBackService(dto));
 
