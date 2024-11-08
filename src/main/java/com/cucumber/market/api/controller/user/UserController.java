@@ -38,7 +38,7 @@ public class UserController {
 
         body.put("data",userService.signInService(dto));
 
-        return new ResponseEntity(body, headers, HttpStatus.PERMANENT_REDIRECT);
+        return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
     /**
@@ -57,7 +57,7 @@ public class UserController {
 
         body.put("data",userService.signInCallBackService(dto));
 
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        return new ResponseEntity(body, headers, HttpStatus.PERMANENT_REDIRECT);
     }
 
     /**
