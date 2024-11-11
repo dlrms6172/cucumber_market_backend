@@ -106,8 +106,6 @@ public class UserService {
                 }
 
             }
-        }else if(dto.getPlatform().equals("kakao")){
-
         }
 
         return result;

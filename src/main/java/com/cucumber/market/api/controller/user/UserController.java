@@ -9,9 +9,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,22 +31,23 @@ public class UserController {
      * @param dto
      * @return
      */
-    @GetMapping(value="/signin")
-    public ResponseEntity signIn(@Valid UserDto.signInDto dto){
+    @GetMapping("/signin")
+    public ResponseEntity signIn(@ModelAttribute @Valid UserDto.signInDto dto){
 
         body.put("data",userService.signInService(dto));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
-    /**
+/*
+    *//**
      * 회원가입 or 로그인
      * @param platform
      * @param dto
      * @return
-     */
+     *//*
     @GetMapping("/singin/callback/{platform}")
-    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto){
+    public ResponseEntity signInCallBack(@PathVariable String platform, @ModelAttribute @Valid UserDto.signInCallBackDto dto){
         dto.setPlatform(platform);
 
         //헤더 로케이션 셋팅
@@ -59,6 +58,7 @@ public class UserController {
 
         return new ResponseEntity(body, headers, HttpStatus.PERMANENT_REDIRECT);
     }
+    */
 
     /**
      * 프로필 조회
