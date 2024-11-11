@@ -47,7 +47,7 @@ public class ItemDto {
         private Integer priceNegotiationYn;
         @Positive
         private Integer price;
-        private List<String> unchangedImageUrls;
+        private List<String> imageIndexList;
     }
 
     @Getter
@@ -75,7 +75,7 @@ public class ItemDto {
         private Integer itemId;
         private String originalName;
         private String keyName;
-
+        private Integer index;
     }
 
 }
