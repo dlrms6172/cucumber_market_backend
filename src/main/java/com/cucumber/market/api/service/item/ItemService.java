@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,10 +67,11 @@ public class ItemService {
         if (item.get("memberId").equals(memberId)) {  //상품 수정 권한 확인
 
             itemMapper.updateItem(itemId, itemDto);
-            List<String> imageUrls = itemImageService.updateImages(itemId, itemDto.getUnchangedImageUrls(), files);
+            List<String> imageUrls = itemImageService.updateImages(itemId, itemDto.getImageIndexList(), files);
 
+            //응답 값 생성
             itemDto.setItemId(itemId);
-            itemDto.setUnchangedImageUrls(null);
+            itemDto.setImageIndexList(null);
             result.put("item", itemDto);
             result.put("imageUrls", imageUrls);
         } else {
@@ -122,7 +124,13 @@ public class ItemService {
 
         Map userInfo = userMapper.selectUserInfo(memberId);
         Integer regionId = (Integer) userInfo.get("regionId");
-        result.put("items", itemMapper.selectAllItems(regionId));
+        List<Map> items = itemMapper.selectAllItems(regionId);
+
+        List<Integer> itemIdList = new ArrayList<>();
+        items.forEach(item -> itemIdList.add((Integer) item.get("itemId")));
+
+        result.put("items", items);
+        result.put("itemRepImages", itemImageService.getRepImageUrls(itemIdList));
 
         return result;
     }
@@ -134,7 +142,13 @@ public class ItemService {
 
         Map userInfo = userMapper.selectUserInfo(memberId);
         Integer regionId = (Integer) userInfo.get("regionId");
-        result.put("items", itemMapper.selectItems(regionId, itemName, itemStatus));
+        List<Map> items = itemMapper.selectItems(regionId, itemName, itemStatus);
+
+        List<Integer> itemIdList = new ArrayList<>();
+        items.forEach(item -> itemIdList.add((Integer) item.get("itemId")));
+
+        result.put("items", items);
+        result.put("itemRepImages", itemImageService.getRepImageUrls(itemIdList));
 
         return result;
     }
@@ -146,7 +160,7 @@ public class ItemService {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
         if (item.get("memberId").equals(memberId)) {  //상품 삭제 권한 확인
 
-            itemImageService.deleteImages(itemId);
+            itemImageService.deleteAllImages(itemId);
             itemMapper.deleteItem(itemId);
             result.put("itemId", itemId);
 

@@ -109,14 +109,9 @@ create table item_image(
     original_name varchar(1000) comment '기존 이미지명',
     key_name varchar(1000) comment '저장된 이미지명',
     item_id int(11) not null comment '상품 id',
+    idx int(11) not null comment '인덱스',
     foreign key (item_id) references item(item_id) on delete cascade
 )engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='상품 이미지';
-
-/** 대표 상품 이미지 rep_item_image */
-create table rep_item_image(
-    image_id int(11) comment '이미지 id' primary key,
-    foreign key (image_id) references item_image(image_id) on delete cascade
-)engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='대표 상품 이미지';
 
 /** 프로필 이미지 profile_image */
 create table profile_image(

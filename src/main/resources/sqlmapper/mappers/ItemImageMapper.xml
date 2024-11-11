@@ -3,15 +3,29 @@
 <mapper namespace="com.cucumber.market.api.mapper.item.ItemImageMapper">
 
     <insert id="insertImage" useGeneratedKeys="true" keyProperty="imageId">
-        insert into item_image (original_name, key_name, item_id)
-        values (#{originalName}, #{keyName}, #{itemId})
+        insert into item_image (original_name, key_name, item_id, idx)
+        values (#{originalName}, #{keyName}, #{itemId}, #{index})
     </insert>
 
     <select id="selectImageKeyNames" resultType="java.lang.String">
         select key_name
         from item_image
         where item_id = #{itemId}
+        order by idx
     </select>
+
+    <select id="selectRepImageKeyName" resultType="java.lang.String">
+        select key_name
+        from item_image
+        where item_id = #{itemId}
+        and idx = 0
+    </select>
+
+    <update id="updateImageIndex">
+        update item_image
+        set idx = #{index}
+        where key_name = #{keyName}
+    </update>
 
     <delete id="deleteImage">
         delete from item_image
@@ -22,11 +36,6 @@
         delete from item_image
         where item_id = #{itemId}
     </delete>
-
-    <insert id="insertRepImage">
-        insert into rep_item_image
-        values (#{imageId})
-    </insert>
 
 </mapper>
 
