@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Utilities;
 
 @Configuration
 public class S3Config {
@@ -34,6 +35,11 @@ public class S3Config {
                 .region(Region.AP_NORTHEAST_2)
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
+    }
+
+    @Bean
+    public S3Utilities s3Utilities() {
+        return s3Client().utilities();
     }
 
 }
