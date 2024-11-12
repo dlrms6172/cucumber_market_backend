@@ -54,7 +54,7 @@ public class UserController {
 
         //헤더 로케이션 셋팅
         headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://localhost:8080/"));
+        headers.setLocation(URI.create("https://api.oi-market.kro.kr/"));
 
         // 로그인 후 처리 서비스 호출
         Map<String, Object> responseBody = userService.signInCallBackService(dto);
@@ -68,7 +68,7 @@ public class UserController {
         headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; HttpOnly; Path=/");
         System.out.println(session.getId());
 
-        return new ResponseEntity(body, headers, HttpStatus.PERMANENT_REDIRECT);
+        return new ResponseEntity(body, headers, HttpStatus.FOUND);
     }
 
     /**
