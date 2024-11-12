@@ -138,7 +138,10 @@ public class UserService {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         result = (LinkedHashMap)userMapper.selectUserInfo(memberId);
-        result.put("profileImageUrl", imageService.getImageUrl(memberId));
+        //세션 만료 시 null 예외처리
+        if(result != null){
+            result.put("profileImageUrl", imageService.getImageUrl(memberId));
+        }
 
         return result;
     }

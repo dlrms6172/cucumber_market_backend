@@ -2,6 +2,7 @@ package com.cucumber.market.api.controller.user;
 
 import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,8 +10,10 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -32,41 +35,55 @@ public class UserController {
      * @return
      */
     @GetMapping("/signin")
-    public ResponseEntity signIn(@ModelAttribute @Valid UserDto.signInDto dto){
+    public ResponseEntity signIn(@Valid UserDto.signInDto dto){
 
         body.put("data",userService.signInService(dto));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
-/*
-    *//**
+    /**
      * 회원가입 or 로그인
      * @param platform
      * @param dto
      * @return
-     *//*
+     */
     @GetMapping("/singin/callback/{platform}")
-    public ResponseEntity signInCallBack(@PathVariable String platform, @ModelAttribute @Valid UserDto.signInCallBackDto dto){
+    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto, HttpSession session){
         dto.setPlatform(platform);
 
         //헤더 로케이션 셋팅
         headers = new HttpHeaders();
         headers.setLocation(URI.create("http://localhost:8080/"));
 
-        body.put("data",userService.signInCallBackService(dto));
+        // 로그인 후 처리 서비스 호출
+        Map<String, Object> responseBody = userService.signInCallBackService(dto);
+
+        // 세션 생성 및 사용자 정보 저장
+        if (responseBody.containsKey("userInfo")) {
+            session.setAttribute("userInfo", responseBody.get("userInfo"));
+        }
+
+        // 세션 ID를 쿠키로 클라이언트에 전달
+        headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; HttpOnly; Path=/");
+        System.out.println(session.getId());
 
         return new ResponseEntity(body, headers, HttpStatus.PERMANENT_REDIRECT);
     }
-    */
 
     /**
      * 프로필 조회
-     * @param memberId
+     * @param session
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId){
+    public ResponseEntity userProfile(HttpSession session){
+
+        //값이 존재하지 않으면 0(memberId가 0인 회원은 없기 때문)
+        int memberId = Optional.ofNullable((Map<String, Object>) session.getAttribute("userInfo"))
+                .map(userInfo -> (Map<String, Object>) userInfo.get("userInfo"))
+                .map(userInfoMap -> (Integer) userInfoMap.get("memberId"))
+                .orElse(0);
 
         body.put("data", userService.userProfileGet(memberId));
 
