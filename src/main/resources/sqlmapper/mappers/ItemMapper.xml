@@ -15,9 +15,10 @@
         where item_id = #{itemId}
     </select>
 
-    <select id="selectItemSeller" resultType="resultMap">
+    <select id="selectUserMainInfo" resultType="resultMap">
         select
                 m.member_id,
+                m.name,
                 m.manners_temperature,
                 r.si_do,
                 r.si_gun_gu,
@@ -116,19 +117,17 @@
     </insert>
 
     <select id="selectBuyerReview" resultType="resultMap">
-        select *
-        from buyer_review
-        where item_id = #{itemId}
+        select item.item_name, brv.review, brv.member_id
+        from buyer_review as brv
+        join item on item.item_id = brv.item_id
+        where item.item_id = #{itemId}
     </select>
 
     <select id="selectBuyerReviews" resultType="resultMap">
-        select *
-        from buyer_review
-        where item_id in (
-                            select item_id
-                            from item
-                            where member_id = #{memberId}
-        )
+        select rv.review, rv.member_id
+        from buyer_review as rv
+        join item on rv.item_id = item.item_id
+        and item.member_id = #{memberId}
     </select>
 
     <update id="updateBuyerReview">
@@ -148,19 +147,19 @@
     </insert>
 
     <select id="selectSellerReview" resultType="resultMap">
-        select *
-        from seller_review
-        where item_id = #{itemId}
+        select item.item_name, srv.review
+        from seller_review as srv
+        join item on item.item_id = srv.item_id
+        where item.item_id = #{itemId}
     </select>
 
     <select id="selectSellerReviews" resultType="resultMap">
-        select *
-        from seller_review
-        where item_id in (
-                            select item_id
-                            from buyer_review
-                            where member_id = #{memberId}
-        )
+        select srv.review, (select member_id
+                            from item
+                            where item.item_id = srv.item_id) as member_id
+        from seller_review as srv
+        join buyer_review as brv on srv.item_id = brv.item_id
+        and brv.member_id = #{memberId}
     </select>
 
     <update id="updateSellerReview">

@@ -18,7 +18,7 @@ public interface ItemMapper {
 
     Optional<Map> selectItem(Integer itemId);
 
-    Optional<Map> selectItemSeller(Integer memberId);
+    Optional<Map> selectUserMainInfo(Integer memberId);
 
     void updateViewCount(Integer itemId);
 
