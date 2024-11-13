@@ -3,7 +3,6 @@ package com.cucumber.market.api.controller.review;
 import com.cucumber.market.api.service.review.ReviewSender;
 import com.cucumber.market.api.service.review.ReviewService;
 import com.cucumber.market.api.service.review.ReviewSort;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class ReviewController {
      */
     @GetMapping
     public ResponseEntity getReviewsOfMe(@RequestHeader(name = "memberId") int memberId,
-                                         @Nullable @RequestParam(name = "sender") ReviewSender reviewSender) {
+                                         @RequestParam(name = "sender") ReviewSender reviewSender) {
 
         body.put("data", reviewService.getReviewsOfMe(memberId, reviewSender));
 

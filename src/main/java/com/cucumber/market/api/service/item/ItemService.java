@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,14 +46,14 @@ public class ItemService {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);  //상품 조회
         Integer sellerMemberId = (Integer) item.get("memberId");
 
-        Map itemSeller = itemMapper.selectItemSeller(sellerMemberId).orElseThrow(IllegalArgumentException::new);  //판매자 조회
+        Map itemSeller = itemMapper.selectUserMainInfo(sellerMemberId).orElseThrow(IllegalArgumentException::new);  //판매자 조회
 
         //응답 값 생성
         item.remove("memberId");
+        item.put("itemImageUrls", itemImageService.getImageUrls(itemId));
         result.put("item", item);
-        result.put("itemImageUrls", itemImageService.getImageUrls(itemId));
+        itemSeller.put("profileImageUrl", profileImageService.getImageUrl(sellerMemberId));
         result.put("itemSeller", itemSeller);
-        result.put("profileImageUrl", profileImageService.getImageUrl(sellerMemberId));
 
         return result;
     }
@@ -126,11 +125,8 @@ public class ItemService {
         Integer regionId = (Integer) userInfo.get("regionId");
         List<Map> items = itemMapper.selectAllItems(regionId);
 
-        List<Integer> itemIdList = new ArrayList<>();
-        items.forEach(item -> itemIdList.add((Integer) item.get("itemId")));
-
+        putItemRepImages(items);  //상품 대표 이미지(섬네일)
         result.put("items", items);
-        result.put("itemRepImages", itemImageService.getRepImageUrls(itemIdList));
 
         return result;
     }
@@ -144,11 +140,8 @@ public class ItemService {
         Integer regionId = (Integer) userInfo.get("regionId");
         List<Map> items = itemMapper.selectItems(regionId, itemName, itemStatus);
 
-        List<Integer> itemIdList = new ArrayList<>();
-        items.forEach(item -> itemIdList.add((Integer) item.get("itemId")));
-
+        putItemRepImages(items);  //상품 대표 이미지(섬네일)
         result.put("items", items);
-        result.put("itemRepImages", itemImageService.getRepImageUrls(itemIdList));
 
         return result;
     }
@@ -249,6 +242,16 @@ public class ItemService {
         itemDto.setIncBuyerMannersTemperature(buyerMannersTemperature); //구매자:증가된 매너온도 셋팅
         userMapper.updateBuyerMannersTemperature(itemDto); //구매자:매너온도 업데이트
     }
+
+
+    private void putItemRepImages(List<Map> items) {
+        for (Map item : items) {
+            Integer itemId = (Integer) item.get("itemId");
+            String repImageUrl = itemImageService.getRepImageUrl(itemId);
+            item.put("itemRepImage", repImageUrl);
+        }
+    }
+
 
 }
 

@@ -1,7 +1,7 @@
 package com.cucumber.market.api.service.history;
 
-
 import com.cucumber.market.api.mapper.history.HistoryMapper;
+import com.cucumber.market.api.service.item.ItemImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +14,14 @@ public class HistoryService {
 
     @Autowired
     HistoryMapper historyMapper;
+    @Autowired
+    ItemImageService itemImageService;
 
     public Map sales(int memberId, Integer itemStatusId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<Map> selectSales = historyMapper.selectSales(memberId, itemStatusId);
+        putItemRepImages(selectSales);
 
         result.put("sales",selectSales);
 
@@ -29,6 +32,7 @@ public class HistoryService {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<Map> selectPurchases = historyMapper.selectPurchases(memberId);
+        putItemRepImages(selectPurchases);
 
         result.put("purchases",selectPurchases);
 
@@ -39,6 +43,7 @@ public class HistoryService {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<Map> selectInterests = historyMapper.selectInterests(memberId);
+        putItemRepImages(selectInterests);
 
         result.put("interests",selectInterests);
 
@@ -53,6 +58,15 @@ public class HistoryService {
         result.put("itemStatus",selectItemStatus);
 
         return result;
+    }
+
+    private void putItemRepImages(List<Map> items) {
+        //상품 대표 이미지(섬네일)
+        for (Map item : items) {
+            Integer itemId = (Integer) item.get("itemId");
+            String repImageUrl = itemImageService.getRepImageUrl(itemId);
+            item.put("itemRepImage", repImageUrl);
+        }
     }
 
 }

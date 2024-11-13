@@ -38,7 +38,7 @@ public class ItemImageService {
     }
 
 
-    public String addImage(Integer itemId, MultipartFile file, Integer index) {
+    private String addImage(Integer itemId, MultipartFile file, Integer index) {
         Map<String, String> imageInfo = imageUploader.uploadImage(BUCKET_FOLDER, file);  //S3에 이미지 저장
 
         ItemDto.itemImageDto imageDto = new ItemDto.itemImageDto();
@@ -68,16 +68,9 @@ public class ItemImageService {
 
 
     @Transactional(readOnly = true)
-    public List<String> getRepImageUrls(List<Integer> itemIdList) {
-        List<String> repImageUrls = new ArrayList<>();
-
-        itemIdList.forEach(itemId -> {
-            String keyName = itemImageMapper.selectRepImageKeyName(itemId);
-            String url = imageUploader.getUrlFromS3Bucket(keyName);
-            repImageUrls.add(url);
-        });
-
-        return repImageUrls;
+    public String getRepImageUrl(Integer itemId) {
+        String keyName = itemImageMapper.selectRepImageKeyName(itemId);
+        return imageUploader.getUrlFromS3Bucket(keyName);
     }
 
 
@@ -89,7 +82,7 @@ public class ItemImageService {
      * @return  List<String> newImageUrls
      */
     public List<String> updateImages(Integer itemId, List<String> imageIndexList, List<MultipartFile> files) {
-        deleteAllImages(itemId, imageIndexList);
+        deleteImages(itemId, imageIndexList);
 
         return generateNewImageUrls(itemId, imageIndexList, files);
     }
@@ -99,19 +92,21 @@ public class ItemImageService {
         UrlValidator urlValidator = new UrlValidator();
         List<String> newImageUrls = new ArrayList<>();
 
-        for (int i = 0; i < imageIndexList.size(); i++) {
-            String s = imageIndexList.get(i);
-            int fileIdx = 0;
+        List<String> fileNameList = new ArrayList<>();
+        files.forEach(file -> fileNameList.add(file.getOriginalFilename()));
+
+        for (int idx = 0; idx < imageIndexList.size(); idx++) {
+            String s = imageIndexList.get(idx);
 
             if (urlValidator.isValid(s)) {  //기존 이미지 url은 인덱스 업데이트
-                URI uri = URI.create(s);
-                String key = s3Utilities.parseUri(uri).key().orElseThrow();
-                itemImageMapper.updateImageIndex(key, i);
+                updateImageIndex(idx, s);
+
                 newImageUrls.add(s);
             } else {  //사용자가 새로 입력한 이미지는 S3 bucket 및 DB 에 저장
+                int fileIdx = fileNameList.indexOf(s);
+                String url = addImage(itemId, files.get(fileIdx), idx);
 
-                newImageUrls.add(addImage(itemId, files.get(fileIdx), i));
-                fileIdx++;
+                newImageUrls.add(url);
             }
         }
 
@@ -119,7 +114,19 @@ public class ItemImageService {
     }
 
 
-    private void deleteAllImages(Integer itemId, List<String> imageIndexList) {
+    private void updateImageIndex(int idx, String url) {
+        URI uri = URI.create(url);
+        String key = s3Utilities.parseUri(uri).key().orElseThrow();
+        itemImageMapper.updateImageIndex(key, idx);
+    }
+
+
+    /**
+     * 상품 수정 시 사용자가 삭제한 이미지 삭제
+     * @param itemId
+     * @param imageIndexList
+     */
+    private void deleteImages(Integer itemId, List<String> imageIndexList) {
         List<String> savedKeyNames = itemImageMapper.selectImageKeyNames(itemId);  //기존에 저장된 이미지들 중
 
         for (String savedKeyName : savedKeyNames) {
@@ -138,6 +145,11 @@ public class ItemImageService {
     }
 
 
+    /**
+     * 상품 이미지 전체 삭제
+     * 상품 삭제 시 상품 이미지들도 모두 삭제
+     * @param itemId
+     */
     public void deleteAllImages(Integer itemId) {
         List<String> savedKeyNames = itemImageMapper.selectImageKeyNames(itemId);
         imageUploader.deleteImages(savedKeyNames);  //S3에서 이미지들 삭제
