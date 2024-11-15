@@ -150,8 +150,9 @@ public class UserService {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         int updateUserInfo = userMapper.updateUserInfo(dto);
+        String updateImage = imageService.updateImage(dto);
+
         result.put("result",updateUserInfo);
-        result.put("profileImageUrl", imageService.updateImage(dto));
 
         return result;
     }
