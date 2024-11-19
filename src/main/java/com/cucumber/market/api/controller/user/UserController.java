@@ -54,7 +54,7 @@ public class UserController {
 
         //헤더 로케이션 셋팅
         headers = new HttpHeaders();
-        headers.setLocation(URI.create("https://api.oi-market.kro.kr/"));
+        headers.setLocation(URI.create("http://localhost:8080/"));
 
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
         Map<String, Object> responseBody = userService.signInCallBackService(dto);
