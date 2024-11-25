@@ -54,7 +54,8 @@ public class UserController {
 
         //헤더 로케이션 셋팅
         headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://localhost:8080/?sessionId=" + session.getId()));
+        headers.setLocation(URI.create("http://localhost:8080/"));
+//        headers.setLocation(URI.create("http://localhost:8080/?sessionId=" + session.getId()));
 
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
         Map<String, Object> responseBody = userService.signInCallBackService(dto);
@@ -65,7 +66,8 @@ public class UserController {
         }
 
         // 세션 ID를 쿠키로 클라이언트에 전달
-        headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; Path=/");
+        headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; HttpOnly; Path=/");
+//        headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; Path=/");
 
         return new ResponseEntity(body, headers, HttpStatus.FOUND);
     }
