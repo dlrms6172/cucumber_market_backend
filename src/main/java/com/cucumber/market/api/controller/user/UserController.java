@@ -1,5 +1,6 @@
 package com.cucumber.market.api.controller.user;
 
+import com.cucumber.market.api.common.handler.MemberSessionHandler;
 import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -13,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -28,6 +28,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    MemberSessionHandler memberSessionHandler;
 
     /**
      * 로그인 페이지 리턴
@@ -77,13 +79,7 @@ public class UserController {
      */
     @GetMapping("/profile")
     public ResponseEntity userProfile(HttpSession session){
-
-        //값이 존재하지 않으면 0(memberId가 0인 회원은 없기 때문)
-        int memberId = Optional.ofNullable((Map<String, Object>) session.getAttribute("userInfo"))
-                .map(userInfo -> (Map<String, Object>) userInfo.get("userInfo"))
-                .map(userInfoMap -> (Integer) userInfoMap.get("memberId"))
-                .orElse(0);
-
+        int memberId = memberSessionHandler.getMemberIdFromSession(session);
         body.put("data", userService.userProfileGet(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
@@ -95,9 +91,10 @@ public class UserController {
      * @return
      */
     @PutMapping("/profile")
-    public ResponseEntity userProfile(@RequestHeader(name = "memberId") int memberId,
+    public ResponseEntity userProfile(HttpSession session,
                                       @RequestPart(value = "file", required = false) MultipartFile file,
                                       @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto){
+        int memberId = memberSessionHandler.getMemberIdFromSession(session);
         dto.setMemberId(memberId);
         dto.setProfileImage(file);
         body.put("data",userService.userProfilePut(dto));
