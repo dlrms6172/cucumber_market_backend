@@ -1,8 +1,6 @@
 package com.cucumber.market.api.controller.item;
 
-import com.cucumber.market.api.common.handler.MemberSessionHandler;
 import com.cucumber.market.api.service.item.OrderService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,6 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderService orderService;
-    private final MemberSessionHandler memberSessionHandler;
 
     private Map<String, Object> body = new LinkedHashMap<>() {
         {
@@ -29,7 +26,7 @@ public class OrderController {
 
     @PostMapping("/{itemId}/order")
     public ResponseEntity addOrder(@PathVariable(name = "itemId") int itemId,
-                                   HttpSession session) {
+                                   @SessionAttribute Integer memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
             {
@@ -37,7 +34,6 @@ public class OrderController {
                 put("resultMsg", "success");
             }
         };
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
         body.put("data", orderService.addOrder(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.CREATED);
@@ -46,8 +42,7 @@ public class OrderController {
 
     @GetMapping("/{itemId}/orders")
     public ResponseEntity getOrders(@PathVariable(name = "itemId") int itemId,
-                                    HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                    @SessionAttribute Integer memberId) {
         body.put("data", orderService.getOrders(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -56,8 +51,7 @@ public class OrderController {
 
     @DeleteMapping("/{itemId}/order")
     public ResponseEntity deleteOrder(@PathVariable(name = "itemId") int itemId,
-                                      HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                      @SessionAttribute Integer memberId) {
         body.put("data", orderService.deleteOrder(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);

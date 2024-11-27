@@ -64,8 +64,8 @@ public class UserService {
         return result;
     }
 
-    public Map signInCallBackService(UserDto.signInCallBackDto dto) {
-        LinkedHashMap<String,Object> result = new LinkedHashMap<>();
+    public Integer signInCallBackService(UserDto.signInCallBackDto dto) {
+        Integer memberId = null;
 
         // 구글 로그인 서비스
         if(dto.getPlatform().equals("google")){
@@ -100,15 +100,13 @@ public class UserService {
                     dto.setSnsValue(response.getBody().get("id").toString());
                     dto.setEmail(response.getBody().get("email").toString());
 
-                    Map userInfo = userCheck(dto);
-
-                    result.put("userInfo",userInfo);
+                    memberId = ensureMemberIsJoined(dto);
                 }
 
             }
         }
 
-        return result;
+        return memberId;
     }
 
     /**
@@ -116,22 +114,15 @@ public class UserService {
      * @param dto
      * @return
      */
-    public Map userCheck(UserDto.signInCallBackDto dto) {
-        LinkedHashMap<String,Object> result = new LinkedHashMap<>();
-
+    public Integer ensureMemberIsJoined(UserDto.signInCallBackDto dto) {
         Map selectCheckUserInfo = userMapper.selectCheckUserInfo(dto);
 
-        // 유저 존재
-        if(selectCheckUserInfo != null){
-            result.put("userInfo",selectCheckUserInfo);
-        }else { // 유저 미존재
+        if (selectCheckUserInfo == null) {  //유저 미존재 시 가입처리
             userMapper.insertUserInfo(dto);
             selectCheckUserInfo = userMapper.selectCheckUserInfo(dto);
-
-            result = (LinkedHashMap<String, Object>) selectCheckUserInfo;
         }
 
-        return result;
+        return (Integer) selectCheckUserInfo.get("memberId");
     }
 
     public Map userProfileGet(Integer memberId){

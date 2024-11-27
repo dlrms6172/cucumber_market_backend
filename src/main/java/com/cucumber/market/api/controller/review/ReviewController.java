@@ -1,10 +1,8 @@
 package com.cucumber.market.api.controller.review;
 
-import com.cucumber.market.api.common.handler.MemberSessionHandler;
 import com.cucumber.market.api.service.review.ReviewSender;
 import com.cucumber.market.api.service.review.ReviewService;
 import com.cucumber.market.api.service.review.ReviewSort;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +17,6 @@ import java.util.Map;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final MemberSessionHandler memberSessionHandler;
 
     private Map<String, Object> body = new LinkedHashMap<>() {
         {
@@ -35,8 +32,7 @@ public class ReviewController {
      */
     @GetMapping
     public ResponseEntity getReviewsOfMe(@RequestParam(name = "sender") ReviewSender reviewSender,
-                                         HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                         @SessionAttribute Integer memberId) {
         body.put("data", reviewService.getReviewsOfMe(memberId, reviewSender));
 
         return new ResponseEntity<>(body, HttpStatus.OK);
@@ -52,8 +48,7 @@ public class ReviewController {
     @GetMapping("/{itemId}")
     public ResponseEntity getReview(@PathVariable(name = "itemId") int itemId,
                                     @RequestParam(name = "reviewSort") ReviewSort reviewSort,
-                                    HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                    @SessionAttribute Integer memberId) {
         body.put("data", reviewService.getReview(memberId, itemId, reviewSort));
 
         return new ResponseEntity<>(body, HttpStatus.OK);

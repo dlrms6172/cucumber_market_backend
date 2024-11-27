@@ -1,6 +1,5 @@
 package com.cucumber.market.api.controller.user;
 
-import com.cucumber.market.api.common.handler.MemberSessionHandler;
 import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -28,8 +27,6 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    @Autowired
-    MemberSessionHandler memberSessionHandler;
 
     /**
      * 로그인 페이지 리턴
@@ -59,12 +56,10 @@ public class UserController {
         headers.setLocation(URI.create("http://localhost:8080/?sessionId=" + session.getId()));
 
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
-        Map<String, Object> responseBody = userService.signInCallBackService(dto);
+        Integer memberId = userService.signInCallBackService(dto);
 
         // 해당 컨트롤러가 호출될 때 세션을 받지 않으므로 세션을 생성해서 DB에 만든 사용자 정보를 세션에 저장(값을 저장하게 되면 세션이 생성됨)
-        if (responseBody.containsKey("userInfo")) {
-            session.setAttribute("userInfo", responseBody.get("userInfo"));
-        }
+        session.setAttribute("memberId", memberId);
 
         // 세션 ID를 쿠키로 클라이언트에 전달
         headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; Path=/");
@@ -74,12 +69,11 @@ public class UserController {
 
     /**
      * 프로필 조회
-     * @param session
+     * @param memberId
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(HttpSession session){
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+    public ResponseEntity userProfile(@SessionAttribute Integer memberId){
         body.put("data", userService.userProfileGet(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
@@ -91,10 +85,9 @@ public class UserController {
      * @return
      */
     @PutMapping("/profile")
-    public ResponseEntity userProfile(HttpSession session,
+    public ResponseEntity userProfile(@SessionAttribute Integer memberId,
                                       @RequestPart(value = "file", required = false) MultipartFile file,
                                       @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto){
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
         dto.setMemberId(memberId);
         dto.setProfileImage(file);
         body.put("data",userService.userProfilePut(dto));
