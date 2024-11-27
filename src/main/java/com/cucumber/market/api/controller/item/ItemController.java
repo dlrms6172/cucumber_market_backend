@@ -1,11 +1,9 @@
 package com.cucumber.market.api.controller.item;
 
-import com.cucumber.market.api.common.handler.MemberSessionHandler;
 import com.cucumber.market.api.dto.item.ItemDto;
 import com.cucumber.market.api.service.item.ItemService;
 import com.cucumber.market.api.service.item.ItemStatus;
 import jakarta.annotation.Nullable;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +21,6 @@ import java.util.Map;
 public class ItemController {
 
     private final ItemService itemService;
-    private final MemberSessionHandler memberSessionHandler;
 
     private Map<String, Object> body = new LinkedHashMap<>() {
         {
@@ -36,7 +33,7 @@ public class ItemController {
     @PostMapping("/items")
     public ResponseEntity addItem(@RequestPart(value = "files") List<MultipartFile> files,
                                   @RequestPart(value = "addItemRequest") ItemDto.addItemDto itemDto,
-                                  HttpSession session) {
+                                  @SessionAttribute Integer memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
             {
@@ -46,7 +43,6 @@ public class ItemController {
         };
 
         itemDto.setPostDate(LocalDateTime.now());
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
         body.put("data", itemService.addItem(memberId, itemDto, files));
 
         return new ResponseEntity(body, HttpStatus.CREATED);
@@ -55,7 +51,6 @@ public class ItemController {
 
     @GetMapping("/items/{itemId}")
     public ResponseEntity getItem(@PathVariable(name = "itemId") int itemId) {
-
         body.put("data", itemService.getItem(itemId));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -73,9 +68,8 @@ public class ItemController {
     public ResponseEntity modifyItem(@RequestPart(value = "files", required = false) List<MultipartFile> files,
                                      @RequestPart(value = "modifyItemRequest") ItemDto.modifyItemDto itemDto,
                                      @PathVariable(name = "itemId") int itemId,
-                                     HttpSession session) {
+                                     @SessionAttribute Integer memberId) {
         itemDto.setUpdateDate(LocalDateTime.now());
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
         body.put("data", itemService.modifyItem(memberId, itemId, itemDto, files));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -85,8 +79,7 @@ public class ItemController {
     @PutMapping("/items/{itemId}/status")
     public ResponseEntity modifyItemStatus(@Valid @RequestBody ItemDto.modifyItemStatusDto dto,
                                            @PathVariable(name = "itemId") int itemId,
-                                           HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                           @SessionAttribute Integer memberId) {
         body.put("data", itemService.modifyItemStatus(memberId, itemId, dto));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -94,8 +87,7 @@ public class ItemController {
 
 
     @GetMapping("/items")
-    public ResponseEntity getItems(HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+    public ResponseEntity getItems(@SessionAttribute Integer memberId) {
         body.put("data", itemService.getItems(memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -105,8 +97,7 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity searchItems(@RequestParam("name") String itemName,
                                       @Nullable @RequestParam("status") ItemStatus itemStatus,
-                                      HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                      @SessionAttribute Integer memberId) {
         body.put("data", itemService.searchItems(memberId, itemName, itemStatus));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -115,8 +106,7 @@ public class ItemController {
 
     @DeleteMapping("/items/{itemId}")
     public ResponseEntity deleteItem(@PathVariable(name = "itemId") int itemId,
-                                     HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                     @SessionAttribute Integer memberId) {
         body.put("data", itemService.deleteItem(memberId, itemId));
 
         return new ResponseEntity<>(body, HttpStatus.OK);
@@ -126,8 +116,7 @@ public class ItemController {
     @PutMapping("/items/{itemId}/review")
     public ResponseEntity modifyReview(@PathVariable(name = "itemId") int itemId,
                                        @RequestBody ItemDto.reviewDto reviewDto,
-                                       HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                       @SessionAttribute Integer memberId) {
         body.put("data", itemService.modifyReview(itemId, memberId, reviewDto));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -136,8 +125,7 @@ public class ItemController {
 
     @DeleteMapping("/items/{itemId}/review")
     public ResponseEntity deleteReview(@PathVariable(name = "itemId") int itemId,
-                                       HttpSession session) {
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+                                       @SessionAttribute Integer memberId) {
         body.put("data", itemService.deleteReview(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);

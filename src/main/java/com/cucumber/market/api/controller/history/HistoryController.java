@@ -1,8 +1,6 @@
 package com.cucumber.market.api.controller.history;
 
-import com.cucumber.market.api.common.handler.MemberSessionHandler;
 import com.cucumber.market.api.service.history.HistoryService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,36 +25,30 @@ public class HistoryController {
 
     @Autowired
     HistoryService historyService;
-    @Autowired
-    MemberSessionHandler memberSessionHandler;
 
     @GetMapping("/sales")
-    public ResponseEntity sales(HttpSession session, @RequestParam(required = false) Integer itemStatusId){
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+    public ResponseEntity sales(@SessionAttribute Integer memberId, @RequestParam(required = false) Integer itemStatusId){
         body.put("data",historyService.sales(memberId, itemStatusId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
     @GetMapping("/purchases")
-    public ResponseEntity purchases(HttpSession session){
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+    public ResponseEntity purchases(@SessionAttribute Integer memberId){
         body.put("data",historyService.purchases(memberId));
 
         return new ResponseEntity(body,headers,HttpStatus.OK);
     }
 
     @GetMapping("/interests")
-    public ResponseEntity interests(HttpSession session){
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+    public ResponseEntity interests(@SessionAttribute Integer memberId){
         body.put("data",historyService.interests(memberId));
 
         return new ResponseEntity(body, headers,HttpStatus.OK);
     }
 
     @GetMapping("/itemStatus")
-    public ResponseEntity itemStatus(HttpSession session){
-        int memberId = memberSessionHandler.getMemberIdFromSession(session);
+    public ResponseEntity itemStatus(@SessionAttribute Integer memberId){
         body.put("data",historyService.itemStatus(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
