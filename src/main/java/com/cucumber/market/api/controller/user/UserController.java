@@ -62,7 +62,7 @@ public class UserController {
         session.setAttribute("memberId", memberId);
 
         // 세션 ID를 쿠키로 클라이언트에 전달
-        headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; Path=/");
+        headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; Path=/" + "; Secure" + "; HttpOnly");  //+ "; Domain=oi-market.kro.kr"
 
         return new ResponseEntity(body, headers, HttpStatus.FOUND);
     }
