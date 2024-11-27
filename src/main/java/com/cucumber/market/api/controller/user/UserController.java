@@ -61,9 +61,6 @@ public class UserController {
         // 해당 컨트롤러가 호출될 때 세션을 받지 않으므로 세션을 생성해서 DB에 만든 사용자 정보를 세션에 저장(값을 저장하게 되면 세션이 생성됨)
         session.setAttribute("memberId", memberId);
 
-        // 세션 ID를 쿠키로 클라이언트에 전달
-        headers.add("Set-Cookie", "OIMARKETSESSIONID=" + session.getId() + "; Path=/" + "; Secure" + "; HttpOnly");  //+ "; Domain=oi-market.kro.kr"
-
         return new ResponseEntity(body, headers, HttpStatus.FOUND);
     }
 
