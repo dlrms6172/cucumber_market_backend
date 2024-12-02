@@ -57,3 +57,4 @@ server:
         name: OIMARKETSESSIONID
         secure: true
         http-only: true
+        same-site: None
