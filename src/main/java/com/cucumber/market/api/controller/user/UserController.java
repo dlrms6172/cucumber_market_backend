@@ -87,6 +87,7 @@ public class UserController {
                                       @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto){
         dto.setMemberId(memberId);
         dto.setProfileImage(file);
+        if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
         body.put("data",userService.userProfilePut(dto));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
