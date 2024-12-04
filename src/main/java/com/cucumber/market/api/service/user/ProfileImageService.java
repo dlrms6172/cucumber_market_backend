@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProfileImageService {
 
-    private final String bucketFolder = "Profile";
+    private static final String BUCKET_FOLDER = "Profile";
     private final ProfileImageMapper profileImageMapper;
     private final ImageUploader imageUploader;
 
@@ -47,7 +47,7 @@ public class ProfileImageService {
         Optional<String> keyName = profileImageMapper.selectImageKeyName(memberId);
 
         if (keyName.isPresent()) {
-            return imageUploader.getUrlFromS3Bucket(keyName.get());
+            return imageUploader.getUrlFromS3Bucket("resized-" + keyName.get());
         }
 
         return "";
@@ -56,8 +56,7 @@ public class ProfileImageService {
 
     @Transactional
     private String addImage(Integer memberId, MultipartFile file) {
-
-        Map<String, String> imageInfo = imageUploader.uploadImage(bucketFolder, file);
+        Map<String, String> imageInfo = imageUploader.uploadImage(BUCKET_FOLDER, file);
 
         UserDto.profileImageDto imageDto = new UserDto.profileImageDto();
         imageDto.setOriginalName(imageInfo.get("originalName"));
@@ -66,9 +65,7 @@ public class ProfileImageService {
 
         profileImageMapper.insertImage(imageDto);
 
-        String url = imageUploader.getUrlFromS3Bucket(imageDto.getKeyName());
-
-        return url;
+        return imageUploader.getUrlFromS3Bucket("resized-" + imageDto.getKeyName());
     }
 
 
@@ -78,6 +75,7 @@ public class ProfileImageService {
 
         if (savedKeyName.isPresent()) {  //기존 프로필 이미지가 있는 경우 삭제
             imageUploader.deleteImage(savedKeyName.get());
+            imageUploader.deleteImage("resized-" + savedKeyName.get());
             profileImageMapper.deleteImage(memberId);
         }
 

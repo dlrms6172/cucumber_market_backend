@@ -50,8 +50,7 @@ public class ItemImageService {
         itemImageMapper.insertImage(imageDto);  //DB에 이미지 정보 저장
 
         //S3 bucket 에 저장된 이미지 url 프론트에 반환
-        String imageUrl = imageUploader.getUrlFromS3Bucket(imageDto.getKeyName());
-        return imageUrl;
+        return imageUploader.getUrlFromS3Bucket("resized-" + imageDto.getKeyName());
     }
 
 
@@ -61,7 +60,7 @@ public class ItemImageService {
         List<String> imageUrls = new ArrayList<>();
 
         List<String> savedKeyNames = itemImageMapper.selectImageKeyNames(itemId);
-        savedKeyNames.forEach(savedKeyName -> imageUrls.add(imageUploader.getUrlFromS3Bucket(savedKeyName)));
+        savedKeyNames.forEach(savedKeyName -> imageUrls.add(imageUploader.getUrlFromS3Bucket("resized-" + savedKeyName)));
 
         return imageUrls;
     }
@@ -70,7 +69,7 @@ public class ItemImageService {
     @Transactional(readOnly = true)
     public String getRepImageUrl(Integer itemId) {
         String keyName = itemImageMapper.selectRepImageKeyName(itemId);
-        return imageUploader.getUrlFromS3Bucket(keyName);
+        return imageUploader.getUrlFromS3Bucket("resized-" + keyName);
     }
 
 
@@ -140,7 +139,10 @@ public class ItemImageService {
 
 
     private void deleteImage(String key) {
-        imageUploader.deleteImage(key);  //S3에서 이미지 삭제
+        //S3에서 이미지 삭제
+        imageUploader.deleteImage(key);
+        imageUploader.deleteImage("resized-" + key);
+
         itemImageMapper.deleteImage(key);  //DB에서 이미지 정보 삭제
     }
 
@@ -151,10 +153,16 @@ public class ItemImageService {
      * @param itemId
      */
     public void deleteAllImages(Integer itemId) {
+        //S3에서 이미지들 삭제
         List<String> savedKeyNames = itemImageMapper.selectImageKeyNames(itemId);
-        imageUploader.deleteImages(savedKeyNames);  //S3에서 이미지들 삭제
+        imageUploader.deleteImages(savedKeyNames);
 
-        itemImageMapper.deleteImages(itemId);  //DB에서 이미지들 정보 삭제
+        List<String> savedResizedKeyNames = new ArrayList<>();
+        savedKeyNames.forEach(savedKeyName -> savedResizedKeyNames.add("resized-" + savedKeyName));
+        imageUploader.deleteImages(savedResizedKeyNames);
+
+        //DB에서 이미지들 정보 삭제
+        itemImageMapper.deleteImages(itemId);
     }
 
 }

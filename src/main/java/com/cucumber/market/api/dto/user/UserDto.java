@@ -52,7 +52,7 @@ public class UserDto {
 
         private MultipartFile profileImage;
 
-        private boolean deletedOldProfileImage = false;  //프로필 이미지 삭제, 교체의 경우 프론트에서 true 로 입력
+        private boolean deletedOldProfileImage = false;  //프로필 이미지 삭제의 경우 프론트에서 true 로 입력
 
     }
 

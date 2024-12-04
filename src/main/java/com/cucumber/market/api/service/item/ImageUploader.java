@@ -1,7 +1,6 @@
 package com.cucumber.market.api.service.item;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,8 +20,7 @@ public class ImageUploader {
     private final S3Client s3Client;
 
     public Map<String, String> uploadImage(String bucketFolder, MultipartFile file) {
-
-        String fileName = FilenameUtils.getBaseName(file.getOriginalFilename());  //확장자 제거한 기존 이미지 이름
+        String fileName = file.getOriginalFilename();  //확장자명까지 받기
         String keyName = createKeyName(bucketFolder, fileName);  //S3 bucket 에 저장될 고유한 key 이름 생성
 
         //이미지 정보
@@ -49,7 +47,7 @@ public class ImageUploader {
 
 
     public String createKeyName(String bucketFolder, String fileName) {
-        String uniqueName = fileName + UUID.randomUUID();
+        String uniqueName = UUID.randomUUID() + fileName;
 
         return bucketFolder + "/" + uniqueName;
     }
@@ -58,9 +56,8 @@ public class ImageUploader {
     //S3 bucket url 형식으로 변환
     public String getUrlFromS3Bucket(String keyName) {
         GetUrlRequest request = GetUrlRequest.builder().bucket(bucket).key(keyName).build();
-        String imageUrl = s3Client.utilities().getUrl(request).toExternalForm();
 
-        return imageUrl;
+        return s3Client.utilities().getUrl(request).toExternalForm();
     }
 
 
