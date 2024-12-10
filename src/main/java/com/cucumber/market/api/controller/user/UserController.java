@@ -1,5 +1,6 @@
 package com.cucumber.market.api.controller.user;
 
+import com.cucumber.market.api.common.security.JwtTokenProvider;
 import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +29,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+
     /**
      * 로그인 페이지 리턴
      * @param dto
@@ -47,30 +51,42 @@ public class UserController {
      * @param dto
      * @return
      */
-    @GetMapping("/singin/callback/{platform}")
-    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto, HttpSession session){
+    @GetMapping("/signin/callback/{platform}")
+    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto){
         dto.setPlatform(platform);
-
-        //헤더 로케이션 셋팅
-        headers = new HttpHeaders();
-        headers.setLocation(URI.create("http://localhost:8080/?sessionId=" + session.getId()));
 
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
         Integer memberId = userService.signInCallBackService(dto);
 
-        // 해당 컨트롤러가 호출될 때 세션을 받지 않으므로 세션을 생성해서 DB에 만든 사용자 정보를 세션에 저장(값을 저장하게 되면 세션이 생성됨)
-        session.setAttribute("memberId", memberId);
+        String token = jwtTokenProvider.generateToken(String.valueOf(memberId));
 
-        return new ResponseEntity(body, headers, HttpStatus.FOUND);
+        // 헤더에 JWT 토큰 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        // 응답으로 토큰 전달 (필요 시 프론트엔드 리다이렉션 URL 설정)
+        headers.setLocation(URI.create("http://localhost:8080?jwt="+token));
+
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
     /**
      * 프로필 조회
-     * @param memberId
+     * @param jwtToken
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(@SessionAttribute Integer memberId){
+    public ResponseEntity userProfile(@RequestHeader("Authorization") String jwtToken) {
+        // "Bearer " 접두어 제거
+        jwtToken = jwtToken.replace("Bearer ", "");
+
+        // 토큰 검증
+        if (!jwtTokenProvider.validateToken(jwtToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token.");
+        }
+
+        int memberId = Integer.parseInt(jwtTokenProvider.getMemberId(jwtToken));
+
         body.put("data", userService.userProfileGet(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
