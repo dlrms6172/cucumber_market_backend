@@ -125,6 +125,10 @@ public class UserService {
         return (Integer) selectCheckUserInfo.get("memberId");
     }
 
+    public void saveRefreshToken(Integer memberId, String refreshToken) {
+        int insertRefreshToken = userMapper.insertRefreshToken(memberId,refreshToken);
+    }
+
     public Map userProfileGet(Integer memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 

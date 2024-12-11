@@ -3,7 +3,9 @@ package com.cucumber.market.api.controller.user;
 import com.cucumber.market.api.common.security.JwtTokenProvider;
 import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
-import jakarta.servlet.http.HttpSession;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -52,20 +54,32 @@ public class UserController {
      * @return
      */
     @GetMapping("/signin/callback/{platform}")
-    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto){
+    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto, HttpServletResponse response){
         dto.setPlatform(platform);
 
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
         Integer memberId = userService.signInCallBackService(dto);
 
-        String token = jwtTokenProvider.generateToken(String.valueOf(memberId));
+        String accessToken = jwtTokenProvider.generateAccessToken(String.valueOf(memberId));
+        String refreshToken = jwtTokenProvider.generateRefreshToken(String.valueOf(memberId));
+
+        // refreshToken 저장
+        userService.saveRefreshToken(memberId,refreshToken);
+
+        // 쿠키에 JWT 토큰을 포함해서 클라이언트에 전달
+        Cookie accessCookie = new Cookie("ACCESS_TOKEN", accessToken);
+        accessCookie.setHttpOnly(true);
+
+        Cookie refreshCookie = new Cookie("REFRESH_TOKEN", refreshToken);
+        refreshCookie.setHttpOnly(true);
+
+        // 쿠키를 응답에 추가
+        response.addCookie(accessCookie); // Access Token 쿠키 추가
+        response.addCookie(refreshCookie); // Refresh Token 쿠키 추가
 
         // 헤더에 JWT 토큰 추가
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
-
-        // 응답으로 토큰 전달 (필요 시 프론트엔드 리다이렉션 URL 설정)
-        headers.setLocation(URI.create("http://localhost:8080?jwt="+token));
+        headers.setLocation(URI.create("http://localhost:8080"+"?access="+accessToken+"&"+"refresh="+refreshToken));
 
         return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
@@ -80,10 +94,6 @@ public class UserController {
         // "Bearer " 접두어 제거
         jwtToken = jwtToken.replace("Bearer ", "");
 
-        // 토큰 검증
-        if (!jwtTokenProvider.validateToken(jwtToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token.");
-        }
 
         int memberId = Integer.parseInt(jwtTokenProvider.getMemberId(jwtToken));
 
@@ -109,4 +119,25 @@ public class UserController {
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
+    /**
+     * 토큰 재발급
+     * @param refreshToken
+     * @return
+     */
+    @PostMapping("/refreshToken")
+    public ResponseEntity refreshToken(@RequestHeader("Authorization") String refreshToken) throws JwtException {
+
+        if(jwtTokenProvider.validateRefreshToken(refreshToken)) {
+            // Refresh Token에서 memberId 추출
+            String memberId = jwtTokenProvider.getMemberId(refreshToken);
+
+            // 새로운 Access Token 발급
+            String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
+            body.put("accessToken",newAccessToken);
+        } else {
+            throw new JwtException("");
+        }
+
+        return new ResponseEntity(body, headers, HttpStatus.OK);
+    }
 }

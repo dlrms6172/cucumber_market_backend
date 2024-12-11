@@ -21,18 +21,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = resolveToken(request);
+            String token = resolveToken(request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            String memberId = jwtTokenProvider.getMemberId(token);
+            if (token != null && jwtTokenProvider.validateAccessToken(token)) {
+                String memberId = jwtTokenProvider.getMemberId(token);
 
-            // Spring Security에서 인증 객체 설정
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(memberId, null, List.of());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
+                // Spring Security에서 인증 객체 설정
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(memberId, null, List.of());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request) {

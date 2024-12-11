@@ -83,4 +83,19 @@
         where 1=1
           and member_id = #{dto.clientId}
     </update>
+
+    <insert id="insertRefreshToken">
+        update cucumber.member
+        set refresh_token = #{refreshToken}
+        where 1=1
+            and member_id = #{memberId}
+    </insert>
+
+    <select id="selectRefreshToken">
+        select
+            *
+        from cucumber.member
+        where 1=1
+            and refresh_token = #{refreshToken}
+    </select>
 </mapper>
