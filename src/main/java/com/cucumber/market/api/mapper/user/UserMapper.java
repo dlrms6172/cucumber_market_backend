@@ -31,4 +31,6 @@ public interface UserMapper {
     int insertRefreshToken(Integer memberId, String refreshToken);
 
     String selectRefreshToken(String refreshToken);
+
+    String selectMemberIdRefreshToken(String refreshToken);
 }

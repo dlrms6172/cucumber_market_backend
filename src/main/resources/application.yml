@@ -8,7 +8,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     maximum-pool-size: 20
 mybatis:
-#  check-config-location: true
+  #  check-config-location: true
   mapper-locations: classpath:/sqlmapper/mappers/**/*.xml
   config-location: classpath:/sqlmapper/sql-mapper-config.xml
 
@@ -58,3 +58,13 @@ server:
         secure: true
         http-only: true
         same-site: None
+
+#JWT
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+  expired:
+    time:
+      accesstoken: ${JWT_EXPIRED_TIME_ACCESSTOKEN}
+      refreshtoken: ${JWT_EXPIRED_TIME_REFRESHTOKEN}
+

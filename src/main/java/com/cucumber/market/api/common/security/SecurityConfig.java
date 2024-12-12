@@ -8,6 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * 스프링 시큐리티 적용 제외 endpoint 설정
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

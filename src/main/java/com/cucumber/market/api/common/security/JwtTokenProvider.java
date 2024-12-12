@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+/**
+ * jwt 생성, 검증 로직
+ */
 @Component
 public class JwtTokenProvider {
 
@@ -27,9 +30,7 @@ public class JwtTokenProvider {
     @Autowired
     private UserMapper userMapper;
 
-    /**
-     * JWT 토큰 생성
-     */
+    //accessToken 생성
     public String generateAccessToken(String memberId) {
         Claims claims = Jwts.claims();
         claims.put("memberId",memberId);
@@ -45,9 +46,9 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(String memberId) {
+    //refreshToken 생성
+    public String generateRefreshToken() {
         Claims claims = Jwts.claims();
-        claims.put("memberId",memberId);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRED_TIME);
@@ -61,9 +62,10 @@ public class JwtTokenProvider {
 
     }
 
-    public boolean validateAccessToken(String token) {
+    public boolean validateAccessToken(String accessToken) {
         try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            accessToken = accessToken.replace("Bearer ", "");
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
@@ -71,8 +73,9 @@ public class JwtTokenProvider {
     }
 
     public boolean validateRefreshToken(String refreshToken) {
-        String cleanToken = refreshToken.replace("Bearer ", "").trim();
-        String validToken = userMapper.selectRefreshToken(cleanToken);
+        // "Bearer " 접두어 제거
+        refreshToken = refreshToken.replace("Bearer ", "");
+        String validToken = userMapper.selectRefreshToken(refreshToken);
 
         if(validToken != null){
             return true;
@@ -81,7 +84,19 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getMemberId(String token) {
-        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().get("memberId");
+    //accessToken 에서 멤버 ID 가져오기
+    public String getMemberIdFromAccessToken(String accessToken) {
+        // "Bearer " 접두어 제거
+        accessToken = accessToken.replace("Bearer ", "");
+        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().get("memberId");
+    }
+
+    //refreshToken 에서 멤버 ID 가져오기
+    public String getMemberIdFromRefreshToken(String refreshToken) {
+        // "Bearer " 접두어 제거
+        refreshToken = refreshToken.replace("Bearer ", "");
+        String memberId = userMapper.selectMemberIdRefreshToken(refreshToken);
+
+        return memberId;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class UserController {
         Integer memberId = userService.signInCallBackService(dto);
 
         String accessToken = jwtTokenProvider.generateAccessToken(String.valueOf(memberId));
-        String refreshToken = jwtTokenProvider.generateRefreshToken(String.valueOf(memberId));
+        String refreshToken = jwtTokenProvider.generateRefreshToken();
 
         // refreshToken 저장
         userService.saveRefreshToken(memberId,refreshToken);
@@ -86,17 +87,13 @@ public class UserController {
 
     /**
      * 프로필 조회
-     * @param jwtToken
+     * @param accessToken
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(@RequestHeader("Authorization") String jwtToken) {
-        // "Bearer " 접두어 제거
-        jwtToken = jwtToken.replace("Bearer ", "");
+    public ResponseEntity userProfile(@RequestHeader("Authorization") String accessToken) {
 
-
-        int memberId = Integer.parseInt(jwtTokenProvider.getMemberId(jwtToken));
-
+        int memberId = Integer.parseInt(jwtTokenProvider.getMemberIdFromAccessToken(accessToken));
         body.put("data", userService.userProfileGet(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
@@ -108,13 +105,16 @@ public class UserController {
      * @return
      */
     @PutMapping("/profile")
-    public ResponseEntity userProfile(@SessionAttribute Integer memberId,
+    public ResponseEntity userProfile(@RequestHeader("Authorization") String accessToken,
                                       @RequestPart(value = "file", required = false) MultipartFile file,
                                       @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto){
-        dto.setMemberId(memberId);
-        dto.setProfileImage(file);
-        if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
-        body.put("data",userService.userProfilePut(dto));
+
+            int memberId = Integer.parseInt(jwtTokenProvider.getMemberIdFromAccessToken(accessToken));
+            dto.setMemberId(memberId);
+            dto.setProfileImage(file);
+
+            if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
+            body.put("data",userService.userProfilePut(dto));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
@@ -128,12 +128,15 @@ public class UserController {
     public ResponseEntity refreshToken(@RequestHeader("Authorization") String refreshToken) throws JwtException {
 
         if(jwtTokenProvider.validateRefreshToken(refreshToken)) {
-            // Refresh Token에서 memberId 추출
-            String memberId = jwtTokenProvider.getMemberId(refreshToken);
+            // Refresh Token으로 DB에서 memberId 추출
+            String memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
+            System.out.println(memberId);
 
             // 새로운 Access Token 발급
             String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
-            body.put("accessToken",newAccessToken);
+
+            body.put("data",new HashMap<>(Map.of("accessToken",newAccessToken)));
+
         } else {
             throw new JwtException("");
         }
