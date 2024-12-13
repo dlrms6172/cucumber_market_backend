@@ -7,6 +7,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 
@@ -65,7 +67,7 @@ public class JwtTokenProvider {
     public boolean validateAccessToken(String accessToken) {
         try {
             accessToken = accessToken.replace("Bearer ", "");
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken);
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
@@ -73,13 +75,22 @@ public class JwtTokenProvider {
     }
 
     public boolean validateRefreshToken(String refreshToken) {
-        // "Bearer " 접두어 제거
-        refreshToken = refreshToken.replace("Bearer ", "");
-        String validToken = userMapper.selectRefreshToken(refreshToken);
+        try {
+            // "Bearer " 접두어 제거
+            refreshToken = refreshToken.replace("Bearer ", "");
+            // 토큰 유효한지 체크
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(refreshToken);
 
-        if(validToken != null){
-            return true;
-        } else {
+            // DB에서 한번 더 체크
+            String validToken = userMapper.selectRefreshToken(refreshToken);
+
+            if(validToken != null){
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
@@ -89,6 +100,17 @@ public class JwtTokenProvider {
         // "Bearer " 접두어 제거
         accessToken = accessToken.replace("Bearer ", "");
         return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().get("memberId");
+
+        // SecurityContext에서 인증된 사용자 정보 가져오기
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        // 인증 정보가 없으면 예외 처리
+//        if (authentication == null || authentication.getPrincipal() == null) {
+//            throw new IllegalStateException("No authentication information found in security context.");
+//        }
+//
+//        // SecurityContext에서 사용자 정보를 추출, memberId는 일반적으로 authentication.getName()에 저장
+//        return authentication.getName();  // getName()은 보통 사용자 ID를 반환한다고 가정
     }
 
     //refreshToken 에서 멤버 ID 가져오기

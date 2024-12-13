@@ -66,6 +66,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // SecurityConfig에서 설정된 허용 URI와 동일하게 체크
     private boolean permittedURI(String requestURI) {
-        return requestURI.startsWith("/user/signin") || requestURI.equals("/");
+        return requestURI.startsWith("/user/signin") || requestURI.equals("/") || requestURI.equals("/user/refreshToken");
     }
 }

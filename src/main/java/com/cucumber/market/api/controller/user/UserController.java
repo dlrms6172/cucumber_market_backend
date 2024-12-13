@@ -70,9 +70,11 @@ public class UserController {
         // 쿠키에 JWT 토큰을 포함해서 클라이언트에 전달
         Cookie accessCookie = new Cookie("ACCESS_TOKEN", accessToken);
         accessCookie.setHttpOnly(true);
+        accessCookie.setSecure(true);
 
         Cookie refreshCookie = new Cookie("REFRESH_TOKEN", refreshToken);
         refreshCookie.setHttpOnly(true);
+        refreshCookie.setSecure(true);
 
         // 쿠키를 응답에 추가
         response.addCookie(accessCookie); // Access Token 쿠키 추가
@@ -130,7 +132,6 @@ public class UserController {
         if(jwtTokenProvider.validateRefreshToken(refreshToken)) {
             // Refresh Token으로 DB에서 memberId 추출
             String memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
-            System.out.println(memberId);
 
             // 새로운 Access Token 발급
             String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
