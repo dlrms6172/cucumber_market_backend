@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,7 +97,9 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity userProfile(@RequestHeader("Authorization") String accessToken) {
 
-        int memberId = Integer.parseInt(jwtTokenProvider.getMemberIdFromAccessToken(accessToken));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int memberId = Integer.parseInt(authentication.getPrincipal().toString());
+
         body.put("data", userService.userProfileGet(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
@@ -109,14 +113,15 @@ public class UserController {
     @PutMapping("/profile")
     public ResponseEntity userProfile(@RequestHeader("Authorization") String accessToken,
                                       @RequestPart(value = "file", required = false) MultipartFile file,
-                                      @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto){
+                                      @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto) {
 
-            int memberId = Integer.parseInt(jwtTokenProvider.getMemberIdFromAccessToken(accessToken));
-            dto.setMemberId(memberId);
-            dto.setProfileImage(file);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int memberId = Integer.parseInt(authentication.getPrincipal().toString());
+        dto.setMemberId(memberId);
+        dto.setProfileImage(file);
 
-            if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
-            body.put("data",userService.userProfilePut(dto));
+        if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
+        body.put("data", userService.userProfilePut(dto));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }

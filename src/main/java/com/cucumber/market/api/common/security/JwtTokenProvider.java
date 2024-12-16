@@ -100,17 +100,6 @@ public class JwtTokenProvider {
         // "Bearer " 접두어 제거
         accessToken = accessToken.replace("Bearer ", "");
         return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().get("memberId");
-
-        // SecurityContext에서 인증된 사용자 정보 가져오기
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        // 인증 정보가 없으면 예외 처리
-//        if (authentication == null || authentication.getPrincipal() == null) {
-//            throw new IllegalStateException("No authentication information found in security context.");
-//        }
-//
-//        // SecurityContext에서 사용자 정보를 추출, memberId는 일반적으로 authentication.getName()에 저장
-//        return authentication.getName();  // getName()은 보통 사용자 ID를 반환한다고 가정
     }
 
     //refreshToken 에서 멤버 ID 가져오기
