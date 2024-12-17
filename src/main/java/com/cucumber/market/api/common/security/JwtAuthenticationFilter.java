@@ -29,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (permittedURI(requestURI)) {
             filterChain.doFilter(request, response);
+            System.out.println(requestURI);
             return;
         }
 
@@ -66,6 +67,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // SecurityConfig에서 설정된 허용 URI와 동일하게 체크
     private boolean permittedURI(String requestURI) {
-        return requestURI.startsWith("/user/signin") || requestURI.equals("/") || requestURI.equals("/user/refreshToken");
+        return requestURI.startsWith("/user/signin") || requestURI.equals("/");
     }
 }
