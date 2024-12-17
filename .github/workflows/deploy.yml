@@ -50,8 +50,8 @@ jobs:
         cloud.aws.s3.secretAccessKey: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
 
         jwt.secret.key: ${{ secrets.JWT_SECRET_KEY }}
-        jwt.expired.time.accesstoken: ${{ JWT_EXPIRED_TIME_ACCESSTOKEN }}
-        jwt.expired.time.refreshtoken: ${{ JWT_EXPIRED_TIME_REFRESHTOKEN }}
+        jwt.expired.time.accesstoken: ${{ secrets.JWT_EXPIRED_TIME_ACCESSTOKEN }}
+        jwt.expired.time.refreshtoken: ${{ secrets.JWT_EXPIRED_TIME_REFRESHTOKEN }}
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
