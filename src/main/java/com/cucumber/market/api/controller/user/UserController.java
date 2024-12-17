@@ -91,11 +91,10 @@ public class UserController {
 
     /**
      * 프로필 조회
-     * @param accessToken
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(@RequestHeader("Authorization") String accessToken) {
+    public ResponseEntity userProfile() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int memberId = Integer.parseInt(authentication.getPrincipal().toString());
@@ -111,8 +110,7 @@ public class UserController {
      * @return
      */
     @PutMapping("/profile")
-    public ResponseEntity userProfile(@RequestHeader("Authorization") String accessToken,
-                                      @RequestPart(value = "file", required = false) MultipartFile file,
+    public ResponseEntity userProfile(@RequestPart(value = "file", required = false) MultipartFile file,
                                       @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
