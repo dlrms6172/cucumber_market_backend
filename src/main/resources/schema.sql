@@ -24,6 +24,7 @@ create table region(
 /* 회원 member **/
 create table member(
     member_id int(11) not null comment '멤버 id' auto_increment primary key,
+    refresh_token varchar(255) not null commnet '리프래쉬 토큰',
     sns_id int(11) not null comment 'sns id',
     sns_value varchar(100) default null comment 'sns 값',
     name varchar(100) comment '이름',

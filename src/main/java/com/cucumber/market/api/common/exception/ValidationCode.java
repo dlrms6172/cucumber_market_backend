@@ -3,6 +3,8 @@ package com.cucumber.market.api.common.exception;
 public enum ValidationCode {
     SUCCESS(200,"SUCCESS","성공"),
     REQUEST_ERROR(400,"REQUEST ERROR","호출 에러"),
+    JWT_EXPIRED_ERROR(403,"JWT TOKEN ERROR", "JWT 토큰 오류"),
+    JWT_VALID_ERROR(403,"JWT TOKEN ERROR", "JWT 토큰 오류"),
     SERVER_ERROR(500,"SERVER ERROR","서버 에러");
 
 

@@ -27,4 +27,10 @@ public interface UserMapper {
     Map selectBuyerMannersTemperature(@Param("dto") ItemDto.modifyItemStatusDto dto);
 
     int updateBuyerMannersTemperature(@Param("dto") ItemDto.modifyItemStatusDto dto);
+
+    int insertRefreshToken(Integer memberId, String refreshToken);
+
+    String selectRefreshToken(String refreshToken);
+
+    String selectMemberIdRefreshToken(String refreshToken);
 }
