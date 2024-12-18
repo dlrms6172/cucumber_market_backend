@@ -19,13 +19,13 @@
     <insert id="insertUserInfo">
         insert into cucumber.member
         (
-        sns_id,
-        sns_value
+            sns_id,
+            sns_value
         )
         values
         (
-        #{snsId},
-        #{snsValue}
+            #{snsId},
+            #{snsValue}
         )
     </insert>
 
