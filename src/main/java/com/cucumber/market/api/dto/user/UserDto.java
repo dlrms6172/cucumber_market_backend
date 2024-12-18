@@ -26,6 +26,8 @@ public class UserDto {
         @NotBlank
         private String code;
 
+        private String refreshToken;
+
         private int snsId;
 
         private String snsValue;
