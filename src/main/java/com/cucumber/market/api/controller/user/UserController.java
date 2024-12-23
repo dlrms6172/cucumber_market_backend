@@ -10,8 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,12 +93,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int memberId = Integer.parseInt(authentication.getPrincipal().toString());
-
-        body.put("data", userService.userProfileGet(memberId));
+    public ResponseEntity userProfile(@AuthenticationPrincipal String memberId) {
+        body.put("data", userService.userProfileGet(Integer.parseInt(memberId)));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
@@ -111,11 +106,9 @@ public class UserController {
      */
     @PutMapping("/profile")
     public ResponseEntity userProfile(@RequestPart(value = "file", required = false) MultipartFile file,
-                                      @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int memberId = Integer.parseInt(authentication.getPrincipal().toString());
-        dto.setMemberId(memberId);
+                                      @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto,
+                                      @AuthenticationPrincipal String memberId) {
+        dto.setMemberId(Integer.parseInt(memberId));
         dto.setProfileImage(file);
 
         if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
