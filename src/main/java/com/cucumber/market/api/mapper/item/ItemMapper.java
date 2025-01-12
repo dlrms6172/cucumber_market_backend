@@ -14,7 +14,7 @@ import java.util.Optional;
 @Mapper
 public interface ItemMapper {
 
-    int insertItem(@Param("memberId") Integer memberId, @Param("itemDto") ItemDto.addItemDto itemDto);
+    int insertItem(@Param("memberId") Integer memberId, @Param("itemDto") ItemDto.AddItemDto itemDto);
 
     Optional<Map> selectItem(Integer itemId);
 
@@ -22,7 +22,7 @@ public interface ItemMapper {
 
     void updateViewCount(Integer itemId);
 
-    int updateItem(@Param("itemId") Integer itemId, @Param("itemDto") ItemDto.modifyItemDto itemDto);
+    int updateItem(@Param("itemId") Integer itemId, @Param("itemDto") ItemDto.ModifyItemDto itemDto);
 
     void updateItemStatus(@Param("itemId") Integer itemId, @Param("itemStatus") ItemStatus itemStatus);
 
@@ -32,23 +32,23 @@ public interface ItemMapper {
 
     void deleteItem(Integer itemId);
 
-    int insertBuyerReview(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+    int insertBuyerReview(@Param("itemId") Integer itemId, @Param("memberId") Integer memberId, @Param("reviewDto") ItemDto.ReviewDto reviewDto);
 
     Optional<Map> selectBuyerReview(Integer itemId);
 
     List<Map> selectBuyerReviews(Integer memberId);
 
-    void updateBuyerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+    void updateBuyerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.ReviewDto reviewDto);
 
     void deleteBuyerReview(Integer itemId);
 
-    int insertSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+    int insertSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.ReviewDto reviewDto);
 
     Optional<Map> selectSellerReview(Integer itemId);
 
     List<Map> selectSellerReviews(Integer memberId);
 
-    void updateSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.reviewDto reviewDto);
+    void updateSellerReview(@Param("itemId") Integer itemId, @Param("reviewDto") ItemDto.ReviewDto reviewDto);
 
     void deleteSellerReview(Integer itemId);
 

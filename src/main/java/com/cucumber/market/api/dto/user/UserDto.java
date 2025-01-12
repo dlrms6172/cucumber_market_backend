@@ -1,6 +1,5 @@
 package com.cucumber.market.api.dto.user;
 
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,14 +10,14 @@ public class UserDto {
 
     @Getter
     @Setter
-    public static class signInDto {
+    public static class SignInDto {
         @NotBlank
         private String platform;
     }
 
     @Getter
     @Setter
-    public static class signInCallBackDto {
+    public static class SignInCallBackDto {
 
         @NotBlank
         private String platform;
@@ -37,7 +36,7 @@ public class UserDto {
 
     @Getter
     @Setter
-    public static class userProfilePut {
+    public static class UserProfilePutDto {
         private Integer memberId;
 
         @NotNull
@@ -60,7 +59,7 @@ public class UserDto {
 
     @Getter
     @Setter
-    public static class profileImageDto {
+    public static class ProfileImageDto {
 
         private Integer memberId;
         private String originalName;

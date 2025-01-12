@@ -1,57 +1,36 @@
 package com.cucumber.market.api.controller.history;
 
+import com.cucumber.market.api.common.payload.CustomResponse;
 import com.cucumber.market.api.service.history.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/history")
 public class HistoryController {
 
-    private HttpHeaders headers;
-
-    private Map<String, Object> body = new LinkedHashMap<String, Object>() {
-        {
-            put("resultCode", 200);
-            put("resultMsg", "success");
-        }
-    };
-
     @Autowired
     HistoryService historyService;
 
     @GetMapping("/sales")
-    public ResponseEntity sales(@AuthenticationPrincipal Integer memberId, @RequestParam(required = false) Integer itemStatusId){
-        body.put("data",historyService.sales(memberId, itemStatusId));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+    public ResponseEntity getSales(@AuthenticationPrincipal Integer memberId, @RequestParam(required = false) Integer itemStatusId){
+        return CustomResponse.ok(historyService.getSales(memberId, itemStatusId));
     }
 
     @GetMapping("/purchases")
-    public ResponseEntity purchases(@AuthenticationPrincipal Integer memberId){
-        body.put("data",historyService.purchases(memberId));
-
-        return new ResponseEntity(body,headers,HttpStatus.OK);
+    public ResponseEntity getPurchases(@AuthenticationPrincipal Integer memberId){
+        return CustomResponse.ok(historyService.getPurchases(memberId));
     }
 
     @GetMapping("/interests")
-    public ResponseEntity interests(@AuthenticationPrincipal Integer memberId){
-        body.put("data",historyService.interests(memberId));
-
-        return new ResponseEntity(body, headers,HttpStatus.OK);
+    public ResponseEntity getInterests(@AuthenticationPrincipal Integer memberId){
+        return CustomResponse.ok(historyService.getInterests(memberId));
     }
 
     @GetMapping("/itemStatus")
-    public ResponseEntity itemStatus(@AuthenticationPrincipal Integer memberId){
-        body.put("data",historyService.itemStatus(memberId));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+    public ResponseEntity getItemStatus(@AuthenticationPrincipal Integer memberId){
+        return CustomResponse.ok(historyService.getItemStatus(memberId));
     }
 }

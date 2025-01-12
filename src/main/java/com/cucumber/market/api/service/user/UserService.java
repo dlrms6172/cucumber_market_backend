@@ -42,7 +42,7 @@ public class UserService {
     @Autowired
     ProfileImageService imageService;
 
-    public Map signInService(UserDto.signInDto dto) {
+    public Map signInService(UserDto.SignInDto dto) {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         // 구글 로그인 서비스
@@ -64,7 +64,7 @@ public class UserService {
         return result;
     }
 
-    public Integer signInCallBackService(UserDto.signInCallBackDto dto) {
+    public Integer signInCallBackService(UserDto.SignInCallBackDto dto) {
         Integer memberId = null;
 
         // 구글 로그인 서비스
@@ -114,7 +114,7 @@ public class UserService {
      * @param dto
      * @return
      */
-    public Integer ensureMemberIsJoined(UserDto.signInCallBackDto dto) {
+    public Integer ensureMemberIsJoined(UserDto.SignInCallBackDto dto) {
         Map selectCheckUserInfo = userMapper.selectCheckUserInfo(dto);
 
         if (selectCheckUserInfo == null) {  //유저 미존재 시 가입처리
@@ -141,7 +141,7 @@ public class UserService {
         return result;
     }
 
-    public Map userProfilePut(UserDto.userProfilePut dto){
+    public Map userProfilePut(UserDto.UserProfilePutDto dto){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         int updateUserInfo = userMapper.updateUserInfo(dto);

@@ -41,7 +41,7 @@ public class ItemImageService {
     private String addImage(Integer itemId, MultipartFile file, Integer index) {
         Map<String, String> imageInfo = imageUploader.uploadImage(BUCKET_FOLDER, file);  //S3에 이미지 저장
 
-        ItemDto.itemImageDto imageDto = new ItemDto.itemImageDto();
+        ItemDto.ItemImageDto imageDto = new ItemDto.ItemImageDto();
         imageDto.setOriginalName(imageInfo.get("originalName"));
         imageDto.setKeyName(imageInfo.get("keyName"));
         imageDto.setItemId(itemId);

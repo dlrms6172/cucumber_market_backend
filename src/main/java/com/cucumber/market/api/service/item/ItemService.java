@@ -26,7 +26,7 @@ public class ItemService {
     private final ItemImageService itemImageService;
     private final ProfileImageService profileImageService;
 
-    public Map addItem(Integer memberId, ItemDto.addItemDto itemDto, List<MultipartFile> files) {
+    public Map addItem(Integer memberId, ItemDto.AddItemDto itemDto, List<MultipartFile> files) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.insertItem(memberId, itemDto);
@@ -59,7 +59,7 @@ public class ItemService {
     }
 
 
-    public Map modifyItem(Integer memberId, Integer itemId, ItemDto.modifyItemDto itemDto, List<MultipartFile> files) {
+    public Map modifyItem(Integer memberId, Integer itemId, ItemDto.ModifyItemDto itemDto, List<MultipartFile> files) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
@@ -81,7 +81,7 @@ public class ItemService {
     }
 
 
-    public Map modifyItemStatus(Integer memberId, Integer itemId, ItemDto.modifyItemStatusDto itemDto) {
+    public Map modifyItemStatus(Integer memberId, Integer itemId, ItemDto.ModifyItemStatusDto itemDto) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         ItemStatus itemStatus = itemDto.getItemStatus();
 
@@ -165,7 +165,7 @@ public class ItemService {
     }
 
 
-    public Map modifyReview(Integer itemId, Integer memberId, ItemDto.reviewDto reviewDto) {
+    public Map modifyReview(Integer itemId, Integer memberId, ItemDto.ReviewDto reviewDto) {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
@@ -215,7 +215,7 @@ public class ItemService {
 
 
     //매너온도 증가 로직
-    public void incMannersTemperature(Integer memberId, ItemDto.modifyItemStatusDto itemDto){
+    public void incMannersTemperature(Integer memberId, ItemDto.ModifyItemStatusDto itemDto){
 
         BigDecimal maxMannersTemperature = new BigDecimal("99");
         BigDecimal stdManTemp = new BigDecimal("0.2"); //매너온도 증가 기준값

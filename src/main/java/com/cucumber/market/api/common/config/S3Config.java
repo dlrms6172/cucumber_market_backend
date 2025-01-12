@@ -19,16 +19,6 @@ public class S3Config {
 
     @Bean
     public S3Client s3Client() {
-
-/*
-      Read IAM role credentials on Amazon EC2 (배포 시 변경)
-
-        return S3Client.builder()
-                .credentialsProvider(InstanceProfileCredentialsProvider.create())
-                .region(Region.AP_NORTHEAST_2)
-                .build();
-*/
-
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretAccessKey);
 
         return S3Client.builder()

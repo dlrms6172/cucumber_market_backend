@@ -17,7 +17,7 @@ public class HistoryService {
     @Autowired
     ItemImageService itemImageService;
 
-    public Map sales(int memberId, Integer itemStatusId){
+    public Map getSales(int memberId, Integer itemStatusId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<Map> selectSales = historyMapper.selectSales(memberId, itemStatusId);
@@ -28,7 +28,7 @@ public class HistoryService {
         return result;
     }
 
-    public Map purchases(int memberId){
+    public Map getPurchases(int memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<Map> selectPurchases = historyMapper.selectPurchases(memberId);
@@ -39,7 +39,7 @@ public class HistoryService {
         return result;
     }
 
-    public Map interests(int memberId){
+    public Map getInterests(int memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<Map> selectInterests = historyMapper.selectInterests(memberId);
@@ -50,7 +50,7 @@ public class HistoryService {
         return result;
     }
 
-    public Map itemStatus(int memberId){
+    public Map getItemStatus(int memberId){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<Map> selectItemStatus = historyMapper.selectItemStatus(memberId);

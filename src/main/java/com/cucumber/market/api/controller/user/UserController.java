@@ -1,5 +1,6 @@
 package com.cucumber.market.api.controller.user;
 
+import com.cucumber.market.api.common.payload.CustomResponse;
 import com.cucumber.market.api.common.security.JwtTokenProvider;
 import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
@@ -16,19 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private HttpHeaders headers;
-    private Map<String, Object> body = new LinkedHashMap<String, Object>() {
-        {
-            put("resultCode", 200);
-            put("resultMsg", "success");
-        }
-    };
 
     @Autowired
     UserService userService;
@@ -42,11 +35,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/signin")
-    public ResponseEntity signIn(@Valid UserDto.signInDto dto){
-
-        body.put("data",userService.signInService(dto));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+    public ResponseEntity signIn(@Valid UserDto.SignInDto dto){
+        return CustomResponse.ok(userService.signInService(dto));
     }
 
     /**
@@ -56,7 +46,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/signin/callback/{platform}")
-    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto, HttpServletResponse response){
+    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.SignInCallBackDto dto, HttpServletResponse response){
         dto.setPlatform(platform);
 
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
@@ -94,9 +84,7 @@ public class UserController {
      */
     @GetMapping("/profile")
     public ResponseEntity userProfile(@AuthenticationPrincipal Integer memberId) {
-        body.put("data", userService.userProfileGet(memberId));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        return CustomResponse.ok(userService.userProfileGet(memberId));
     }
 
     /**
@@ -106,15 +94,13 @@ public class UserController {
      */
     @PutMapping("/profile")
     public ResponseEntity userProfile(@RequestPart(value = "file", required = false) MultipartFile file,
-                                      @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto,
+                                      @RequestPart(value = "dto") @Valid UserDto.UserProfilePutDto dto,
                                       @AuthenticationPrincipal Integer memberId) {
         dto.setMemberId(memberId);
         dto.setProfileImage(file);
 
         if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
-        body.put("data", userService.userProfilePut(dto));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        return CustomResponse.ok(userService.userProfilePut(dto));
     }
 
     /**
@@ -124,20 +110,16 @@ public class UserController {
      */
     @PostMapping("/refreshToken")
     public ResponseEntity refreshToken(@RequestHeader("Authorization") String refreshToken) throws JwtException {
-
-        if(jwtTokenProvider.validateRefreshToken(refreshToken)) {
-            // Refresh Token으로 DB에서 memberId 추출
-            Integer memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
-
-            // 새로운 Access Token 발급
-            String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
-
-            body.put("data",new HashMap<>(Map.of("accessToken",newAccessToken)));
-
-        } else {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             throw new JwtException("");
         }
 
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        // Refresh Token으로 DB에서 memberId 추출
+        Integer memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
+
+        // 새로운 Access Token 발급
+        String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
+
+        return CustomResponse.ok(new HashMap<>(Map.of("accessToken", newAccessToken)));
     }
 }

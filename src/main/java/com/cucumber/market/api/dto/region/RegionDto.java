@@ -1,7 +1,6 @@
 package com.cucumber.market.api.dto.region;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ public class RegionDto {
 
     @Getter
     @Setter
-    public static class regionAdd{
+    public static class RegionAddDto {
         private String siDo;
 
         private String siGunGu;
@@ -27,13 +26,13 @@ public class RegionDto {
 
     @Getter
     @Setter
-    public static class level2 {
+    public static class Level2Dto {
         private String level1;
     }
 
     @Getter
     @Setter
-    public static class level3 {
+    public static class Level3Dto {
         private String level1;
 
         private String level2;
@@ -41,7 +40,7 @@ public class RegionDto {
 
     @Getter
     @Setter
-    public static class level4 {
+    public static class Level4Dto {
         private String level1;
 
         private String level2;
@@ -51,7 +50,7 @@ public class RegionDto {
 
     @Getter
     @Setter
-    public static class level5 {
+    public static class Level5Dto {
         private String level1;
 
         private String level2;
@@ -63,7 +62,7 @@ public class RegionDto {
 
     @Getter
     @Setter
-    public static class id {
+    public static class IdDto {
 
         @NotBlank
         private String level1;

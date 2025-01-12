@@ -1,14 +1,12 @@
 package com.cucumber.market.api.common.exception;
 
-
+import com.cucumber.market.api.common.payload.ResponseDto;
 import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.LinkedHashMap;
 
 @RestControllerAdvice(basePackages = {"com.cucumber.market.api.controller"})
 public class ExceptionController {
@@ -17,11 +15,11 @@ public class ExceptionController {
     // NullPointerException 오류
     @ExceptionHandler(value = NullPointerException.class)
     public ResponseEntity NullPointerException(NullPointerException e) {
-        LinkedHashMap body = new LinkedHashMap();
-
-        body.put("resultCode",ValidationCode.SERVER_ERROR.getCode());
-        body.put("resultMsg",ValidationCode.SERVER_ERROR.getMessage());
-        body.put("resultDescription",ValidationCode.SERVER_ERROR.getDescription());
+        ResponseDto body = ResponseDto.builder()
+                .resultCode(ValidationCode.SERVER_ERROR.getCode())
+                .resultMsg(ValidationCode.SERVER_ERROR.getMessage())
+                .resultDescription(ValidationCode.SERVER_ERROR.getDescription())
+                .build();
 
         LOGGER.error(e.getMessage(), e);
 
@@ -31,11 +29,11 @@ public class ExceptionController {
     // JWT 토큰 오류
     @ExceptionHandler(value = JwtException.class)
     public ResponseEntity JwtException(JwtException e) {
-        LinkedHashMap body = new LinkedHashMap();
-
-        body.put("resultCode",ValidationCode.JWT_VALID_ERROR.getCode());
-        body.put("resultMsg",ValidationCode.JWT_VALID_ERROR.getMessage());
-        body.put("resultDescription",ValidationCode.JWT_VALID_ERROR.getDescription());
+        ResponseDto body = ResponseDto.builder()
+                .resultCode(ValidationCode.JWT_VALID_ERROR.getCode())
+                .resultMsg(ValidationCode.JWT_VALID_ERROR.getMessage())
+                .resultDescription(ValidationCode.JWT_VALID_ERROR.getDescription())
+                .build();
 
         LOGGER.error(e.getMessage(), e);
 
@@ -45,11 +43,11 @@ public class ExceptionController {
     // 그 외 오류
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity Exception(Exception e){
-        LinkedHashMap body = new LinkedHashMap();
-
-        body.put("resultCode",ValidationCode.SERVER_ERROR.getCode());
-        body.put("resultMsg",ValidationCode.SERVER_ERROR.getMessage());
-        body.put("resultDescription",ValidationCode.SERVER_ERROR.getDescription());
+        ResponseDto body = ResponseDto.builder()
+                .resultCode(ValidationCode.SERVER_ERROR.getCode())
+                .resultMsg(ValidationCode.SERVER_ERROR.getMessage())
+                .resultDescription(ValidationCode.SERVER_ERROR.getDescription())
+                .build();
 
         LOGGER.error(e.getMessage(), e);
 

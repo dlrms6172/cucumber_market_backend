@@ -10,15 +10,14 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI CucumberMarketOpenAPI() {
+    public OpenAPI oiMarketOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("CucumberMarket API")
-                                .description("CucumberMarket API 설명")
+                .info(new Info().title("OiMarket API")
+                                .description("OiMarket API 설명")
                                 .version("v0.0.1")
-//                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
                 )
                 .externalDocs(new ExternalDocumentation()
-                        .description("CucumberMarket Github")
+                        .description("OiMarket Github")
                         .url("https://github.com/dlrms6172/cucumber_market_backend"));
     }
 
