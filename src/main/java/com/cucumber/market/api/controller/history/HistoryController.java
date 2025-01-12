@@ -15,22 +15,22 @@ public class HistoryController {
     HistoryService historyService;
 
     @GetMapping("/sales")
-    public ResponseEntity sales(@AuthenticationPrincipal Integer memberId, @RequestParam(required = false) Integer itemStatusId){
-        return CustomResponse.ok(historyService.sales(memberId, itemStatusId));
+    public ResponseEntity getSales(@AuthenticationPrincipal Integer memberId, @RequestParam(required = false) Integer itemStatusId){
+        return CustomResponse.ok(historyService.getSales(memberId, itemStatusId));
     }
 
     @GetMapping("/purchases")
-    public ResponseEntity purchases(@AuthenticationPrincipal Integer memberId){
-        return CustomResponse.ok(historyService.purchases(memberId));
+    public ResponseEntity getPurchases(@AuthenticationPrincipal Integer memberId){
+        return CustomResponse.ok(historyService.getPurchases(memberId));
     }
 
     @GetMapping("/interests")
-    public ResponseEntity interests(@AuthenticationPrincipal Integer memberId){
-        return CustomResponse.ok(historyService.interests(memberId));
+    public ResponseEntity getInterests(@AuthenticationPrincipal Integer memberId){
+        return CustomResponse.ok(historyService.getInterests(memberId));
     }
 
     @GetMapping("/itemStatus")
-    public ResponseEntity itemStatus(@AuthenticationPrincipal Integer memberId){
-        return CustomResponse.ok(historyService.itemStatus(memberId));
+    public ResponseEntity getItemStatus(@AuthenticationPrincipal Integer memberId){
+        return CustomResponse.ok(historyService.getItemStatus(memberId));
     }
 }
