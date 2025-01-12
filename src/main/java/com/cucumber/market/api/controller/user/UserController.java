@@ -1,5 +1,6 @@
 package com.cucumber.market.api.controller.user;
 
+import com.cucumber.market.api.common.payload.CustomResponse;
 import com.cucumber.market.api.common.security.JwtTokenProvider;
 import com.cucumber.market.api.dto.user.UserDto;
 import com.cucumber.market.api.service.user.UserService;
@@ -16,19 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private HttpHeaders headers;
-    private Map<String, Object> body = new LinkedHashMap<String, Object>() {
-        {
-            put("resultCode", 200);
-            put("resultMsg", "success");
-        }
-    };
 
     @Autowired
     UserService userService;
@@ -43,10 +36,7 @@ public class UserController {
      */
     @GetMapping("/signin")
     public ResponseEntity signIn(@Valid UserDto.signInDto dto){
-
-        body.put("data",userService.signInService(dto));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        return CustomResponse.ok(userService.signInService(dto));
     }
 
     /**
@@ -94,9 +84,7 @@ public class UserController {
      */
     @GetMapping("/profile")
     public ResponseEntity userProfile(@AuthenticationPrincipal Integer memberId) {
-        body.put("data", userService.userProfileGet(memberId));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        return CustomResponse.ok(userService.userProfileGet(memberId));
     }
 
     /**
@@ -112,9 +100,7 @@ public class UserController {
         dto.setProfileImage(file);
 
         if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
-        body.put("data", userService.userProfilePut(dto));
-
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        return CustomResponse.ok(userService.userProfilePut(dto));
     }
 
     /**
@@ -124,20 +110,16 @@ public class UserController {
      */
     @PostMapping("/refreshToken")
     public ResponseEntity refreshToken(@RequestHeader("Authorization") String refreshToken) throws JwtException {
-
-        if(jwtTokenProvider.validateRefreshToken(refreshToken)) {
-            // Refresh Token으로 DB에서 memberId 추출
-            Integer memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
-
-            // 새로운 Access Token 발급
-            String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
-
-            body.put("data",new HashMap<>(Map.of("accessToken",newAccessToken)));
-
-        } else {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             throw new JwtException("");
         }
 
-        return new ResponseEntity(body, headers, HttpStatus.OK);
+        // Refresh Token으로 DB에서 memberId 추출
+        Integer memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
+
+        // 새로운 Access Token 발급
+        String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);
+
+        return CustomResponse.ok(new HashMap<>(Map.of("accessToken", newAccessToken)));
     }
 }

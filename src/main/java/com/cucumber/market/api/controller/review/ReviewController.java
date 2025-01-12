@@ -1,16 +1,13 @@
 package com.cucumber.market.api.controller.review;
 
+import com.cucumber.market.api.common.payload.CustomResponse;
 import com.cucumber.market.api.service.review.ReviewSender;
 import com.cucumber.market.api.service.review.ReviewService;
 import com.cucumber.market.api.service.review.ReviewSort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/reviews")
@@ -18,13 +15,6 @@ import java.util.Map;
 public class ReviewController {
 
     private final ReviewService reviewService;
-
-    private Map<String, Object> body = new LinkedHashMap<>() {
-        {
-            put("resultCode", 200);
-            put("resultMsg", "success");
-        }
-    };
 
     /**
      * 내가 받은 후기 전체 조회
@@ -34,9 +24,7 @@ public class ReviewController {
     @GetMapping
     public ResponseEntity getReviewsOfMe(@RequestParam(name = "sender") ReviewSender reviewSender,
                                          @AuthenticationPrincipal Integer memberId) {
-        body.put("data", reviewService.getReviewsOfMe(memberId, reviewSender));
-
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return CustomResponse.ok(reviewService.getReviewsOfMe(memberId, reviewSender));
     }
 
 
@@ -50,9 +38,7 @@ public class ReviewController {
     public ResponseEntity getReview(@PathVariable(name = "itemId") int itemId,
                                     @RequestParam(name = "reviewSort") ReviewSort reviewSort,
                                     @AuthenticationPrincipal Integer memberId) {
-        body.put("data", reviewService.getReview(memberId, itemId, reviewSort));
-
-        return new ResponseEntity<>(body, HttpStatus.OK);
+        return CustomResponse.ok(reviewService.getReview(memberId, itemId, reviewSort));
     }
 
 }

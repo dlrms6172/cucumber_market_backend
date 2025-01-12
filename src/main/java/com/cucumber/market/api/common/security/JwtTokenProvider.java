@@ -7,8 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 
@@ -99,8 +97,8 @@ public class JwtTokenProvider {
     public Integer getMemberIdFromAccessToken(String accessToken) {
         // "Bearer " 접두어 제거
         accessToken = accessToken.replace("Bearer ", "");
-        String memberId = (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().get("memberId");
-        return Integer.parseInt(memberId);
+        Integer memberId = (Integer) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().get("memberId");
+        return memberId;
     }
 
     //refreshToken 에서 멤버 ID 가져오기
