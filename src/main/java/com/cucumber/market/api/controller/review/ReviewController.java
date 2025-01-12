@@ -6,6 +6,7 @@ import com.cucumber.market.api.service.review.ReviewSort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -32,7 +33,7 @@ public class ReviewController {
      */
     @GetMapping
     public ResponseEntity getReviewsOfMe(@RequestParam(name = "sender") ReviewSender reviewSender,
-                                         @SessionAttribute Integer memberId) {
+                                         @AuthenticationPrincipal Integer memberId) {
         body.put("data", reviewService.getReviewsOfMe(memberId, reviewSender));
 
         return new ResponseEntity<>(body, HttpStatus.OK);
@@ -48,7 +49,7 @@ public class ReviewController {
     @GetMapping("/{itemId}")
     public ResponseEntity getReview(@PathVariable(name = "itemId") int itemId,
                                     @RequestParam(name = "reviewSort") ReviewSort reviewSort,
-                                    @SessionAttribute Integer memberId) {
+                                    @AuthenticationPrincipal Integer memberId) {
         body.put("data", reviewService.getReview(memberId, itemId, reviewSort));
 
         return new ResponseEntity<>(body, HttpStatus.OK);

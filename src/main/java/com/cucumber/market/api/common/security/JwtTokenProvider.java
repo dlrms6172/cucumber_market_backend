@@ -33,7 +33,7 @@ public class JwtTokenProvider {
     private UserMapper userMapper;
 
     //accessToken 생성
-    public String generateAccessToken(String memberId) {
+    public String generateAccessToken(Integer memberId) {
         Claims claims = Jwts.claims();
         claims.put("memberId",memberId);
 
@@ -96,17 +96,18 @@ public class JwtTokenProvider {
     }
 
     //accessToken 에서 멤버 ID 가져오기
-    public String getMemberIdFromAccessToken(String accessToken) {
+    public Integer getMemberIdFromAccessToken(String accessToken) {
         // "Bearer " 접두어 제거
         accessToken = accessToken.replace("Bearer ", "");
-        return (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().get("memberId");
+        String memberId = (String) Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody().get("memberId");
+        return Integer.parseInt(memberId);
     }
 
     //refreshToken 에서 멤버 ID 가져오기
-    public String getMemberIdFromRefreshToken(String refreshToken) {
+    public Integer getMemberIdFromRefreshToken(String refreshToken) {
         // "Bearer " 접두어 제거
         refreshToken = refreshToken.replace("Bearer ", "");
-        String memberId = userMapper.selectMemberIdRefreshToken(refreshToken);
+        Integer memberId = Integer.valueOf(userMapper.selectMemberIdRefreshToken(refreshToken));
 
         return memberId;
     }

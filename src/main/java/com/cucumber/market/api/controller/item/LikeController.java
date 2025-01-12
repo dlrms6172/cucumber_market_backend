@@ -4,6 +4,7 @@ import com.cucumber.market.api.service.item.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -26,7 +27,7 @@ public class LikeController {
 
     @PostMapping("/{itemId}/like")
     public ResponseEntity addLike(@PathVariable(name = "itemId") int itemId,
-                                  @SessionAttribute Integer memberId) {
+                                  @AuthenticationPrincipal Integer memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
             {
@@ -42,7 +43,7 @@ public class LikeController {
 
     @DeleteMapping("/{itemId}/like")
     public ResponseEntity deleteLike(@PathVariable(name = "itemId") int itemId,
-                                     @SessionAttribute Integer memberId) {
+                                     @AuthenticationPrincipal Integer memberId) {
         body.put("data", likeService.deleteLike(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);

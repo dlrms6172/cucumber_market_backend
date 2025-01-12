@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -27,28 +28,28 @@ public class HistoryController {
     HistoryService historyService;
 
     @GetMapping("/sales")
-    public ResponseEntity sales(@SessionAttribute Integer memberId, @RequestParam(required = false) Integer itemStatusId){
+    public ResponseEntity sales(@AuthenticationPrincipal Integer memberId, @RequestParam(required = false) Integer itemStatusId){
         body.put("data",historyService.sales(memberId, itemStatusId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
 
     @GetMapping("/purchases")
-    public ResponseEntity purchases(@SessionAttribute Integer memberId){
+    public ResponseEntity purchases(@AuthenticationPrincipal Integer memberId){
         body.put("data",historyService.purchases(memberId));
 
         return new ResponseEntity(body,headers,HttpStatus.OK);
     }
 
     @GetMapping("/interests")
-    public ResponseEntity interests(@SessionAttribute Integer memberId){
+    public ResponseEntity interests(@AuthenticationPrincipal Integer memberId){
         body.put("data",historyService.interests(memberId));
 
         return new ResponseEntity(body, headers,HttpStatus.OK);
     }
 
     @GetMapping("/itemStatus")
-    public ResponseEntity itemStatus(@SessionAttribute Integer memberId){
+    public ResponseEntity itemStatus(@AuthenticationPrincipal Integer memberId){
         body.put("data",historyService.itemStatus(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
