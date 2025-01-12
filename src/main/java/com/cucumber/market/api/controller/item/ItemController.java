@@ -23,7 +23,7 @@ public class ItemController {
 
     @PostMapping("/items")
     public ResponseEntity addItem(@RequestPart(value = "files") List<MultipartFile> files,
-                                  @RequestPart(value = "addItemRequest") ItemDto.addItemDto itemDto,
+                                  @RequestPart(value = "addItemRequest") ItemDto.AddItemDto itemDto,
                                   @AuthenticationPrincipal Integer memberId) {
         itemDto.setPostDate(LocalDateTime.now());
         return CustomResponse.created(itemService.addItem(memberId, itemDto, files));
@@ -43,7 +43,7 @@ public class ItemController {
      */
     @PutMapping("/items/{itemId}")
     public ResponseEntity modifyItem(@RequestPart(value = "files", required = false) List<MultipartFile> files,
-                                     @RequestPart(value = "modifyItemRequest") ItemDto.modifyItemDto itemDto,
+                                     @RequestPart(value = "modifyItemRequest") ItemDto.ModifyItemDto itemDto,
                                      @PathVariable(name = "itemId") int itemId,
                                      @AuthenticationPrincipal Integer memberId) {
         itemDto.setUpdateDate(LocalDateTime.now());
@@ -51,7 +51,7 @@ public class ItemController {
     }
 
     @PutMapping("/items/{itemId}/status")
-    public ResponseEntity modifyItemStatus(@Valid @RequestBody ItemDto.modifyItemStatusDto dto,
+    public ResponseEntity modifyItemStatus(@Valid @RequestBody ItemDto.ModifyItemStatusDto dto,
                                            @PathVariable(name = "itemId") int itemId,
                                            @AuthenticationPrincipal Integer memberId) {
         return CustomResponse.ok(itemService.modifyItemStatus(memberId, itemId, dto));
@@ -81,7 +81,7 @@ public class ItemController {
 
     @PutMapping("/items/{itemId}/review")
     public ResponseEntity modifyReview(@PathVariable(name = "itemId") int itemId,
-                                       @RequestBody ItemDto.reviewDto reviewDto,
+                                       @RequestBody ItemDto.ReviewDto reviewDto,
                                        @AuthenticationPrincipal Integer memberId) {
         return CustomResponse.ok(itemService.modifyReview(itemId, memberId, reviewDto));
     }

@@ -20,7 +20,7 @@ public class ProfileImageService {
     private final ImageUploader imageUploader;
 
     @Transactional
-    public String updateImage(UserDto.userProfilePut dto) {
+    public String updateImage(UserDto.UserProfilePutDto dto) {
         String url = "";  //아무런 수정 사항 없으면 빈 문자열 반환
 
         MultipartFile file = dto.getProfileImage();
@@ -58,7 +58,7 @@ public class ProfileImageService {
     private String addImage(Integer memberId, MultipartFile file) {
         Map<String, String> imageInfo = imageUploader.uploadImage(BUCKET_FOLDER, file);
 
-        UserDto.profileImageDto imageDto = new UserDto.profileImageDto();
+        UserDto.ProfileImageDto imageDto = new UserDto.ProfileImageDto();
         imageDto.setOriginalName(imageInfo.get("originalName"));
         imageDto.setKeyName(imageInfo.get("keyName"));
         imageDto.setMemberId(memberId);

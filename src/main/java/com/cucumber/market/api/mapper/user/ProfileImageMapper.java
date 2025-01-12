@@ -10,7 +10,7 @@ import java.util.Optional;
 @Mapper
 public interface ProfileImageMapper {
 
-    void insertImage(UserDto.profileImageDto imageDto);
+    void insertImage(UserDto.ProfileImageDto imageDto);
 
     Optional<String> selectImageKeyName(Integer memberId);
 

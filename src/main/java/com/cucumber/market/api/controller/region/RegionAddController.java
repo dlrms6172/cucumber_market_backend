@@ -50,12 +50,12 @@ public class RegionAddController {
         for(int i = 0; i < sheetCnt; i++){
             Sheet workSheet = workbook.getSheetAt(i);
 
-            List<RegionDto.regionAdd> dataList = new ArrayList<>();
+            List<RegionDto.RegionAddDto> dataList = new ArrayList<>();
 
             for(int j = 1; j <workSheet.getPhysicalNumberOfRows(); j++){
                 Row row = workSheet.getRow(j);
 
-                RegionDto.regionAdd data = new RegionDto.regionAdd();
+                RegionDto.RegionAddDto data = new RegionDto.RegionAddDto();
 
                 data.setSiDo(row.getCell(0).getStringCellValue());
 

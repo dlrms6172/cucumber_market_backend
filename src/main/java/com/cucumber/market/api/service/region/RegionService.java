@@ -25,7 +25,7 @@ public class RegionService {
         return result;
     }
 
-    public Map level2(RegionDto.level2 dto) {
+    public Map level2(RegionDto.Level2Dto dto) {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<String> selectLevel2 = regionMapper.selectLevel2(dto);
@@ -35,7 +35,7 @@ public class RegionService {
         return result;
     }
 
-    public Map level3(RegionDto.level3 dto) {
+    public Map level3(RegionDto.Level3Dto dto) {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<String> selectLevel3 = regionMapper.selectLevel3(dto);
@@ -45,7 +45,7 @@ public class RegionService {
         return result;
     }
 
-    public Map level4(RegionDto.level4 dto) {
+    public Map level4(RegionDto.Level4Dto dto) {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<String> selectLevel4 = regionMapper.selectLevel4(dto);
@@ -55,7 +55,7 @@ public class RegionService {
         return result;
     }
 
-    public Map level5(RegionDto.level5 dto) {
+    public Map level5(RegionDto.Level5Dto dto) {
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         List<String> selectLevel5 = regionMapper.selectLevel5(dto);
@@ -65,7 +65,7 @@ public class RegionService {
         return result;
     }
     
-    public Map id(RegionDto.id dto){
+    public Map id(RegionDto.IdDto dto){
         LinkedHashMap<String,Object> result = new LinkedHashMap<>();
 
         Map selectRegionId = regionMapper.selectRegionId(dto);

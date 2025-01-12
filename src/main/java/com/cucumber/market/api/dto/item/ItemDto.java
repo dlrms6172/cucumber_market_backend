@@ -16,7 +16,7 @@ public class ItemDto {
 
     @Getter
     @Setter
-    public static class addItemDto {
+    public static class AddItemDto {
         private Integer itemId;
         @NotBlank
         private String itemName;
@@ -34,7 +34,7 @@ public class ItemDto {
 
     @Getter
     @Setter
-    public static class modifyItemDto {
+    public static class ModifyItemDto {
         private Integer itemId;
         @NotBlank
         private String itemName;
@@ -52,7 +52,7 @@ public class ItemDto {
 
     @Getter
     @Setter
-    public static class modifyItemStatusDto {
+    public static class ModifyItemStatusDto {
         @NotNull
         private ItemStatus itemStatus;
         private Integer clientId;
@@ -62,14 +62,14 @@ public class ItemDto {
 
     @Getter
     @Setter
-    public static class reviewDto {
+    public static class ReviewDto {
         @NotBlank
         private String review;
     }
 
     @Getter
     @Setter
-    public static class itemImageDto {
+    public static class ItemImageDto {
 
         private Integer imageId;
         private Integer itemId;

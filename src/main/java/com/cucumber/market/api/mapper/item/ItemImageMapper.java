@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface ItemImageMapper {
 
-    void insertImage(ItemDto.itemImageDto imageDto);
+    void insertImage(ItemDto.ItemImageDto imageDto);
 
     List<String> selectImageKeyNames(Integer itemId);
 

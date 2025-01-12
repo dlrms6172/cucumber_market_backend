@@ -12,21 +12,21 @@ import java.util.Map;
 @Mapper
 public interface UserMapper {
 
-    Map selectCheckUserInfo(UserDto.signInCallBackDto dto);
+    Map selectCheckUserInfo(UserDto.SignInCallBackDto dto);
 
-    int insertUserInfo(UserDto.signInCallBackDto dto);
+    int insertUserInfo(UserDto.SignInCallBackDto dto);
 
     Map selectUserInfo(Integer memberId);
 
-    int updateUserInfo(UserDto.userProfilePut dto);
+    int updateUserInfo(UserDto.UserProfilePutDto dto);
 
     Map selectSellerMannersTemperature(Integer memberId);
 
-    int updateSellerMannersTemperature(@Param("memberId") Integer memberId, @Param("dto") ItemDto.modifyItemStatusDto dto);
+    int updateSellerMannersTemperature(@Param("memberId") Integer memberId, @Param("dto") ItemDto.ModifyItemStatusDto dto);
 
-    Map selectBuyerMannersTemperature(@Param("dto") ItemDto.modifyItemStatusDto dto);
+    Map selectBuyerMannersTemperature(@Param("dto") ItemDto.ModifyItemStatusDto dto);
 
-    int updateBuyerMannersTemperature(@Param("dto") ItemDto.modifyItemStatusDto dto);
+    int updateBuyerMannersTemperature(@Param("dto") ItemDto.ModifyItemStatusDto dto);
 
     int insertRefreshToken(Integer memberId, String refreshToken);
 

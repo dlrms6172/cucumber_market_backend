@@ -25,28 +25,28 @@ public class RegionController {
     }
 
     @GetMapping("/level2")
-    public ResponseEntity level2(@AuthenticationPrincipal Integer memberId, @ParameterObject @Valid RegionDto.level2 dto) {
+    public ResponseEntity level2(@AuthenticationPrincipal Integer memberId, @ParameterObject @Valid RegionDto.Level2Dto dto) {
         return CustomResponse.ok(regionService.level2(dto));
     }
 
     @GetMapping("/level3")
-    public ResponseEntity level3(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.level3 dto){
+    public ResponseEntity level3(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.Level3Dto dto){
         return CustomResponse.ok(regionService.level3(dto));
     }
 
     @GetMapping("/level4")
-    public ResponseEntity level4(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.level4 dto){
+    public ResponseEntity level4(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.Level4Dto dto){
         return CustomResponse.ok(regionService.level4(dto));
     }
 
     @GetMapping("/level5")
-    public ResponseEntity level5(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.level5 dto){
+    public ResponseEntity level5(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.Level5Dto dto){
         return CustomResponse.ok(regionService.level5(dto));
 
     }
 
     @GetMapping("/id")
-    public ResponseEntity id(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.id dto) {
+    public ResponseEntity id(@AuthenticationPrincipal Integer memberId, @Valid RegionDto.IdDto dto) {
         return CustomResponse.ok(regionService.id(dto));
     }
 

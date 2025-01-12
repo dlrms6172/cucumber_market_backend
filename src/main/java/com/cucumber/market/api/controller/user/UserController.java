@@ -35,7 +35,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/signin")
-    public ResponseEntity signIn(@Valid UserDto.signInDto dto){
+    public ResponseEntity signIn(@Valid UserDto.SignInDto dto){
         return CustomResponse.ok(userService.signInService(dto));
     }
 
@@ -46,7 +46,7 @@ public class UserController {
      * @return
      */
     @GetMapping("/signin/callback/{platform}")
-    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.signInCallBackDto dto, HttpServletResponse response){
+    public ResponseEntity signInCallBack(@PathVariable String platform, @Valid UserDto.SignInCallBackDto dto, HttpServletResponse response){
         dto.setPlatform(platform);
 
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
@@ -94,7 +94,7 @@ public class UserController {
      */
     @PutMapping("/profile")
     public ResponseEntity userProfile(@RequestPart(value = "file", required = false) MultipartFile file,
-                                      @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto,
+                                      @RequestPart(value = "dto") @Valid UserDto.UserProfilePutDto dto,
                                       @AuthenticationPrincipal Integer memberId) {
         dto.setMemberId(memberId);
         dto.setProfileImage(file);
