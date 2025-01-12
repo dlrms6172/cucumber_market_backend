@@ -62,7 +62,7 @@ public class UserController {
         // 로그인 후 처리 서비스 호출(DB에 유저 정보 생성)
         Integer memberId = userService.signInCallBackService(dto);
 
-        String accessToken = jwtTokenProvider.generateAccessToken(String.valueOf(memberId));
+        String accessToken = jwtTokenProvider.generateAccessToken(memberId);
         String refreshToken = jwtTokenProvider.generateRefreshToken();
 
         // refreshToken 저장
@@ -93,8 +93,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/profile")
-    public ResponseEntity userProfile(@AuthenticationPrincipal String memberId) {
-        body.put("data", userService.userProfileGet(Integer.parseInt(memberId)));
+    public ResponseEntity userProfile(@AuthenticationPrincipal Integer memberId) {
+        body.put("data", userService.userProfileGet(memberId));
 
         return new ResponseEntity(body, headers, HttpStatus.OK);
     }
@@ -107,8 +107,8 @@ public class UserController {
     @PutMapping("/profile")
     public ResponseEntity userProfile(@RequestPart(value = "file", required = false) MultipartFile file,
                                       @RequestPart(value = "dto") @Valid UserDto.userProfilePut dto,
-                                      @AuthenticationPrincipal String memberId) {
-        dto.setMemberId(Integer.parseInt(memberId));
+                                      @AuthenticationPrincipal Integer memberId) {
+        dto.setMemberId(memberId);
         dto.setProfileImage(file);
 
         if (!file.isEmpty()) dto.setDeletedOldProfileImage(true);
@@ -127,7 +127,7 @@ public class UserController {
 
         if(jwtTokenProvider.validateRefreshToken(refreshToken)) {
             // Refresh Token으로 DB에서 memberId 추출
-            String memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
+            Integer memberId = jwtTokenProvider.getMemberIdFromRefreshToken(refreshToken);
 
             // 새로운 Access Token 발급
             String newAccessToken = jwtTokenProvider.generateAccessToken(memberId);

@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             // 토큰이 유효한 경우 인증 객체 설정
-            String memberId = jwtTokenProvider.getMemberIdFromAccessToken(token);
+            Integer memberId = jwtTokenProvider.getMemberIdFromAccessToken(token);
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(memberId, null, List.of());
             SecurityContextHolder.getContext().setAuthentication(authentication);

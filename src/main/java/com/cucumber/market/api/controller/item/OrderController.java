@@ -4,6 +4,7 @@ import com.cucumber.market.api.service.item.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -26,7 +27,7 @@ public class OrderController {
 
     @PostMapping("/{itemId}/order")
     public ResponseEntity addOrder(@PathVariable(name = "itemId") int itemId,
-                                   @SessionAttribute Integer memberId) {
+                                   @AuthenticationPrincipal Integer memberId) {
 
         Map<String, Object> body = new LinkedHashMap<>() {
             {
@@ -42,7 +43,7 @@ public class OrderController {
 
     @GetMapping("/{itemId}/orders")
     public ResponseEntity getOrders(@PathVariable(name = "itemId") int itemId,
-                                    @SessionAttribute Integer memberId) {
+                                    @AuthenticationPrincipal Integer memberId) {
         body.put("data", orderService.getOrders(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
@@ -51,7 +52,7 @@ public class OrderController {
 
     @DeleteMapping("/{itemId}/order")
     public ResponseEntity deleteOrder(@PathVariable(name = "itemId") int itemId,
-                                      @SessionAttribute Integer memberId) {
+                                      @AuthenticationPrincipal Integer memberId) {
         body.put("data", orderService.deleteOrder(itemId, memberId));
 
         return new ResponseEntity(body, HttpStatus.OK);
