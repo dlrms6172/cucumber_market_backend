@@ -31,6 +31,7 @@ public class OrderController {
     @DeleteMapping("/{itemId}/order")
     public ResponseEntity deleteOrder(@PathVariable(name = "itemId") int itemId,
                                       @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.ok(orderService.deleteOrder(itemId, memberId));
+        orderService.deleteOrder(itemId, memberId);
+        return CustomResponse.ok();
     }
 }

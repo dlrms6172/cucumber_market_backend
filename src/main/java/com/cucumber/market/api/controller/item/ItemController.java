@@ -47,14 +47,16 @@ public class ItemController {
                                      @PathVariable(name = "itemId") int itemId,
                                      @AuthenticationPrincipal Integer memberId) {
         itemDto.setUpdateDate(LocalDateTime.now());
-        return CustomResponse.ok(itemService.modifyItem(memberId, itemId, itemDto, files));
+        itemService.modifyItem(memberId, itemId, itemDto, files);
+        return CustomResponse.ok();
     }
 
     @PutMapping("/items/{itemId}/status")
     public ResponseEntity modifyItemStatus(@Valid @RequestBody ItemDto.ModifyItemStatusDto dto,
                                            @PathVariable(name = "itemId") int itemId,
                                            @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.ok(itemService.modifyItemStatus(memberId, itemId, dto));
+        itemService.modifyItemStatus(memberId, itemId, dto);
+        return CustomResponse.ok();
     }
 
 
@@ -75,7 +77,8 @@ public class ItemController {
     @DeleteMapping("/items/{itemId}")
     public ResponseEntity deleteItem(@PathVariable(name = "itemId") int itemId,
                                      @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.ok(itemService.deleteItem(memberId, itemId));
+        itemService.deleteItem(memberId, itemId);
+        return CustomResponse.ok();
     }
 
 
@@ -83,14 +86,16 @@ public class ItemController {
     public ResponseEntity modifyReview(@PathVariable(name = "itemId") int itemId,
                                        @RequestBody ItemDto.ReviewDto reviewDto,
                                        @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.ok(itemService.modifyReview(itemId, memberId, reviewDto));
+        itemService.modifyReview(itemId, memberId, reviewDto);
+        return CustomResponse.ok();
     }
 
 
     @DeleteMapping("/items/{itemId}/review")
     public ResponseEntity deleteReview(@PathVariable(name = "itemId") int itemId,
                                        @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.ok(itemService.deleteReview(itemId, memberId));
+        itemService.deleteReview(itemId, memberId);
+        return CustomResponse.ok();
     }
 
 }

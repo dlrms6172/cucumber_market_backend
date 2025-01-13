@@ -17,13 +17,15 @@ public class LikeController {
     @PostMapping("/{itemId}/like")
     public ResponseEntity addLike(@PathVariable(name = "itemId") int itemId,
                                   @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.created(likeService.addLike(itemId, memberId));
+        likeService.addLike(itemId, memberId);
+        return CustomResponse.ok();
     }
 
     @DeleteMapping("/{itemId}/like")
     public ResponseEntity deleteLike(@PathVariable(name = "itemId") int itemId,
                                      @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.ok(likeService.deleteLike(itemId, memberId));
+        likeService.deleteLike(itemId, memberId);
+        return CustomResponse.ok();
     }
 
 }
