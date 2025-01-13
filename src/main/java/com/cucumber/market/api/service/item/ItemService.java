@@ -30,10 +30,8 @@ public class ItemService {
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
 
         itemMapper.insertItem(memberId, itemDto);
-        List<String> imageUrls = itemImageService.addImages(itemDto.getItemId(), files);
-
-        result.put("item", itemDto);
-        result.put("imageUrls", imageUrls);
+        itemImageService.addImages(itemDto.getItemId(), files);
+        result.put("itemId", itemDto.getItemId());
 
         return result;
     }
@@ -59,61 +57,39 @@ public class ItemService {
     }
 
 
-    public Map modifyItem(Integer memberId, Integer itemId, ItemDto.ModifyItemDto itemDto, List<MultipartFile> files) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
+    public void modifyItem(Integer memberId, Integer itemId, ItemDto.ModifyItemDto itemDto, List<MultipartFile> files) {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
-        if (item.get("memberId").equals(memberId)) {  //상품 수정 권한 확인
 
-            itemMapper.updateItem(itemId, itemDto);
-            List<String> imageUrls = itemImageService.updateImages(itemId, itemDto.getImageIndexList(), files);
-
-            //응답 값 생성
-            itemDto.setItemId(itemId);
-            itemDto.setImageIndexList(null);
-            result.put("item", itemDto);
-            result.put("imageUrls", imageUrls);
-        } else {
+        if (!checkAuthority(memberId, item)) {
             throw new IllegalArgumentException("상품 수정 권한이 없습니다.");
         }
 
-        return result;
+        itemMapper.updateItem(itemId, itemDto);
+        itemImageService.updateImages(itemId, itemDto.getImageIndexList(), files);
     }
 
-
-    public Map modifyItemStatus(Integer memberId, Integer itemId, ItemDto.ModifyItemStatusDto itemDto) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+    public void modifyItemStatus(Integer memberId, Integer itemId, ItemDto.ModifyItemStatusDto itemDto) {
         ItemStatus itemStatus = itemDto.getItemStatus();
 
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
 
-        if (item.get("memberId").equals(memberId)) {  //상품 상태 수정 권한 확인
-
-            if (item.get("itemStatusId").equals(ItemStatus.CLOSED.getDbCode())) {  //기존 거래완료 상태인 상품일 경우
-                itemMapper.deleteBuyerReview(itemId);  //기존 구매자 리뷰 삭제
-                itemMapper.deleteSellerReview(itemId);  //기존 판매자 리뷰 삭제
-            }
-
-            if (itemStatus == ItemStatus.CLOSED) {  //상품 상태를 거래완료로 변경할 경우
-                itemMapper.insertBuyerReview(itemId, itemDto.getClientId(), null);  //구매자 후기 테이블에 등록
-                itemMapper.insertSellerReview(itemId, null);  //판매자 후기 테이블에 등록
-
-                incMannersTemperature(memberId,itemDto);//매너온도 증가 로직
-            }
-
-            itemMapper.updateItemStatus(itemId, itemStatus);
-
-            result.put("itemId", itemId);
-            result.put("itemStatus", itemStatus);
-            if (itemDto.getClientId() != null) {
-                result.put("clientId", itemDto.getClientId());
-            }
-
-        } else {
+        if (!checkAuthority(memberId, item)) {
             throw new IllegalArgumentException("상품 상태 수정 권한이 없습니다.");
         }
 
-        return result;
+        if (item.get("itemStatusId").equals(ItemStatus.CLOSED.getDbCode())) {  //기존 거래완료 상태인 상품일 경우
+            itemMapper.deleteBuyerReview(itemId);  //기존 구매자 리뷰 삭제
+            itemMapper.deleteSellerReview(itemId);  //기존 판매자 리뷰 삭제
+        }
+
+        if (itemStatus == ItemStatus.CLOSED) {  //상품 상태를 거래완료로 변경할 경우
+            itemMapper.insertBuyerReview(itemId, itemDto.getClientId(), null);  //구매자 후기 테이블에 등록
+            itemMapper.insertSellerReview(itemId, null);  //판매자 후기 테이블에 등록
+
+            incMannersTemperature(memberId,itemDto);//매너온도 증가 로직
+        }
+
+        itemMapper.updateItemStatus(itemId, itemStatus);
     }
 
 
@@ -147,70 +123,51 @@ public class ItemService {
     }
 
 
-    public Map deleteItem(Integer memberId, Integer itemId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
+    public void deleteItem(Integer memberId, Integer itemId) {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
-        if (item.get("memberId").equals(memberId)) {  //상품 삭제 권한 확인
 
-            itemImageService.deleteAllImages(itemId);
-            itemMapper.deleteItem(itemId);
-            result.put("itemId", itemId);
-
-        } else {
+        if (checkAuthority(memberId, item)) {
             throw new IllegalArgumentException("상품 삭제 권한이 없습니다.");
         }
 
-        return result;
+        itemImageService.deleteAllImages(itemId);
+        itemMapper.deleteItem(itemId);
     }
 
 
-    public Map modifyReview(Integer itemId, Integer memberId, ItemDto.ReviewDto reviewDto) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
+    public void modifyReview(Integer itemId, Integer memberId, ItemDto.ReviewDto reviewDto) {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
 
-        if (item.get("memberId").equals(memberId)) {  //판매자 여부 판별
+        if (checkAuthority(memberId, item)) {  //판매자 여부 판별
 
             itemMapper.updateSellerReview(itemId, reviewDto);
         } else {
             Map buyerReview = itemMapper.selectBuyerReview(itemId).orElseThrow(IllegalArgumentException::new);
 
-            if (!buyerReview.get("memberId").equals(memberId)) {   //구매자 여부 판별
+            if (!checkAuthority(memberId, buyerReview)) {   //구매자 여부 판별
                 throw new IllegalArgumentException("상품 후기 수정 권한이 없습니다.");
             }
             itemMapper.updateBuyerReview(itemId, reviewDto);
 
         }
-
-        result.put("itemId", itemId);
-        result.put("review", reviewDto.getReview());
-
-        return result;
     }
 
 
-    public Map deleteReview(Integer itemId, Integer memberId) {
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-
+    public void deleteReview(Integer itemId, Integer memberId) {
         Map item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
 
-        if (item.get("memberId").equals(memberId)) {  //판매자 여부 판별
+        if (checkAuthority(memberId, item)) {  //판매자 여부 판별
 
             itemMapper.deleteSellerReview(itemId);
         } else {
             Map buyerReview = itemMapper.selectBuyerReview(itemId).orElseThrow(IllegalArgumentException::new);
 
-            if (!buyerReview.get("memberId").equals(memberId)) {   //구매자 여부 판별
+            if (!checkAuthority(memberId, buyerReview)) {   //구매자 여부 판별
                 throw new IllegalArgumentException("상품 후기 삭제 권한이 없습니다.");
             }
             itemMapper.deleteBuyerReview(itemId);
 
         }
-
-        result.put("itemId", itemId);
-
-        return result;
     }
 
 
@@ -250,6 +207,10 @@ public class ItemService {
             String repImageUrl = itemImageService.getRepImageUrl(itemId);
             item.put("itemRepImage", repImageUrl);
         }
+    }
+
+    private static boolean checkAuthority(Integer memberId, Map item) {
+        return item.get("memberId").equals(memberId);
     }
 
 
