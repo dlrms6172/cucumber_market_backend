@@ -22,8 +22,8 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping("/items")
-    public ResponseEntity addItem(@RequestPart(value = "itemImgFiles") List<MultipartFile> itemImgFiles,
-                                  @RequestPart(value = "itemDto") ItemDto.AddItemDto itemDto,
+    public ResponseEntity addItem(@RequestPart(value = "files") List<MultipartFile> itemImgFiles,
+                                  @RequestPart(value = "addItemRequest") ItemDto.AddItemDto itemDto,
                                   @AuthenticationPrincipal Integer memberId) {
         itemDto.setPostDate(LocalDateTime.now());
         return CustomResponse.ok(itemService.addItem(memberId, itemDto, itemImgFiles));
@@ -42,8 +42,8 @@ public class ItemController {
      * @return
      */
     @PutMapping("/items/{itemId}")
-    public ResponseEntity modifyItem(@RequestPart(value = "itemImgFiles", required = false) List<MultipartFile> itemImgFiles,
-                                     @RequestPart(value = "itemDto") ItemDto.ModifyItemDto itemDto,
+    public ResponseEntity modifyItem(@RequestPart(value = "files", required = false) List<MultipartFile> itemImgFiles,
+                                     @RequestPart(value = "modifyItemRequest") ItemDto.ModifyItemDto itemDto,
                                      @PathVariable(name = "itemId") int itemId,
                                      @AuthenticationPrincipal Integer memberId) {
         itemDto.setUpdateDate(LocalDateTime.now());
