@@ -1,4 +1,4 @@
-package com.cucumber.market.api.dto.item;
+package com.cucumber.market.api.dto.request;
 
 import com.cucumber.market.api.service.item.ItemStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -24,12 +24,11 @@ public class ItemDto {
         private String itemInfo;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime postDate;
-        private Integer donationFlag;
+        private Integer donationFlag = 0;
         private String categoryId;
         private Integer priceNegotiationYn;
         @Positive
         private Integer price;
-
     }
 
     @Getter

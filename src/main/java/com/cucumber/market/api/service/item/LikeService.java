@@ -16,9 +16,9 @@ public class LikeService {
         likeMapper.insertLike(itemId, memberId);
     }
 
-
     public void deleteLike(Integer itemId, Integer memberId) {
-        likeMapper.selectLike(itemId, memberId).orElseThrow(IllegalArgumentException::new);  //좋아요 존재 및 좋아요 삭제 권한 확인
+        //좋아요 존재 및 좋아요 삭제 권한 확인
+        likeMapper.selectLike(itemId, memberId).orElseThrow(IllegalArgumentException::new);
         likeMapper.deleteLike(itemId, memberId);
     }
 }

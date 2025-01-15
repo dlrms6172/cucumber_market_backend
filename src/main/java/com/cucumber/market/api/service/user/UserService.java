@@ -1,6 +1,6 @@
 package com.cucumber.market.api.service.user;
 
-import com.cucumber.market.api.dto.user.UserDto;
+import com.cucumber.market.api.dto.request.UserDto;
 import com.cucumber.market.api.mapper.user.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

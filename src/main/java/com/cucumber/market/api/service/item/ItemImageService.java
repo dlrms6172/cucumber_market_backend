@@ -1,6 +1,6 @@
 package com.cucumber.market.api.service.item;
 
-import com.cucumber.market.api.dto.item.ItemDto;
+import com.cucumber.market.api.dto.request.ItemDto;
 import com.cucumber.market.api.mapper.item.ItemImageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

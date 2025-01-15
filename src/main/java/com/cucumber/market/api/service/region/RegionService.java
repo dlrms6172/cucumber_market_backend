@@ -1,6 +1,6 @@
 package com.cucumber.market.api.service.region;
 
-import com.cucumber.market.api.dto.region.RegionDto;
+import com.cucumber.market.api.dto.request.RegionDto;
 import com.cucumber.market.api.mapper.region.RegionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

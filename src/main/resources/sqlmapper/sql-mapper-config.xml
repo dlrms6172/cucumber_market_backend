@@ -9,6 +9,10 @@
 
     <typeAliases>
         <typeAlias type="com.cucumber.market.api.common.config.CamelHashMap" alias="resultMap"></typeAlias>
+        <typeAlias type="com.cucumber.market.api.dto.response.ItemDetail" alias="ItemDetail"></typeAlias>
+        <typeAlias type="com.cucumber.market.api.dto.response.Item" alias="Item"></typeAlias>
+        <typeAlias type="com.cucumber.market.api.dto.response.ItemSeller$Info" alias="ItemSellerInfo"></typeAlias>
+        <typeAlias type="com.cucumber.market.api.dto.response.ItemSeller$Region" alias="ItemSellerRegion"></typeAlias>
     </typeAliases>
 
     <typeHandlers>

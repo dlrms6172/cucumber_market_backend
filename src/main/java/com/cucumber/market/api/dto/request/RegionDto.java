@@ -1,4 +1,4 @@
-package com.cucumber.market.api.dto.region;
+package com.cucumber.market.api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

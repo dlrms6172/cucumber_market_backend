@@ -1,6 +1,8 @@
 package com.cucumber.market.api.mapper.item;
 
-import com.cucumber.market.api.dto.item.ItemDto;
+import com.cucumber.market.api.dto.request.ItemDto;
+import com.cucumber.market.api.dto.response.Item;
+import com.cucumber.market.api.dto.response.ItemDetail;
 import com.cucumber.market.api.service.item.ItemStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,7 +18,7 @@ public interface ItemMapper {
 
     int insertItem(@Param("memberId") Integer memberId, @Param("itemDto") ItemDto.AddItemDto itemDto);
 
-    Optional<Map> selectItem(Integer itemId);
+    Optional<ItemDetail> selectItem(Integer itemId);
 
     Optional<Map> selectUserMainInfo(Integer memberId);
 
@@ -26,9 +28,9 @@ public interface ItemMapper {
 
     void updateItemStatus(@Param("itemId") Integer itemId, @Param("itemStatus") ItemStatus itemStatus);
 
-    List<Map> selectAllItems(@Param("regionId") Integer regionId);
+    List<Item> selectAllItems(@Param("regionId") Integer regionId);
 
-    List<Map> selectItems(@Param("regionId") Integer regionId, @Param("itemName") String itemName, @Param("itemStatus") ItemStatus itemStatus);
+    List<Item> selectItems(@Param("regionId") Integer regionId, @Param("itemName") String itemName, @Param("itemStatus") ItemStatus itemStatus);
 
     void deleteItem(Integer itemId);
 

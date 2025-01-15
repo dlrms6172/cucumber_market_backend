@@ -1,4 +1,4 @@
-package com.cucumber.market.api.dto.user;
+package com.cucumber.market.api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

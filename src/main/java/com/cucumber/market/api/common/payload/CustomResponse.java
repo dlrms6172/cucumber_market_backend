@@ -1,38 +1,26 @@
 package com.cucumber.market.api.common.payload;
 
+import com.cucumber.market.api.common.exception.ValidationCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Map;
-
 public class CustomResponse {
 
-    public static ResponseEntity<ResponseDto> ok() {
-        ResponseDto body = ResponseDto.builder()
-                .resultCode(200)
-                .resultMsg("success")
-                .resultDescription("요청에 성공했습니다.")
+    public static <T> ResponseEntity<ResponseDto<T>> ok() {
+        ResponseDto<T>  body = ResponseDto.<T>builder()
+                .resultCode(ValidationCode.SUCCESS.getCode())
+                .resultMsg(ValidationCode.SUCCESS.getMessage())
+                .resultDescription(ValidationCode.SUCCESS.getDescription())
                 .build();
 
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
-    public static ResponseEntity<ResponseDto> ok(Map result) {
-        ResponseDto body = ResponseDto.builder()
-                .resultCode(200)
-                .resultMsg("success")
-                .resultDescription("요청에 성공했습니다.")
-                .data(result)
-                .build();
-
-        return new ResponseEntity<>(body, HttpStatus.OK);
-    }
-
-    public static ResponseEntity<ResponseDto> created(Map result) {
-        ResponseDto body = ResponseDto.builder()
-                .resultCode(201)
-                .resultMsg("success")
-                .resultDescription("요청에 성공했습니다.")
+    public static <T> ResponseEntity<ResponseDto<T>> ok(T result) {
+        ResponseDto<T> body = ResponseDto.<T>builder()
+                .resultCode(ValidationCode.SUCCESS.getCode())
+                .resultMsg(ValidationCode.SUCCESS.getMessage())
+                .resultDescription(ValidationCode.SUCCESS.getDescription())
                 .data(result)
                 .build();
 
