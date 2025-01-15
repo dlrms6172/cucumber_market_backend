@@ -1,6 +1,6 @@
 package com.cucumber.market.api.mapper.region;
 
-import com.cucumber.market.api.dto.region.RegionDto;
+import com.cucumber.market.api.dto.request.RegionDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

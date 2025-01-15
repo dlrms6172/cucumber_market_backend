@@ -2,7 +2,7 @@ package com.cucumber.market.api.controller.user;
 
 import com.cucumber.market.api.common.payload.CustomResponse;
 import com.cucumber.market.api.common.security.JwtTokenProvider;
-import com.cucumber.market.api.dto.user.UserDto;
+import com.cucumber.market.api.dto.request.UserDto;
 import com.cucumber.market.api.service.user.UserService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;

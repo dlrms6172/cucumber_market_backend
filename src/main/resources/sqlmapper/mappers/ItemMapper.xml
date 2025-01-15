@@ -7,13 +7,54 @@
         values (#{memberId}, #{itemDto.itemName}, #{itemDto.itemInfo}, #{itemDto.donationFlag}, #{itemDto.price}, #{itemDto.categoryId}, #{itemDto.priceNegotiationYn}, #{itemDto.postDate}, 0)
     </insert>
 
-    <select id="selectItem" resultType="resultMap">
-        select *, (select count(*)
-                    from favorite
-                    where item_id = #{itemId}) as like_count
-        from item
-        where item_id = #{itemId}
+    <select id="selectItem" resultMap="itemResultMap">
+        SELECT
+            i.item_id,
+            i.item_name,
+            i.item_info,
+            i.post_date,
+            i.update_date,
+            i.donation_flag,
+            i.price,
+            i.category_id,
+            i.price_negotiation_yn,
+            i.item_status_id,
+            i.view_count,
+            (
+                SELECT COUNT(*)
+                FROM favorite f
+                WHERE f.item_id = i.item_id
+            ) AS like_count,
+            m.member_id,
+            m.name,
+            m.manners_temperature,
+            r.si_do,
+            r.si_gun_gu,
+            r.eup_myeon_dong_gu,
+            r.eup_myeon_li_dong,
+            r.li
+        FROM item AS i
+        JOIN member AS m
+            ON m.member_id = i.member_id
+        JOIN region AS r
+            ON m.region_id = r.region_id
+        WHERE i.item_id = #{itemId}
     </select>
+
+    <resultMap id="itemResultMap" type="ItemDetail">
+        <association property="member" javaType="ItemSellerInfo">
+            <id column="member_id" property="memberId"/>
+            <result column="name" property="name"/>
+            <result column="manners_temperature" property="mannersTemperature"/>
+        </association>
+        <association property="region" javaType="ItemSellerRegion">
+            <result column="si_do" property="siDo"/>
+            <result column="si_gun_gu" property="siGunGu"/>
+            <result column="eup_myeon_dong_gu" property="eupMyeonDongGu"/>
+            <result column="eup_myeon_li_dong" property="eupMyeonLiDong"/>
+            <result column="li" property="li"/>
+        </association>
+    </resultMap>
 
     <select id="selectUserMainInfo" resultType="resultMap">
         select
@@ -54,11 +95,21 @@
         where item_id = #{itemId}
     </update>
 
-    <select id="selectAllItems" resultType="resultMap">
-        SELECT *, (select count(*)
-                    from favorite
-                    where item.item_id = favorite.item_id) as like_count
-        FROM item
+    <select id="selectAllItems" resultType="Item">
+        select
+        i.item_id,
+        i.item_name,
+        i.item_info,
+        i.post_date,
+        i.update_date,
+        i.donation_flag,
+        i.price,
+        i.category_id,
+        i.price_negotiation_yn,
+        i.item_status_id,
+        i.view_count,
+        (select count(*) from favorite f where f.item_id = i.item_id) as like_count
+        FROM item as i
         WHERE member_id IN (
             SELECT member_id
             FROM member
@@ -77,11 +128,21 @@
             )
     </select>
 
-    <select id="selectItems" resultType="resultMap">
-        SELECT *, (select count(*)
-                    from favorite
-                    where item.item_id = favorite.item_id) as like_count
-        FROM item
+    <select id="selectItems" resultType="Item">
+        select
+        i.item_id,
+        i.item_name,
+        i.item_info,
+        i.post_date,
+        i.update_date,
+        i.donation_flag,
+        i.price,
+        i.category_id,
+        i.price_negotiation_yn,
+        i.item_status_id,
+        i.view_count,
+        (select count(*) from favorite f where f.item_id = i.item_id) as like_count
+        FROM item as i
         WHERE member_id IN (
             SELECT member_id
             FROM member

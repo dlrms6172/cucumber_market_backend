@@ -1,6 +1,7 @@
 package com.cucumber.market.api.controller.review;
 
 import com.cucumber.market.api.common.payload.CustomResponse;
+import com.cucumber.market.api.dto.request.ItemDto;
 import com.cucumber.market.api.service.review.ReviewSender;
 import com.cucumber.market.api.service.review.ReviewService;
 import com.cucumber.market.api.service.review.ReviewSort;
@@ -10,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/reviews")
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -21,7 +21,7 @@ public class ReviewController {
      * @param reviewSender
      * @return
      */
-    @GetMapping
+    @GetMapping("/reviews")
     public ResponseEntity getReviewsOfMe(@RequestParam(name = "sender") ReviewSender reviewSender,
                                          @AuthenticationPrincipal Integer memberId) {
         return CustomResponse.ok(reviewService.getReviewsOfMe(memberId, reviewSender));
@@ -34,11 +34,28 @@ public class ReviewController {
      * @param reviewSort
      * @return
      */
-    @GetMapping("/{itemId}")
+    @GetMapping("/reviews/{itemId}")
     public ResponseEntity getReview(@PathVariable(name = "itemId") int itemId,
                                     @RequestParam(name = "reviewSort") ReviewSort reviewSort,
                                     @AuthenticationPrincipal Integer memberId) {
         return CustomResponse.ok(reviewService.getReview(memberId, itemId, reviewSort));
+    }
+
+
+    @PutMapping("/items/{itemId}/review")
+    public ResponseEntity modifyReview(@PathVariable(name = "itemId") int itemId,
+                                       @RequestBody ItemDto.ReviewDto reviewDto,
+                                       @AuthenticationPrincipal Integer memberId) {
+        reviewService.modifyReview(itemId, memberId, reviewDto);
+        return CustomResponse.ok();
+    }
+
+
+    @DeleteMapping("/items/{itemId}/review")
+    public ResponseEntity deleteReview(@PathVariable(name = "itemId") int itemId,
+                                       @AuthenticationPrincipal Integer memberId) {
+        reviewService.deleteReview(itemId, memberId);
+        return CustomResponse.ok();
     }
 
 }

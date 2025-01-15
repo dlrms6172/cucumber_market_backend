@@ -1,6 +1,6 @@
 package com.cucumber.market.api.controller.region;
 
-import com.cucumber.market.api.dto.region.RegionDto;
+import com.cucumber.market.api.dto.request.RegionDto;
 import com.cucumber.market.api.mapper.region.RegionMapper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

@@ -1,6 +1,6 @@
 package com.cucumber.market.api.service.user;
 
-import com.cucumber.market.api.dto.user.UserDto;
+import com.cucumber.market.api.dto.request.UserDto;
 import com.cucumber.market.api.mapper.user.ProfileImageMapper;
 import com.cucumber.market.api.service.item.ImageUploader;
 import lombok.RequiredArgsConstructor;

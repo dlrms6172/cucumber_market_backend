@@ -1,6 +1,6 @@
 package com.cucumber.market.api.mapper.user;
 
-import com.cucumber.market.api.dto.user.UserDto;
+import com.cucumber.market.api.dto.request.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

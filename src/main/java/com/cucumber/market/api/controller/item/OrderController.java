@@ -17,16 +17,15 @@ public class OrderController {
     @PostMapping("/{itemId}/order")
     public ResponseEntity addOrder(@PathVariable(name = "itemId") int itemId,
                                    @AuthenticationPrincipal Integer memberId) {
-        return CustomResponse.created(orderService.addOrder(itemId, memberId));
+        orderService.addOrder(itemId, memberId);
+        return CustomResponse.ok();
     }
-
 
     @GetMapping("/{itemId}/orders")
     public ResponseEntity getOrders(@PathVariable(name = "itemId") int itemId,
                                     @AuthenticationPrincipal Integer memberId) {
         return CustomResponse.ok(orderService.getOrders(itemId, memberId));
     }
-
 
     @DeleteMapping("/{itemId}/order")
     public ResponseEntity deleteOrder(@PathVariable(name = "itemId") int itemId,

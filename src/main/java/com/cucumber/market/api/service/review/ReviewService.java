@@ -1,6 +1,10 @@
 package com.cucumber.market.api.service.review;
 
+import com.cucumber.market.api.dto.request.ItemDto;
+import com.cucumber.market.api.dto.response.ItemDetail;
+import com.cucumber.market.api.dto.response.ItemSeller;
 import com.cucumber.market.api.mapper.item.ItemMapper;
+import com.cucumber.market.api.mapper.user.UserMapper;
 import com.cucumber.market.api.service.user.ProfileImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,7 @@ public class ReviewService {
 
     private final ItemMapper itemMapper;
     private final ProfileImageService profileImageService;
+    private final UserMapper userMapper;
 
     public Map getReviewsOfMe(Integer memberId, ReviewSender reviewSender) {  //내가 받은 후기
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
@@ -92,7 +97,6 @@ public class ReviewService {
         return result;
     }
 
-
     /**
      * 거래 상대자 이름 조회
      * @param itemId
@@ -103,15 +107,54 @@ public class ReviewService {
     private String getCounterpartName(Integer itemId, Integer buyerMemberId, boolean amIBuyer) {
         Map counterpartInfo;
 
-        if (amIBuyer) {
-            Map item  = itemMapper.selectItem(itemId).orElseThrow();
-            Integer sellerId = (Integer) item.get("memberId");
-            counterpartInfo = itemMapper.selectUserMainInfo(sellerId).orElseThrow();
-        } else {
-            counterpartInfo = itemMapper.selectUserMainInfo(buyerMemberId).orElseThrow();
-        }
+           if (amIBuyer) {
+               ItemDetail item = itemMapper.selectItem(itemId).orElseThrow();
+               Integer sellerId = item.getMember().getMemberId();
+               counterpartInfo = itemMapper.selectUserMainInfo(sellerId).orElseThrow();
+           } else {
+               counterpartInfo = itemMapper.selectUserMainInfo(buyerMemberId).orElseThrow();
+           }
 
-        return (String) counterpartInfo.get("name");
+           return (String) counterpartInfo.get("name");
+    }
+
+    public void modifyReview(Integer itemId, Integer memberId, ItemDto.ReviewDto reviewDto) {
+        ItemDetail item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
+        Integer itemSellerId = item.getMember().getMemberId();
+
+        if (checkAuthority(memberId, itemSellerId)) {  //판매자 여부 판별
+            itemMapper.updateSellerReview(itemId, reviewDto);
+        } else {
+            Map buyerReview = itemMapper.selectBuyerReview(itemId).orElseThrow(IllegalArgumentException::new);
+
+            if (!checkAuthority(memberId, Integer.parseInt((String) buyerReview.get("memberId")))) {   //구매자 여부 판별
+                throw new IllegalArgumentException("상품 후기 수정 권한이 없습니다.");
+            }
+            itemMapper.updateBuyerReview(itemId, reviewDto);
+
+        }
+    }
+
+    public void deleteReview(Integer itemId, Integer memberId) {
+        ItemDetail item = itemMapper.selectItem(itemId).orElseThrow(IllegalArgumentException::new);
+        Integer itemSellerId = item.getMember().getMemberId();
+
+        if (checkAuthority(memberId, itemSellerId)) {  //판매자 여부 판별
+
+            itemMapper.deleteSellerReview(itemId);
+        } else {
+            Map buyerReview = itemMapper.selectBuyerReview(itemId).orElseThrow(IllegalArgumentException::new);
+
+            if (!checkAuthority(memberId,  Integer.parseInt((String) buyerReview.get("memberId")))) {   //구매자 여부 판별
+                throw new IllegalArgumentException("상품 후기 삭제 권한이 없습니다.");
+            }
+            itemMapper.deleteBuyerReview(itemId);
+
+        }
+    }
+
+    private static boolean checkAuthority(Integer memberId, Integer itemSellerId) {
+        return memberId.equals(itemSellerId);
     }
 
 }

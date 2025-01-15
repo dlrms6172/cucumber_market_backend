@@ -1,7 +1,7 @@
 package com.cucumber.market.api.controller.region;
 
 import com.cucumber.market.api.common.payload.CustomResponse;
-import com.cucumber.market.api.dto.region.RegionDto;
+import com.cucumber.market.api.dto.request.RegionDto;
 import com.cucumber.market.api.service.region.RegionService;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
