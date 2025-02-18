@@ -42,6 +42,19 @@
     </select>
 
     <resultMap id="itemResultMap" type="ItemDetail">
+        <id column="item_id" property="itemId"/>
+        <result column="item_name" property="itemName"/>
+        <result column="item_info" property="itemInfo"/>
+        <result column="post_date" property="postDate"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="donation_flag" property="donationFlag"/>
+        <result column="price" property="price"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="price_negotiation_yn" property="priceNegotiationYn"/>
+        <result column="item_status_id" property="itemStatusId"/>
+        <result column="view_count" property="viewCount"/>
+        <result column="like_count" property="likeCount"/>
+
         <association property="member" javaType="ItemSellerInfo">
             <id column="member_id" property="memberId"/>
             <result column="name" property="name"/>
